@@ -3,6 +3,7 @@ import time
 import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.jobstores.base import JobLookupError
+import platform
 
 def polling_req():
     res = requests.get('http://localhost:5000/polling', timeout=5)

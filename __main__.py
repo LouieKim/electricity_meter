@@ -3,6 +3,7 @@ import signal
 import subprocess
 import time
 import psutil
+import platform
 
 def main():
     while True:
@@ -21,5 +22,5 @@ def main():
 if __name__ == "__main__":
     if platform.system() == "Linux":
         setproctitle.setproctitle('ninewatt_main')
-        
+
     main()
