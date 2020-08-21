@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1000, user-scalable=yes, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <title>키패드</title>
+</head>
+<body>
+    <div class="chart_app">
+        <div class="box">
+            <div class="left">
+                <div>
+                    <canvas id="myChart"></canvas>
+                    <div class="chart_btm">
+                        <span>0시</span>
+                        <span>6시</span>
+                        <span class="time12">12시</span>
+                        <span>18시</span>
+                        <span>24시</span>
+                    </div>
+                </div>
+
+                <div class="toggle_btn_container">
+                    <div class="toggle_btn_box">
+                        <input class="toggle_input " id="toggle_btn" type="checkbox" />
+                        <label class="toggle_label" for="toggle_btn">
+                            <span class="txt1">자동</span>
+                            <span class="txt2">수동</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="logo_box">
+                    <a href="/"><img src="{{ url_for('static',filename='images/ninewatt-logo-3d.gif') }}" alt=""></a>
+                </div>
+                <div class="input_content">
+                    <div class="title_box">
+                        <span class="icon"><i class="fas fa-bolt fa-lg"></i></span>
+                        <span class="txt">현재 목표 전력</span>
+                    </div>
+                    <div class="input_box">
+                        <input type="text" id="now">
+                        <span>kW</span>
+                    </div>
+                </div>
+                <div class="input_content">
+                    <div class="title_box">
+                        <span class="icon"><i class="fas fa-plug fa-lg"></i></span>
+                        <span class="txt">설정 목표 전력</span>
+                    </div>
+                    <div class="input_box">
+                        <input type="text" id="setting" value="자동">
+                        <span>kW</span>
+                    </div>
+                </div>
+                <div class="btn_box">
+                    <button id="btn_power">설정</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.js"></script>
+    <script>
+
+
+        var now = document.querySelector('#now');
+
+        $.ajax({
+            url: 'http://192.168.100.2:7070/getDeviceHistory',
+            //url: 'http://ec2-13-125-22-29.ap-northeast-2.compute.amazonaws.com/chart.php',
+            type: 'GET',
+            data: {
+                // 보낼 데이터
+            },
+            dataType: 'json'
+        })
+            .done(function(res) {
+                // 성공 시 동작
+                console.log('성공' , res)
+                var checkSum = res.checksum;
+                var resDate = [];
+                var hour = [];
+                var current = [];
+                var target = [];
+                for(var i = 0; i <= 23; i+= 1) {
+                    for(var v = 0; v <= 55; v+= 5) {
+                        // console.log(v)
+                        if (i < 10) {
+                            if(v < 10) {
+                                hour.push(`0${i}:0${v}`)
+                            } else {
+                                hour.push(`0${i}:${v}`)
+                            }
+                        } else {
+                            if(v < 10) {
+                                hour.push(`${i}:0${v}`)
+                            } else {
+                                hour.push(`${i}:${v}`)
+                            }
+                        }
+                    }
+                }
+                res.forEach(function(i){
+                    console.log(i)
+                    if(i.label !=='') {
+                        resDate.push(i.label)
+                    }
+                    //current.push(i[3])
+                    target.push(i[1])
+                })
+
+                var ctx = document.getElementById('myChart').getContext('2d');
+
+                var chart = new Chart(ctx, {
+                    // The type of chart we want to create
+                    type: 'line',
+
+                    // The data for our dataset
+                    data: {
+                        labels: hour,
+                        datasets: [
+                            {
+                                label: '전력량A',
+                                // backgroundColor: 'rgb(255, 99, 132)',
+                                borderColor: 'rgb(234, 195, 100)',
+                                // backgroundColor : 'rgba(39,39,39)',
+                                pointRadius: 0,
+                                data: current
+                            },
+                            {
+                                label: '전력량B',
+                                // backgroundColor: 'rgb(255, 99, 132)',
+                                borderColor: 'tomato',
+                                // backgroundColor : 'rgba(39,39,39)',
+                                pointRadius: 0,
+                                data: target
+                            }
+                        ]
+                    },
+
+
+                    // Configuration options go here
+                    options: {
+                        scales : {
+                            xAxes: [{
+                                gridLines: {
+                                    // display: false,
+                                    // color: "black"
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: "시간",
+                                    fontColor: "rgb(234, 195, 100)"
+                                },
+                                ticks: {
+                                    autoSkip: true,
+                                    fontSize : 0,
+                                }
+                            }],
+                            yAxes: [{
+                                id: 'y-axis-1',
+                                gridLines: {
+                                    // color: "black",
+                                    // borderDash: [2, 5],
+                                },
+                                ticks: {
+                                    // max: 800,
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: "전력량",
+                                    fontColor: "rgb(234, 195, 100)"
+                                }
+                            }]
+                        },
+                        annotation: {
+                            // annotations: [{
+                            //     type: 'line',
+                            //     mode: 'horizontal',
+                            //     scaleID: 'y-axis-1',
+                            //     value: now.value,
+                            //     borderColor: 'tomato',
+                            //     borderWidth: 2,
+                            //     label : {
+                            //         content : '목표전력',
+                            //         enabled : true
+                            //     }
+                            // }],
+                            drawTime: "afterDraw" // (default)
+                        }
+                    }
+                });
+
+                // var myBarChart = new Chart(ctx).Line(chart);
+
+                setInterval(function(){
+                    $.ajax({
+                        //url: 'http://localhost:3000/test01',
+                        url: 'http://192.168.100.2:7070/getDeviceHistory',
+                        type: 'GET',
+                        data: {
+                            // 보낼 데이터
+                        },
+                        dataType: 'json'
+                    })
+                        .done(function(res) {
+                            console.log('res' , res)
+                            //if(checkSum !== res.checksum) {
+                                checkSum = res.checksum
+                                var current = []
+                                var target = [];
+                                
+                                res.forEach(function(i){
+                                    console.log(i)
+                                    if(i.label !=='') {
+                                        resDate.push(i.label)
+                                    }
+                                    current.push(i.current)
+                                    //target.push(i.target)
+                                })
+                                addData(chart, current, 0);
+                                //addData2(chart, target, 0);
+                            //}
+                        });
+                } , 10000)
+
+                // setTimeout(function() {
+                //     addData(chart, [45, 50, 30, 34, 61, 53, 42], 0);
+                // }, 2000);
+            })
+            .fail(function(error) {
+                // 실패 시 동작
+                console.log('에러' ,error)
+            })
+            .always(function(response) {
+                // 완료 시 동작
+            });
+
+        function addData(chart, data, datasetIndex) {
+            chart.data.datasets[datasetIndex].data = data;
+            chart.update();
+        }
+        function addData2(chart, data ) {
+            chart.data.datasets[1].data = data;
+            chart.update();
+        }
+
+        var toggleBtn = document.querySelector('#toggle_btn');
+        var setting = document.querySelector('#setting');
+        var btn = document.querySelector('.btn_box button');
+        // toggleBtn.checked = true;
+        toggleBtn.addEventListener('change' , function(){
+            console.log(toggleBtn.checked)
+            if(toggleBtn.checked) {
+                setting.value = now.value;
+                setting.style.pointerEvents = 'auto';
+                btn.classList.add('active');
+            } else {
+                setting.value = '자동';
+                setting.style.pointerEvents = 'none';
+                btn.classList.remove('active');
+            }
+        })
+
+        $('#btn_power').click( function() {
+			$.ajax({
+			url: 'http://192.168.100.2:3000/set_power',
+			dataType: 'json',
+			type: 'POST',
+			data: $('#setting').val(),
+			success: function(){}
+			})
+		})
+    </script>
+</body>
+</html>
