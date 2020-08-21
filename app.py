@@ -162,15 +162,20 @@ def get_resource():
 
 @app.route('/process')
 def get_process():
-    pid_check  = "ninewatt_app" in (p.name() for p in psutil.process_iter())
-    pid_check  = "ninewatt_manager" in (p.name() for p in psutil.process_iter())
-    pid_check  = "ninewatt_web" in (p.name() for p in psutil.process_iter())
 
-    if pid_check = True:
-        print("ninewatt_app runnung")
+    result_status = dict()
+
+    app_status  = "ninewatt_app" in (p.name() for p in psutil.process_iter())
+    manager_status = "ninewatt_manager" in (p.name() for p in psutil.process_iter())
+    web_status  = "ninewatt_web" in (p.name() for p in psutil.process_iter())
+
+    result_status["ninewatt_app"] = app_status
+    result_status["ninewatt_manager"] = manager_status
+    result_status["ninewatt_web"] = web_status
+
+    dict_rows_json = json.dumps(result_status)
     
-    else:
-        print("Not Run ninewatt_app")
+    return dict_rows_json
 
 @app.route('/historydata/<get_date>')
 def get_history(get_date):
