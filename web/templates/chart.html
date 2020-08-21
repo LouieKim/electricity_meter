@@ -154,27 +154,29 @@
         })
     }, 10000);
 
-    $.ajax({
-        url: 'http://localhost:5000/realtime',
-        type: 'GET',
-        contentType:'javascript/json; charset=utf-8',
-        data: {},
-        dataType: 'json',
-        success: function(data){
-            var html = '';
-            var raw_data = data['data'];
+    setInterval(function(){
+        $.ajax({
+            url: 'http://localhost:5000/realtime',
+            type: 'GET',
+            contentType:'javascript/json; charset=utf-8',
+            data: {},
+            dataType: 'json',
+            success: function(data){
+                var html = '';
+                var raw_data = data['data'];
 
-            for(key in raw_data)
-            {
-                html += '<tr>';
-                html += '<td>'+raw_data[key].point_id+'</td>';
-                html += '<td>'+raw_data[key].value+'</td>';
-                html += '</tr>';
+                for(key in raw_data)
+                {
+                    html += '<tr>';
+                    html += '<td>'+raw_data[key].point_id+'</td>';
+                    html += '<td>'+raw_data[key].value+'</td>';
+                    html += '</tr>';
+                }
+                $("#dynamicTbody").empty();
+                $("#dynamicTbody").append(html);
             }
-            $("#dynamicTbody").empty();
-            $("#dynamicTbody").append(html);
-        }
-    });
+        })
+    }, 10000);
 
     
 </script>
