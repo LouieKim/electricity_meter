@@ -55,15 +55,15 @@
                             <tbody>
                                 <tr>
                                     <td>APP</td>
-                                    <td>O</td>
+                                    <td id="app_process"></td>
                                 </tr>
                                 <tr>
                                     <td>WebServer</td>
-                                    <td>O</td>
+                                    <td id="web_process"></td>
                                 </tr>
                                 <tr>
                                     <td>Manager</td>
-                                    <td>O</td>
+                                    <td id="manager_process"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -74,21 +74,21 @@
                             <thead>
                                 <tr>
                                     <th>리소스</th>
-                                    <th>사용률</th>
+                                    <th>사용율(%)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>CPU</td>
-                                    <td>100%</td>
+                                    <td id="cpu_usage"></td>
                                 </tr>
                                 <tr>
                                     <td>메모리</td>
-                                    <td>30%</td>
+                                    <td id="mem_usage"></td>
                                 </tr>
                                 <tr>
                                     <td>디스크</td>
-                                    <td>40%</td>
+                                    <td id="hdd_usage"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -121,8 +121,58 @@
                     
         $("#dynamicTbody").empty();
         $("#dynamicTbody").append(html);
-                    
+
     });
+
+    $.ajax({
+        url: 'http://192.168.100.2:5000/process',
+        type: 'GET',
+        contentType:'javascript/json; charset=utf-8',
+        data: {},
+        dataType: 'json',
+        success: function(data){
+            document.querySelector('#app_process').innerHTML = data['ninewatt_app'];
+            document.querySelector('#manager_process').innerHTML = data['ninewatt_manager'];
+            document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
+        }
+    });
+
+    $.ajax({
+        url: 'http://192.168.100.2:5000/resource',
+        type: 'GET',
+        contentType:'javascript/json; charset=utf-8',
+        data: {},
+        dataType: 'json',
+        success: function(data){
+            document.querySelector('#cpu_usage').innerHTML = data['cpu'];
+            document.querySelector('#mem_usage').innerHTML = data['cpu'];
+            document.querySelector('#hdd_usage').innerHTML = data['hdd'];
+        }
+    });
+
+    $.ajax({
+        url: 'http://192.168.100.2:5000/realtime',
+        type: 'GET',
+        contentType:'javascript/json; charset=utf-8',
+        data: {},
+        dataType: 'json',
+        success: function(data){
+            var html = '';
+            var raw_data = data['data'];
+
+            for(key in raw_data)
+            {
+                html += '<tr>';
+                html += '<td>'+raw_data[key].point_id+'</td>';
+                html += '<td>'+raw_data[key].value+'</td>';
+                html += '</tr>';
+            }
+            $("#dynamicTbody").empty();
+            $("#dynamicTbody").append(html);
+        }
+    });
+
+    
 </script>
 
 </html>

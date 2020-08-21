@@ -24,12 +24,16 @@ import psutil
 
 import platform
 import setproctitle
+from flask_cors import CORS,cross_origin
 
 # configuration
 DATABASE = 'ninewatt_bems.db'
 DATE_TIME = "00:00:00"
 
 app = Flask(__name__)
+CORS(app, support_credentials=True)
+
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + DATABASE
 db = SQLAlchemy(app)
 
@@ -128,6 +132,7 @@ def model_modbus_info():
     return point_list
 
 @app.route('/realtime')
+@cross_origin(supports_credentials=True)
 def get_real_time_data():
     #raw_real_time = History.query(History.point_id, func.max(History.date)).group_by(History.point_id).scalar()
     raw_real_time = History.query.with_entities(History.point_id, func.max(History.date), History.value).group_by(History.point_id).all()
@@ -136,10 +141,10 @@ def get_real_time_data():
     #raw_real_time = History.query.all()
     #raw_real_time = db.session.query(History.point_id, func.max(History.date), History.value).group_by(History.point_id).all()
 
-    result_dict = dict()
     result_list = list()
     
     for row in raw_real_time:
+        result_dict = dict()
         result_dict['point_id'] = row.point_id
         result_dict['value'] = row.value
         result_list.append(result_dict)
@@ -155,7 +160,7 @@ def get_resource():
     mem_percent = psutil.virtual_memory()[2]  # physical memory usage
     hdd_percent = psutil.disk_usage('/')[3]
 
-    resource_dict = {'cpu': cpu_percent, 'mem': mem_percent, 'hdd_percent': hdd_percent}
+    resource_dict = {'cpu': cpu_percent, 'mem': mem_percent, 'hdd': hdd_percent}
     resource_json = json.dumps(resource_dict)
 
     return resource_json
@@ -171,7 +176,7 @@ def get_process():
 
     result_status["ninewatt_app"] = app_status
     result_status["ninewatt_manager"] = manager_status
-    result_status["ninewatt_web"] = web_status
+    result_status["ninewatt_web"] = web_status 
 
     dict_rows_json = json.dumps(result_status)
     
