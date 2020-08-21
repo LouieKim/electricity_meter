@@ -101,31 +101,31 @@
 </body>
 <script>
     
-    $(function tableCreate(){
+    // $(function tableCreate(){
 
-        var tc = new Array();
-        var html = '';
+    //     var tc = new Array();
+    //     var html = '';
                 
-        tc.push({name : '남궁민수', job : '기관사'}); 
-        tc.push({name : '유재석', job : 'MC'}); 
-        tc.push({name : '박명수', job : '개그맨'}); 
-        tc.push({name : '정준하', job : '엔터테이너'}); 
-        tc.push({name : '정형돈', job : '개그맨'});
+    //     tc.push({name : '남궁민수', job : '기관사'}); 
+    //     tc.push({name : '유재석', job : 'MC'}); 
+    //     tc.push({name : '박명수', job : '개그맨'}); 
+    //     tc.push({name : '정준하', job : '엔터테이너'}); 
+    //     tc.push({name : '정형돈', job : '개그맨'});
 
-        for(key in tc){
-        html += '<tr>';
-        html += '<td>'+tc[key].name+'</td>';
-        html += '<td>'+tc[key].job+'</td>';
-        html += '</tr>';
-        }
+    //     for(key in tc){
+    //     html += '<tr>';
+    //     html += '<td>'+tc[key].name+'</td>';
+    //     html += '<td>'+tc[key].job+'</td>';
+    //     html += '</tr>';
+    //     }
                     
-        $("#dynamicTbody").empty();
-        $("#dynamicTbody").append(html);
+    //     $("#dynamicTbody").empty();
+    //     $("#dynamicTbody").append(html);
 
-    });
+    // });
 
     $.ajax({
-        url: 'http://192.168.100.2:5000/process',
+        url: 'http://localhost:5000/process',
         type: 'GET',
         contentType:'javascript/json; charset=utf-8',
         data: {},
@@ -138,7 +138,7 @@
     });
 
     $.ajax({
-        url: 'http://192.168.100.2:5000/resource',
+        url: 'http://localhost:5000/resource',
         type: 'GET',
         contentType:'javascript/json; charset=utf-8',
         data: {},
@@ -151,7 +151,7 @@
     });
 
     $.ajax({
-        url: 'http://192.168.100.2:5000/realtime',
+        url: 'http://localhost:5000/realtime',
         type: 'GET',
         contentType:'javascript/json; charset=utf-8',
         data: {},
