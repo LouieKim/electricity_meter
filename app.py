@@ -16,9 +16,14 @@ from contextlib import closing
 
 from gems_modbus import GemsModbus
 
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 from meter_calc import MeterCalc
 from model import ModbusPointInfo
+
+import psutil
+
+import platform
+import setproctitle
 
 # configuration
 DATABASE = 'ninewatt_bems.db'
@@ -122,6 +127,51 @@ def model_modbus_info():
     
     return point_list
 
+@app.route('/realtime')
+def get_real_time_data():
+    #raw_real_time = History.query(History.point_id, func.max(History.date)).group_by(History.point_id).scalar()
+    raw_real_time = History.query.with_entities(History.point_id, func.max(History.date), History.value).group_by(History.point_id).all()
+    #Reference: https://leilayanhui.gitbooks.io/teachmyselfpython/content/Chap5/note/ch5_7_insert_select.html
+    #raw_real_time = History.query.group_by(History.point_id).all()
+    #raw_real_time = History.query.all()
+    #raw_real_time = db.session.query(History.point_id, func.max(History.date), History.value).group_by(History.point_id).all()
+
+    result_dict = dict()
+    result_list = list()
+    
+    for row in raw_real_time:
+        result_dict['point_id'] = row.point_id
+        result_dict['value'] = row.value
+        result_list.append(result_dict)
+    
+    dict_rows = {"data" : result_list}
+    dict_rows_json = json.dumps(dict_rows)
+
+    return dict_rows_json
+
+@app.route('/resource')
+def get_resource():
+    cpu_percent = psutil.cpu_percent()
+    mem_percent = psutil.virtual_memory()[2]  # physical memory usage
+    hdd_percent = psutil.disk_usage('/')[3]
+
+    resource_dict = {'cpu': cpu_percent, 'mem': mem_percent, 'hdd_percent': hdd_percent}
+    resource_json = json.dumps(resource_dict)
+
+    return resource_json
+
+@app.route('/process')
+def get_process():
+    pid_check  = "ninewatt_app" in (p.name() for p in psutil.process_iter())
+    pid_check  = "ninewatt_manager" in (p.name() for p in psutil.process_iter())
+    pid_check  = "ninewatt_web" in (p.name() for p in psutil.process_iter())
+
+    if pid_check = True:
+        print("ninewatt_app runnung")
+    
+    else:
+        print("Not Run ninewatt_app")
+
 @app.route('/historydata/<get_date>')
 def get_history(get_date):
     #raw_history_data = History.query.filter_by(date=get_date).all()
@@ -211,6 +261,12 @@ def main():
 
 if __name__ == "__main__":
     init_db()
+
+    if platform.system() == "Linux":
+        setproctitle.setproctitle('ninewatt_app')
+    
     main()
+
+    
     #aa = model_modbus_info()
     #print(aa[0].get_description())

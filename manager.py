@@ -28,6 +28,9 @@ def calc_req():
 
 if __name__ == "__main__":
 
+    if platform.system() == "Linux":
+        setproctitle.setproctitle('ninewatt_manager')
+
     sched = BackgroundScheduler()
 
     sched.add_job(calc_req, 'cron', minute='0, 15, 30, 45', id="test_10")
