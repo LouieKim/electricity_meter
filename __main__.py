@@ -4,6 +4,7 @@ import subprocess
 import time
 import psutil
 import platform
+import setproctitle
 
 def main():
     while True:
