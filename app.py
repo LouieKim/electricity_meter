@@ -132,7 +132,6 @@ def model_modbus_info():
     return point_list
 
 @app.route('/realtime')
-@cross_origin(supports_credentials=True)
 def get_real_time_data():
     #raw_real_time = History.query(History.point_id, func.max(History.date)).group_by(History.point_id).scalar()
     raw_real_time = History.query.with_entities(History.point_id, func.max(History.date), History.value).group_by(History.point_id).all()
@@ -180,6 +179,21 @@ def get_process():
 
     dict_rows_json = json.dumps(result_status)
     
+    return dict_rows_json
+
+@app.route('/timenow')
+def get_timenow():
+    
+    time_dict = dict()
+
+    now = datetime.now()
+
+    nowDatetime = now.strftime('%Y-%m-%d %H:%M')
+    #print(type(nowDatetime))
+    time_dict["time"] = nowDatetime[2:]
+
+    dict_rows_json = json.dumps(time_dict)
+
     return dict_rows_json
 
 @app.route('/historydata/<get_date>')

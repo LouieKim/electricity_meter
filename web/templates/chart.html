@@ -39,7 +39,7 @@
                     <div class="title_box">
                         <span class="icon"><i class="fas fa-bolt fa-lg"></i></span>
                         <span class="txt">Time</span>
-                        <span class="txt">20.08.20 13:30</span>
+                        <span class="txt" id="timenow"></span>
                     </div>
                 </div>
                 
@@ -65,12 +65,12 @@
                                     <td>Manager</td>
                                     <td id="manager_process"></td>
                                 </tr>
+                                <tr>
+                                    <td>&nbsp</td>
+                                    <td>&nbsp</td>
+                                </tr>
                             </tbody>
-                        </table>
-                    </div>
-
-                    <div class="table_box">
-                        <table>
+                            
                             <thead>
                                 <tr>
                                     <th>리소스</th>
@@ -98,7 +98,7 @@
 
         </div>
     </div>
-</body>
+
 <script>
     
     // $(function tableCreate(){
@@ -178,7 +178,19 @@
         })
     }, 10000);
 
+    setInterval(function(){
+        $.ajax({
+            url: 'http://localhost:5000/timenow',
+            type: 'GET',
+            contentType:'javascript/json; charset=utf-8',
+            data: {},
+            dataType: 'json',
+            success: function(data){
+                document.querySelector('#timenow').innerHTML = data['time'];
+            }
+        })
+    }, 10000);
     
 </script>
-
+</body>
 </html>
