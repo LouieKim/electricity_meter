@@ -12,7 +12,11 @@ def chart():
 
 @app.route('/test')
 def test_chart():
-    return render_template('test03.html')    
+    return render_template('test03.html')
+
+@app.route('/setting')
+def setting_modbus_info():
+    return render_template('setting.html')
 
 if __name__ == '__main__':
     if platform.system() == "Linux":

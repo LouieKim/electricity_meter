@@ -197,6 +197,53 @@ def get_timenow():
 
     return dict_rows_json
 
+@app.route('/modbusinfo')
+def get_modbus_info():
+    
+    result_list = list()
+    
+    modbus_info_dates = ModbusInfo.query.all()
+
+    for info_date in modbus_info_dates:
+        result_status = dict()
+        result_status["point_id"] = info_date.point_id
+        result_status["slave"] = info_date.slave
+        result_status["function_code"] = info_date.function_code
+        result_status["map_address"] = info_date.map_address
+        result_status["unit"] = info_date.unit
+        result_list.append(result_status)
+    
+    dict_rows = {"modbus_info" : result_list}  
+    dict_rows_json = json.dumps(dict_rows)
+
+    return dict_rows_json
+
+@app.route('/modbus/delete/<int:point_id>')
+def del_modbus_info(point_id):
+    post = ModbusInfo.query.get_or_404(point_id)
+    db.session.delete(post)
+    db.session.commit()
+
+    return "success"
+
+@app.route('/modbus/new', methods = ['GET', 'POST'])
+def new_modbus_info():
+    if request.method == 'POST':
+        req_slave = request.form['slave']
+        req_code = request.form['function_code']
+        req_address = request.form['map_address']
+        req_unit = request.form['unit']
+
+        job_query = ModbusInfo(slave = req_slave, function_code = req_code, map_address = req_address, unit = req_unit)
+
+        db.session.add(job_query)
+        db.session.commit()
+
+        return "success"
+    else:
+        return "aa"
+
+"""
 DATE_TIME = "00:00:00"
 
 @app.route('/historydata/<get_date>')
@@ -282,6 +329,7 @@ def get_graph_history(send_date):
     dict_rows_json = json.dumps(dict_rows)
     
     return dict_rows_json
+"""
 
 def main():
     app.run(host="0.0.0.0", port="5000", debug=True)

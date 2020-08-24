@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <!-- Referece: https://qkrrudtjr954.github.io/jquery/2018/01/29/jquery-dynamic-table.html -->
+</head>
+
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <!-- 동적 테이블 -->
+    <table id="list_table" class="table">
+        <colgroup>
+            <!-- column 의 설정을 할수 있다. -->
+            <col style="width:70px;">
+            <col style="width:200px;">
+            <col style="width:300px;">
+            <col style="width:200px;">
+        </colgroup>
+
+        <thead class="thead-dark">
+            <tr>
+                <th>point_id</th>
+                <th>slave</th>
+                <th>funtion_code</th>
+                <th>map_address</th>
+                <th>unit</th>
+                <th>del</th>
+            </tr>
+        </thead>
+        <tbody id=dynamicTbody>
+        </tbody>
+    </table>
+    <script>
+        $.ajax({
+        url: 'http://localhost:5000/modbusinfo',
+        type: 'GET',
+        contentType:'javascript/json; charset=utf-8',
+        dataType: 'json',
+        success: function(data){
+            var html = '';
+            var raw_data = data['modbus_info'];
+
+            for(key in raw_data)
+            {
+                html += '<tr>';
+                html += '<td>'+raw_data[key].point_id+'</td>';
+                html += '<td>'+raw_data[key].slave+'</td>';
+                html += '<td>'+raw_data[key].function_code+'</td>';
+                html += '<td>'+raw_data[key].map_address+'</td>';
+                html += '<td>'+raw_data[key].unit+'</td>';
+                html += '<td><a href="http://localhost:5000/modbus/delete/' + raw_data[key].point_id + '" class="delete-link">Delete</a></td>';
+                html += '</tr>';
+            }
+            $("#dynamicTbody").empty();
+            $("#dynamicTbody").append(html);
+            }
+         });
+
+
+    </script>
+
+    <h3>추가 입력 테이블</h3>
+
+    <table id="append_table" class="table">
+        <colgroup>
+            <col style="width:15%">
+            <col style="width:30%">
+            <col style="width:30%">
+            <col style="width:15%">
+            <col style="width:10%">
+        </colgroup>
+
+        <thead class="thead-light">
+            <tr>
+                <th>Slave</th>
+                <th>Function_code</th>
+                <th>Map_address</th>
+                <th>Unit</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td><input type="text" id="slave"></td>
+                <td><input type="text" id="function_code"></td>
+                <td><input type="text" id="map_address"></td>
+                <td><input type="text" id="unit"></td>
+                <td><button type="button" id="append_row">데이터 추가</button></td>
+            </tr>
+        </tbody>
+
+    </table>
+
+    <script type="text/javascript">
+
+        $('#append_row').on("click", function (){
+			$.ajax({
+			url: 'http://192.168.100.2:5000/modbus/new',
+			dataType: 'json',
+			type: 'POST',
+			data: {slave: $('#slave').val(), function_code: $('#function_code').val(), map_address: $('#map_address').val(), unit: $('#unit').val()},
+            
+			success: function(result){
+                console.log(result);
+            }
+			})
+            console.log($('#slave').val());
+            console.log($('#map_address').val());
+            console.log($('#unit').val());
+		});
+
+    </script>
+
+</body>
+
+</html>
