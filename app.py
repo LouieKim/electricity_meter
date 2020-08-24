@@ -8,13 +8,15 @@ FORMAT = ('%(asctime)-15s %(threadName)-15s '
 #log.setLevel(logging.DEBUG)
 
 from flask import Flask, jsonify, redirect, url_for, request
+from flask_cors import CORS,cross_origin
+
+from contextlib import closing
 import sqlite3
 import json
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
-from contextlib import closing
 
-from gems_modbus import GemsModbus
+from datetime import datetime
+
+from flask_sqlalchemy import SQLAlchemy
 
 from sqlalchemy import and_, func
 from meter_calc import MeterCalc
@@ -24,11 +26,11 @@ import psutil
 
 import platform
 import setproctitle
-from flask_cors import CORS,cross_origin
+
+from gems_modbus import GemsModbus
 
 # configuration
 DATABASE = 'ninewatt_bems.db'
-DATE_TIME = "00:00:00"
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
@@ -41,7 +43,8 @@ def connect_db():
     return sqlite3.connect(DATABASE)
 
 def init_db():
-    with closing(connect_db()) as db:
+    #Rerefence: https://flask-ptbr.readthedocs.io/en/latest/tutorial/dbinit.html
+    with closing(connect_db()) as db:    
         with app.open_resource('schema.sql') as f:
             db.cursor().executescript(f.read().decode('utf-8'))
         db.commit()
@@ -51,17 +54,15 @@ class ModbusInfo(db.Model):
     slave = db.Column(db.Integer, nullable=False)
     function_code = db.Column(db.Integer, nullable=False)
     map_address = db.Column(db.Integer, nullable=False)
-    description = db.Column(db.String(50), nullable=False)
+    unit = db.Column(db.String(50), nullable=False)
 
 class History(db.Model):
-    #device_id = db.Column(db.Integer, db.ForeignKey('modbusinfo.device_id', ondelete='CASCADE'))
-    #Todo Change Foreign key
-    point_id = db.Column(db.Integer, primary_key=True)
+    point_id = db.Column(db.Integer, db.ForeignKey('modbus_info.point_id', ondelete='CASCADE'))
     date = db.Column(db.DateTime, default=datetime.now, primary_key=True)
     value = db.Column(db.Integer, nullable=False)
 
-class GraphHistory(db.Model):
-    point_id = db.Column(db.Integer, primary_key=True)
+class CalcHistory(db.Model):
+    point_id = db.Column(db.Integer, db.ForeignKey('modbus_info.point_id', ondelete='CASCADE'))
     date = db.Column(db.DateTime, primary_key=True)
     value = db.Column(db.Integer, nullable=False)
 
@@ -72,7 +73,7 @@ def get_modbus_value():
 
     for row in rows:
         raw_modbus_value = GemsModbus.read_device_map(row.slave, row.map_address)
-
+        
         job_query = History(point_id = row.point_id, value = raw_modbus_value)
 
         db.session.add(job_query)
@@ -112,7 +113,7 @@ def calc_data_graph(start_date, end_date):
 
         date_time_obj = datetime.strptime(end_dt_txt, "%Y-%m-%d %H:%M:%S")
 
-        job_query = GraphHistory(point_id = info_date.point_id, date = date_time_obj, value = watt_avg_int)
+        job_query = CalcHistory(point_id = info_date.point_id, date = date_time_obj, value = watt_avg_int)
         db.session.add(job_query)
         db.session.commit()
 
@@ -195,6 +196,8 @@ def get_timenow():
     dict_rows_json = json.dumps(time_dict)
 
     return dict_rows_json
+
+DATE_TIME = "00:00:00"
 
 @app.route('/historydata/<get_date>')
 def get_history(get_date):

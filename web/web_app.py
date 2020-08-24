@@ -12,7 +12,7 @@ def chart():
 
 @app.route('/test')
 def test_chart():
-    return render_template('chart_test01.html')    
+    return render_template('test03.html')    
 
 if __name__ == '__main__':
     if platform.system() == "Linux":

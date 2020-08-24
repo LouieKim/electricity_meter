@@ -6,11 +6,17 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <title>키패드</title>
 </head>
 <body>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
     <div class="chart_app">
         <div class="box">
             <div class="left">
@@ -101,6 +107,7 @@
 
 <script>
     
+    
     // $(function tableCreate(){
 
     //     var tc = new Array();
@@ -123,6 +130,69 @@
     //     $("#dynamicTbody").append(html);
 
     // });
+    
+    $.ajax({
+        url: 'http://localhost:5000/process',
+        type: 'GET',
+        contentType:'javascript/json; charset=utf-8',
+        data: {},
+        dataType: 'json',
+        success: function(data){
+            document.querySelector('#app_process').innerHTML = data['ninewatt_app'];
+            document.querySelector('#manager_process').innerHTML = data['ninewatt_manager'];
+            document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
+        }
+    });
+
+    $.ajax({
+        url: 'http://localhost:5000/resource',
+        type: 'GET',
+        contentType:'javascript/json; charset=utf-8',
+        data: {},
+        dataType: 'json',
+        success: function(data){
+            document.querySelector('#cpu_usage').innerHTML = data['cpu'];
+            document.querySelector('#mem_usage').innerHTML = data['mem'];
+            document.querySelector('#hdd_usage').innerHTML = data['hdd'];
+        }
+    });
+
+    
+    $.ajax({
+        url: 'http://localhost:5000/realtime',
+        type: 'GET',
+        contentType:'javascript/json; charset=utf-8',
+        data: {},
+        dataType: 'json',
+        success: function(data){
+            var html = '';
+            var raw_data = data['data'];
+
+            for(key in raw_data)
+            {
+                html += '<tr>';
+                html += '<td>'+raw_data[key].point_id+'</td>';
+                html += '<td>'+raw_data[key].value+'</td>';
+                html += '</tr>';
+            }
+            $("#dynamicTbody").empty();
+            $("#dynamicTbody").append(html);
+        }
+    });
+
+    
+    $.ajax({
+        url: 'http://localhost:5000/timenow',
+        type: 'GET',
+        contentType:'javascript/json; charset=utf-8',
+        data: {},
+        dataType: 'json',
+        success: function(data){
+            document.querySelector('#timenow').innerHTML = data['time'];
+        }
+    });
+
+    //=================================================================
 
     setInterval(function(){
         $.ajax({
