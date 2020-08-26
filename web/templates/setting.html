@@ -49,12 +49,14 @@
             for(key in raw_data)
             {
                 html += '<tr>';
-                html += '<td>'+raw_data[key].point_id+'</td>';
+                html += '<td id="req_point_id">'+raw_data[key].point_id+'</td>';
                 html += '<td>'+raw_data[key].slave+'</td>';
                 html += '<td>'+raw_data[key].function_code+'</td>';
                 html += '<td>'+raw_data[key].map_address+'</td>';
                 html += '<td>'+raw_data[key].unit+'</td>';
-                html += '<td><a href="http://localhost:5000/modbus/delete/' + raw_data[key].point_id + '" class="delete-link">Delete</a></td>';
+                //html += '<td><a href="http://localhost:5000/modbus/delete/' + raw_data[key].point_id + '" class="delete-link">Delete</a></td>';
+                html += '<td><a href="#" onclick="modbusdel(' + raw_data[key].point_id + ')" class="delete-link">Delete</a></td>';
+
                 html += '</tr>';
             }
             $("#dynamicTbody").empty();
@@ -98,21 +100,34 @@
     </table>
 
     <script type="text/javascript">
+    
+        function refreshMemList(){
+            location.reload();
+        }
+
+        function modbusdel(point_id){
+            $.ajax({
+			url: 'http://localhost:5000/modbus/delete',
+			dataType: 'json',
+			type: 'POST',
+			data: {point_id: point_id},
+			success: function(result){
+                refreshMemList();
+            }
+			})
+        }
 
         $('#append_row').on("click", function (){
 			$.ajax({
-			url: 'http://192.168.100.2:5000/modbus/new',
+			url: 'http://localhost:5000/modbus/new',
 			dataType: 'json',
 			type: 'POST',
 			data: {slave: $('#slave').val(), function_code: $('#function_code').val(), map_address: $('#map_address').val(), unit: $('#unit').val()},
             
 			success: function(result){
-                console.log(result);
+                refreshMemList();
             }
 			})
-            console.log($('#slave').val());
-            console.log($('#map_address').val());
-            console.log($('#unit').val());
 		});
 
     </script>

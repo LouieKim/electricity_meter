@@ -27,6 +27,8 @@ import psutil
 import platform
 import setproctitle
 
+import subprocess
+
 from gems_modbus import GemsModbus
 
 # configuration
@@ -106,7 +108,7 @@ def calc_data_graph(start_date, end_date):
         for history_data in history_datas:
             power_list.append(history_data.value)
 
-        print(power_list)
+        #print(power_list)
         
         watt_avg = MeterCalc.electricity_calc(power_list)
         watt_avg_int = round(watt_avg)
@@ -218,13 +220,27 @@ def get_modbus_info():
 
     return dict_rows_json
 
-@app.route('/modbus/delete/<int:point_id>')
-def del_modbus_info(point_id):
-    post = ModbusInfo.query.get_or_404(point_id)
-    db.session.delete(post)
-    db.session.commit()
+# @app.route('/modbus/delete/<int:point_id>')
+# def del_modbus_info(point_id):
 
-    return "success"
+#     post = ModbusInfo.query.get_or_404(point_id)
+#     db.session.delete(post)
+#     db.session.commit()
+
+#     return "success"
+
+@app.route('/modbus/delete', methods = ['GET', 'POST'])
+def abab():
+
+    if request.method == 'POST':
+        req_point_id = request.form['point_id']
+
+        post = ModbusInfo.query.get_or_404(req_point_id)
+        db.session.delete(post)
+        db.session.commit()
+
+        resp = jsonify(success=True)
+        return resp
 
 @app.route('/modbus/new', methods = ['GET', 'POST'])
 def new_modbus_info():
@@ -239,9 +255,21 @@ def new_modbus_info():
         db.session.add(job_query)
         db.session.commit()
 
-        return "success"
+        resp = jsonify(success=True)
+        return resp
+
     else:
-        return "aa"
+        return "success"
+
+@app.route('/process/stop')
+def process_stop():
+    subprocess.call("supervisorctl stop ninewatt_manager")
+    return "success"
+
+@app.route('/process/start')
+def process_stop():
+    subprocess.call("supervisorctl start ninewatt_manager")
+    return "success"
 
 """
 DATE_TIME = "00:00:00"
@@ -332,7 +360,7 @@ def get_graph_history(send_date):
 """
 
 def main():
-    app.run(host="0.0.0.0", port="5000", debug=True)
+    app.run(host="localhost", port="5000", debug=True)
 
 if __name__ == "__main__":
     init_db()
