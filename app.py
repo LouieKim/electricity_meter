@@ -267,7 +267,7 @@ def process_stop():
     return "success"
 
 @app.route('/process/start')
-def process_stop():
+def process_start():
     subprocess.call("supervisorctl start ninewatt_manager")
     return "success"
 
