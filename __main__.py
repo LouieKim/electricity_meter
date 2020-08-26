@@ -15,7 +15,7 @@ def main():
             print("eccServer running")
         else:
             print("eccServer not")
-            subprocess.call("supervisord -c /home/pi/elect_meter/electricity_meter/supervisord.conf", shell=True)
+            subprocess.call("supervisord -c /home/pi/electricity_meter/supervisord.conf", shell=True)
             #proc = subprocess.Popen("supervisord -c /etc/supervisord.conf")
             #print(proc.pid)
         time.sleep(10)
