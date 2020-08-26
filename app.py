@@ -184,8 +184,9 @@ def get_real_time_data():
         
         dict_rows = {"data" : result_list}
         dict_rows_json = json.dumps(dict_rows)
+        return dict_rows_json
         
-        return jsonify(dict_rows_json), 200
+        #return jsonify(dict_rows_json), 200
             
     except Exception as e:
         return jsonify({'error': 'Admin access is required'}), 401
