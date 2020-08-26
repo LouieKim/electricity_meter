@@ -1,11 +1,7 @@
 from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 
 import logging
-FORMAT = ('%(asctime)-15s %(threadName)-15s '
-          '%(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
-#logging.basicConfig(format=FORMAT)
-#log = logging.getLogger()
-#log.setLevel(logging.DEBUG)
+from logging import handlers
 
 from flask import Flask, jsonify, redirect, url_for, request
 from flask_cors import CORS,cross_origin
@@ -41,6 +37,28 @@ CORS(app, support_credentials=True)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + DATABASE
 db = SQLAlchemy(app)
 
+#============================================
+LOG_FILENAME = "ninewatt_app.log"
+
+fmt = "%(asctime)s %(levelname)s (%(threadName)s) [%(name)s] %(message)s"
+datefmt = "%Y-%m-%d %H:%M:%S"
+logFormatter = logging.Formatter(fmt)
+
+fileLogHandler = logging.handlers.TimedRotatingFileHandler(LOG_FILENAME, when='midnight', interval=1, backupCount=0, encoding='utf-8', delay=False, utc=False, atTime=None)
+fileLogHandler.setFormatter(logFormatter)
+fileLogHandler.setLevel(logging.DEBUG)
+fileLogHandler.suffix = "%Y%m%d_%H%M%S"
+
+#stmLogHandler = logging.StreamHandler()
+#stmLogHandler.setLevel(logging.DEBUG)
+#stmLogHandler.setFormatter(logFormatter)
+
+_LOGGER = logging.getLogger(__name__)
+_LOGGER.setLevel(logging.DEBUG)
+_LOGGER.addHandler(fileLogHandler)
+#_LOGGER.addHandler(stmLogHandler)
+#============================================
+
 def connect_db():
     return sqlite3.connect(DATABASE)
 
@@ -71,22 +89,33 @@ class CalcHistory(db.Model):
 @app.route('/polling')
 def get_modbus_value():
 
-    rows = ModbusInfo.query.all()
+    try:
+        rows = ModbusInfo.query.all()
 
-    for row in rows:
-        raw_modbus_value = GemsModbus.read_device_map(row.slave, row.map_address)
-        
-        job_query = History(point_id = row.point_id, value = raw_modbus_value)
+        for row in rows:
+            raw_modbus_value = GemsModbus.read_device_map(row.slave, row.map_address)
+            
+            job_query = History(point_id = row.point_id, value = raw_modbus_value)
 
-        db.session.add(job_query)
-        db.session.commit()
+            db.session.add(job_query)
+            db.session.commit()
 
-    return "success"
+            #resp = jsonify(success=True)
+            #return resp
+            #You can (optionally) set the response code explicitly:
+            #resp.status_code = 200
+
+        return jsonify(success=True)
+            
+    except Exception as e:
+        _LOGGER.error(e)
+        return jsonify({'error': 'Admin access is required'}), 401
 
 #Average per 5 Minutes
 #Param: start_date -> 2008041315
 #Param: end_date -> 2008041330
 
+#####******* 평균값 정리해서 virtual Point 만들어야함 
 @app.route('/calc/<start_date>/<end_date>')
 def calc_data_graph(start_date, end_date):
 
@@ -136,89 +165,109 @@ def model_modbus_info():
 
 @app.route('/realtime')
 def get_real_time_data():
-    #raw_real_time = History.query(History.point_id, func.max(History.date)).group_by(History.point_id).scalar()
-    raw_real_time = History.query.with_entities(History.point_id, func.max(History.date), History.value).group_by(History.point_id).all()
-    #Reference: https://leilayanhui.gitbooks.io/teachmyselfpython/content/Chap5/note/ch5_7_insert_select.html
-    #raw_real_time = History.query.group_by(History.point_id).all()
-    #raw_real_time = History.query.all()
-    #raw_real_time = db.session.query(History.point_id, func.max(History.date), History.value).group_by(History.point_id).all()
 
-    result_list = list()
-    
-    for row in raw_real_time:
-        result_dict = dict()
-        result_dict['point_id'] = row.point_id
-        result_dict['value'] = row.value
-        result_list.append(result_dict)
-    
-    dict_rows = {"data" : result_list}
-    dict_rows_json = json.dumps(dict_rows)
+    try:
+        #raw_real_time = History.query(History.point_id, func.max(History.date)).group_by(History.point_id).scalar()
+        raw_real_time = History.query.with_entities(History.point_id, func.max(History.date), History.value).group_by(History.point_id).all()
+        #Reference: https://leilayanhui.gitbooks.io/teachmyselfpython/content/Chap5/note/ch5_7_insert_select.html
+        #raw_real_time = History.query.group_by(History.point_id).all()
+        #raw_real_time = History.query.all()
+        #raw_real_time = db.session.query(History.point_id, func.max(History.date), History.value).group_by(History.point_id).all()
 
-    return dict_rows_json
+        result_list = list()
+        
+        for row in raw_real_time:
+            result_dict = dict()
+            result_dict['point_id'] = row.point_id
+            result_dict['value'] = row.value
+            result_list.append(result_dict)
+        
+        dict_rows = {"data" : result_list}
+        dict_rows_json = json.dumps(dict_rows)
+        
+        return jsonify(dict_rows_json), 200
+            
+    except Exception as e:
+        return jsonify({'error': 'Admin access is required'}), 401
+
 
 @app.route('/resource')
 def get_resource():
-    cpu_percent = psutil.cpu_percent()
-    mem_percent = psutil.virtual_memory()[2]  # physical memory usage
-    hdd_percent = psutil.disk_usage('/')[3]
+    try:
+        cpu_percent = psutil.cpu_percent()
+        mem_percent = psutil.virtual_memory()[2]  # physical memory usage
+        hdd_percent = psutil.disk_usage('/')[3]
 
-    resource_dict = {'cpu': cpu_percent, 'mem': mem_percent, 'hdd': hdd_percent}
-    resource_json = json.dumps(resource_dict)
+        resource_dict = {'cpu': cpu_percent, 'mem': mem_percent, 'hdd': hdd_percent}
+        resource_json = json.dumps(resource_dict)
 
-    return resource_json
+        return jsonify(resource_json), 200
+
+    except Exception as e:
+        return jsonify({'error': 'Admin access is required'}), 401
 
 @app.route('/process')
 def get_process():
+    try:
+        result_status = dict()
 
-    result_status = dict()
+        app_status  = "ninewatt_app" in (p.name() for p in psutil.process_iter())
+        manager_status = "ninewatt_manager" in (p.name() for p in psutil.process_iter())
+        web_status  = "ninewatt_web" in (p.name() for p in psutil.process_iter())
 
-    app_status  = "ninewatt_app" in (p.name() for p in psutil.process_iter())
-    manager_status = "ninewatt_manager" in (p.name() for p in psutil.process_iter())
-    web_status  = "ninewatt_web" in (p.name() for p in psutil.process_iter())
+        result_status["ninewatt_app"] = app_status
+        result_status["ninewatt_manager"] = manager_status
+        result_status["ninewatt_web"] = web_status 
 
-    result_status["ninewatt_app"] = app_status
-    result_status["ninewatt_manager"] = manager_status
-    result_status["ninewatt_web"] = web_status 
+        dict_rows_json = json.dumps(result_status)
 
-    dict_rows_json = json.dumps(result_status)
+        return jsonify(dict_rows_json), 200
     
-    return dict_rows_json
+    except Exception as e:
+        return jsonify({'error': 'Admin access is required'}), 401
 
 @app.route('/timenow')
 def get_timenow():
+    try:
+        time_dict = dict()
+
+        now = datetime.now()
+
+        nowDatetime = now.strftime('%Y-%m-%d %H:%M')
+        #print(type(nowDatetime))
+        time_dict["time"] = nowDatetime[2:]
+
+        dict_rows_json = json.dumps(time_dict)
+
+        return jsonify(dict_rows_json), 200
     
-    time_dict = dict()
+    except Exception as e:
+        return jsonify({'error': 'Admin access is required'}), 401
 
-    now = datetime.now()
-
-    nowDatetime = now.strftime('%Y-%m-%d %H:%M')
-    #print(type(nowDatetime))
-    time_dict["time"] = nowDatetime[2:]
-
-    dict_rows_json = json.dumps(time_dict)
-
-    return dict_rows_json
 
 @app.route('/modbusinfo')
 def get_modbus_info():
-    
-    result_list = list()
-    
-    modbus_info_dates = ModbusInfo.query.all()
+    try:
+        result_list = list()
+        
+        modbus_info_dates = ModbusInfo.query.all()
 
-    for info_date in modbus_info_dates:
-        result_status = dict()
-        result_status["point_id"] = info_date.point_id
-        result_status["slave"] = info_date.slave
-        result_status["function_code"] = info_date.function_code
-        result_status["map_address"] = info_date.map_address
-        result_status["unit"] = info_date.unit
-        result_list.append(result_status)
-    
-    dict_rows = {"modbus_info" : result_list}  
-    dict_rows_json = json.dumps(dict_rows)
+        for info_date in modbus_info_dates:
+            result_status = dict()
+            result_status["point_id"] = info_date.point_id
+            result_status["slave"] = info_date.slave
+            result_status["function_code"] = info_date.function_code
+            result_status["map_address"] = info_date.map_address
+            result_status["unit"] = info_date.unit
+            result_list.append(result_status)
+        
+        dict_rows = {"modbus_info" : result_list}  
+        dict_rows_json = json.dumps(dict_rows)
 
-    return dict_rows_json
+        return jsonify(dict_rows_json), 200
+    
+    except Exception as e:
+        return jsonify({'error': 'Admin access is required'}), 401
 
 # @app.route('/modbus/delete/<int:point_id>')
 # def del_modbus_info(point_id):
@@ -232,44 +281,59 @@ def get_modbus_info():
 @app.route('/modbus/delete', methods = ['GET', 'POST'])
 def abab():
 
-    if request.method == 'POST':
-        req_point_id = request.form['point_id']
+    try:
 
-        post = ModbusInfo.query.get_or_404(req_point_id)
-        db.session.delete(post)
-        db.session.commit()
+        if request.method == 'POST':
+            req_point_id = request.form['point_id']
 
-        resp = jsonify(success=True)
-        return resp
+            post = ModbusInfo.query.get_or_404(req_point_id)
+            db.session.delete(post)
+            db.session.commit()
+
+            resp = jsonify(success=True)
+            return resp
+
+    except Exception as e:
+        return jsonify({'error': 'Admin access is required'}), 401
 
 @app.route('/modbus/new', methods = ['GET', 'POST'])
 def new_modbus_info():
-    if request.method == 'POST':
-        req_slave = request.form['slave']
-        req_code = request.form['function_code']
-        req_address = request.form['map_address']
-        req_unit = request.form['unit']
+    try:
+        if request.method == 'POST':
+            req_slave = request.form['slave']
+            req_code = request.form['function_code']
+            req_address = request.form['map_address']
+            req_unit = request.form['unit']
 
-        job_query = ModbusInfo(slave = req_slave, function_code = req_code, map_address = req_address, unit = req_unit)
+            job_query = ModbusInfo(slave = req_slave, function_code = req_code, map_address = req_address, unit = req_unit)
 
-        db.session.add(job_query)
-        db.session.commit()
+            db.session.add(job_query)
+            db.session.commit()
 
-        resp = jsonify(success=True)
-        return resp
+            return jsonify(success=True)
 
-    else:
-        return "success"
+    except Exception as e:
+        return jsonify({'error': 'Admin access is required'}), 401
 
 @app.route('/process/stop')
 def process_stop():
-    subprocess.call("supervisorctl stop ninewatt_manager")
-    return "success"
+    try:
+        subprocess.call("supervisorctl stop ninewatt_manager")
+        return jsonify(success=True)
+
+    except Exception as e:
+        return jsonify({'error': 'Admin access is required'}), 401
+
 
 @app.route('/process/start')
 def process_start():
-    subprocess.call("supervisorctl start ninewatt_manager")
-    return "success"
+    try:
+        subprocess.call("supervisorctl start ninewatt_manager")
+        return jsonify(success=True)
+
+    except Exception as e:
+        return jsonify({'error': 'Admin access is required'}), 401
+        
 
 """
 DATE_TIME = "00:00:00"
