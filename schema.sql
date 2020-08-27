@@ -21,7 +21,3 @@ CREATE TABLE IF NOT EXISTS calc_history (
   PRIMARY KEY(point_id, date),
   FOREIGN KEY(point_id) REFERENCES modbus_info(point_id) ON DELETE CASCADE
 );
-
-INSERT INTO modbus_info(slave, function_code, map_address, unit) VALUES(1, 4, 137, 'A');
-INSERT INTO modbus_info(slave, function_code, map_address, unit) VALUES(1, 4, 177, 'A');
-INSERT INTO modbus_info(slave, function_code, map_address, unit) VALUES(1, 4, 217, 'A');
