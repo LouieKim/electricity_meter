@@ -366,7 +366,7 @@ def new_modbus_info():
 @app.route('/process/stop')
 def process_stop():
     try:
-        subprocess.call("supervisorctl stop ninewatt_manager")
+        subprocess.call("supervisorctl stop ninewatt_manager", shell=True)
         return jsonify(success=True)
 
     except Exception as e:
@@ -377,7 +377,7 @@ def process_stop():
 @app.route('/process/start')
 def process_start():
     try:
-        subprocess.call("supervisorctl start ninewatt_manager")
+        subprocess.call("supervisorctl start ninewatt_manager", shell=True)
         return jsonify(success=True)
 
     except Exception as e:
