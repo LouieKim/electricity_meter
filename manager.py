@@ -35,11 +35,11 @@ if __name__ == "__main__":
 
     sched = BackgroundScheduler()
 
-    #sched.add_job(calc_req, 'cron', minute='0, 15, 30, 45', id="test_10")
-    #sched.add_job(polling_req, 'cron', minute='*/1', id="test_20")
-
-    sched.add_job(calc_req, 'cron', minute='*/2', id="calc_cron")
+    sched.add_job(calc_req, 'cron', minute='0, 15, 30, 45', id="calc_cron")
     sched.add_job(polling_req, 'cron', minute='*/1', id="polling_cron")
+
+    #sched.add_job(calc_req, 'cron', minute='*/2', id="calc_cron")
+    #sched.add_job(polling_req, 'cron', minute='*/1', id="polling_cron")
     
     sched.start()
 
