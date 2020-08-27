@@ -76,15 +76,27 @@ class ModbusInfo(db.Model):
     map_address = db.Column(db.Integer, nullable=False)
     unit = db.Column(db.String(50), nullable=False)
 
+    #CalcHistory = db.relationship("CalcHistory", backref='modbus_info', cascade="all, delete, delete-orphan")
+    #history = db.relationship("History", backref='modbus_info', cascade="all, delete, delete-orphan")
+    
+
 class History(db.Model):
-    point_id = db.Column(db.Integer, db.ForeignKey('modbus_info.point_id', ondelete='CASCADE'))
+    point_id = db.Column(db.Integer, db.ForeignKey('modbus_info.point_id', ondelete='cascade'))
     date = db.Column(db.DateTime, default=datetime.now, primary_key=True)
     value = db.Column(db.Integer, nullable=False)
 
+    #modbusinfo = relationship("ModbusInfo", cascade="all, delete", passive_deletes=True)
+
+    #modbusinfo = db.relationship("ModbusInfo", backref='history', cascade="all, delete")
+
 class CalcHistory(db.Model):
-    point_id = db.Column(db.Integer, db.ForeignKey('modbus_info.point_id', ondelete='CASCADE'))
-    date = db.Column(db.DateTime, primary_key=True)
+    point_id = db.Column(db.Integer, db.ForeignKey('modbus_info.point_id', ondelete='cascade'))
+    date = db.Column(db.DateTime, default=datetime.now, primary_key=True)
     value = db.Column(db.Integer, nullable=False)
+
+    #modbusinfo = db.relationship("ModbusInfo", cascade="all, delete", passive_deletes=True)
+
+    #modbusinfo = db.relationship("ModbusInfo", backref='CalcHistory', cascade="all, delete")
 
 @app.route('/polling')
 def get_modbus_value():
@@ -109,6 +121,7 @@ def get_modbus_value():
             
     except Exception as e:
         _LOGGER.error(e)
+        print(e)
         return jsonify({'error': 'Admin access is required'}), 401
 
 #Average per 5 Minutes
@@ -152,16 +165,24 @@ def calc_data_graph(start_date, end_date):
 
 
 def model_modbus_info():
-    rows = ModbusInfo.query.all()
 
-    tmp_list = list()
-    point_list = list()
+    try:
+        rows = ModbusInfo.query.all()
 
-    for row in rows:
-        tmp_list = [row.point_id, row.slave, row.function_code, row.map_address, row.description]
-        point_list.append(ModbusPointInfo(tmp_list))
-    
-    return point_list
+        tmp_list = list()
+        point_list = list()
+
+        for row in rows:
+            tmp_list = [row.point_id, row.slave, row.function_code, row.map_address, row.description]
+            point_list.append(ModbusPointInfo(tmp_list))
+        
+        return point_list
+
+    except Exception as e:
+        _LOGGER.error(e)
+        return jsonify({'error': 'Admin access is required'}), 401
+
+
 
 @app.route('/realtime')
 def get_real_time_data():
@@ -189,6 +210,7 @@ def get_real_time_data():
         #return jsonify(dict_rows_json), 200
             
     except Exception as e:
+        _LOGGER.error(e)
         return jsonify({'error': 'Admin access is required'}), 401
 
 
@@ -202,9 +224,12 @@ def get_resource():
         resource_dict = {'cpu': cpu_percent, 'mem': mem_percent, 'hdd': hdd_percent}
         resource_json = json.dumps(resource_dict)
 
-        return jsonify(resource_json), 200
+        return resource_json
+
+        #return jsonify(resource_json), 200
 
     except Exception as e:
+        _LOGGER.error(e)
         return jsonify({'error': 'Admin access is required'}), 401
 
 @app.route('/process')
@@ -222,9 +247,12 @@ def get_process():
 
         dict_rows_json = json.dumps(result_status)
 
-        return jsonify(dict_rows_json), 200
+        return dict_rows_json
+
+        #return jsonify(dict_rows_json), 200
     
     except Exception as e:
+        _LOGGER.error(e)
         return jsonify({'error': 'Admin access is required'}), 401
 
 @app.route('/timenow')
@@ -240,9 +268,12 @@ def get_timenow():
 
         dict_rows_json = json.dumps(time_dict)
 
-        return jsonify(dict_rows_json), 200
+        return dict_rows_json
+
+        #return jsonify(dict_rows_json), 200
     
     except Exception as e:
+        _LOGGER.error(e)
         return jsonify({'error': 'Admin access is required'}), 401
 
 
@@ -265,9 +296,12 @@ def get_modbus_info():
         dict_rows = {"modbus_info" : result_list}  
         dict_rows_json = json.dumps(dict_rows)
 
-        return jsonify(dict_rows_json), 200
+        return dict_rows_json
+
+        #return jsonify(dict_rows_json), 200
     
     except Exception as e:
+        _LOGGER.error(e)
         return jsonify({'error': 'Admin access is required'}), 401
 
 # @app.route('/modbus/delete/<int:point_id>')
@@ -278,6 +312,17 @@ def get_modbus_info():
 #     db.session.commit()
 
 #     return "success"
+
+from sqlalchemy import event
+from sqlalchemy.engine import Engine
+from sqlite3 import Connection as SQLite3Connection
+
+@event.listens_for(Engine, "connect")
+def _set_sqlite_pragma(dbapi_connection, connection_record):
+    if isinstance(dbapi_connection, SQLite3Connection):
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON;")
+        cursor.close()
 
 @app.route('/modbus/delete', methods = ['GET', 'POST'])
 def abab():
@@ -295,6 +340,7 @@ def abab():
             return resp
 
     except Exception as e:
+        _LOGGER.error(e)
         return jsonify({'error': 'Admin access is required'}), 401
 
 @app.route('/modbus/new', methods = ['GET', 'POST'])
@@ -314,6 +360,7 @@ def new_modbus_info():
             return jsonify(success=True)
 
     except Exception as e:
+        _LOGGER.error(e)
         return jsonify({'error': 'Admin access is required'}), 401
 
 @app.route('/process/stop')
@@ -323,6 +370,7 @@ def process_stop():
         return jsonify(success=True)
 
     except Exception as e:
+        _LOGGER.error(e)
         return jsonify({'error': 'Admin access is required'}), 401
 
 
@@ -333,6 +381,7 @@ def process_start():
         return jsonify(success=True)
 
     except Exception as e:
+        _LOGGER.error(e)
         return jsonify({'error': 'Admin access is required'}), 401
         
 

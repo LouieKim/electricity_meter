@@ -95,9 +95,29 @@
                 <td><input type="text" id="unit"></td>
                 <td><button type="button" id="append_row">데이터 추가</button></td>
             </tr>
-        </tbody>
 
+            <tr>
+                <td>APP</td>
+                <td id="app_process"></td>
+            </tr>
+            <tr>
+                <td>WebServer</td>
+                <td id="web_process"></td>
+            </tr>
+            <tr>
+                <td>Manager</td>
+                <td id="manager_process"></td>
+            </tr>
+
+        </tbody>
     </table>
+
+
+    <div>
+        <button type="button" id="manager_start">manager ON</button>
+        <button type="button" id="manager_stop">manager OFF</button>
+        <button type="button" id="manager_status">Status</button>
+    </div>
 
     <script type="text/javascript">
     
@@ -128,6 +148,21 @@
                 refreshMemList();
             }
 			})
+		});
+
+        $('#manager_status').on("click", function (){
+			$.ajax({
+            url: 'http://localhost:5000/process',
+            type: 'GET',
+            contentType:'javascript/json; charset=utf-8',
+            data: {},
+            dataType: 'json',
+            success: function(data){
+                document.querySelector('#app_process').innerHTML = data['ninewatt_app'];
+                document.querySelector('#manager_process').innerHTML = data['ninewatt_manager'];
+                document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
+            }
+            })
 		});
 
     </script>

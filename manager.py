@@ -8,7 +8,7 @@ import setproctitle
 
 def polling_req():
     res = requests.get('http://localhost:5000/polling', timeout=5)
-    #print(res.text)
+    print(res.text)
 
 def calc_req():
     now = datetime.datetime.now()
@@ -21,11 +21,11 @@ def calc_req():
     start_time = now_date_time[2:]
     end_time = pre_date_time[2:]
 
-    #print("Start time: %s" %start_time)
-    #print("End Time: %s" %end_time)
+    print("Start time: %s" %start_time)
+    print("End Time: %s" %end_time)
 
     res = requests.get('http://localhost:5000/calc/' + end_time + '/' + start_time, timeout=5)
-    #print(res.text)
+    print(res.text)
 
 
 if __name__ == "__main__":
@@ -35,13 +35,16 @@ if __name__ == "__main__":
 
     sched = BackgroundScheduler()
 
-    sched.add_job(calc_req, 'cron', minute='0, 15, 30, 45', id="test_10")
-    sched.add_job(polling_req, 'cron', minute='*/1', id="test_20")
+    #sched.add_job(calc_req, 'cron', minute='0, 15, 30, 45', id="test_10")
+    #sched.add_job(polling_req, 'cron', minute='*/1', id="test_20")
+
+    sched.add_job(calc_req, 'cron', minute='*/2', id="calc_cron")
+    sched.add_job(polling_req, 'cron', minute='*/1', id="polling_cron")
     
     sched.start()
 
     while True:
         time.sleep(30)
-        #print("Operating")
+        print("Operating")
 
 
