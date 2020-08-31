@@ -384,7 +384,45 @@ def process_start():
     except Exception as e:
         _LOGGER.error(e)
         return jsonify({'error': 'Admin access is required'}), 401
-        
+
+
+@app.route('/graph/<point_id>/<history_date>')
+def get_history_graph(point_id, history_date):
+    #Select Data From Graph History Table
+
+    length = 2
+    a = [history_date[i:i+length] for i in range(0, len(history_date), length)]
+    str_dt_txt = "20" + a[0] + "-" + a[1] + "-" + a[2] + " 00:00:00"
+
+    raw_history_data = CalcHistory.query.filter(and_(CalcHistory.date >= str_dt_txt, CalcHistory.point_id == point_id)).order_by(CalcHistory.date).all()
+    
+    bb = list()
+
+    for row in raw_history_data:
+        a = (row.point_id, row.date.strftime('%H:%M'), row.value)
+        bb.append(a)
+
+    dict_rows_json = json.dumps(bb)
+    
+    return dict_rows_json
+
+@app.route('/graph/<point_id>')
+def get_today_history_graph(point_id):
+    #Select Data From Graph History Table
+    
+    str_dt_txt = datetime.now().strftime('%Y-%m-%d 00:00:00'
+
+    raw_history_data = CalcHistory.query.filter(and_(CalcHistory.date >= str_dt_txt, CalcHistory.point_id == point_id)).order_by(CalcHistory.date).all()
+    
+    bb = list()
+
+    for row in raw_history_data:
+        a = (row.point_id, row.date.strftime('%H:%M'), row.value)
+        bb.append(a)
+
+    dict_rows_json = json.dumps(bb)
+    
+    return dict_rows_json
 
 """
 DATE_TIME = "00:00:00"

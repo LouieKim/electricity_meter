@@ -7,16 +7,20 @@ import setproctitle
 app = Flask(__name__)
 
 @app.route('/')
-def chart():
-    return render_template('chart_offline.html')
-
-@app.route('/offline')
-def chart_offline():
+def hello():
     return render_template('chart_offline.html')
 
 @app.route('/test')
 def test_chart():
     return render_template('test03.html')
+
+@app.route('/chart/offline')
+def chart_offline():
+    return render_template('chart_offline.html')
+
+@app.route('/chart/online')
+def chart_online():
+    return render_template('chart_online.html')
 
 @app.route('/setting')
 def setting_modbus_info():
@@ -26,10 +30,19 @@ def setting_modbus_info():
 def setting_modbus_info_offline():
     return render_template('setting_offline.html')
 
+@app.route('/graph/online')
+def graph_chart_online():
+    return render_template('graph_online.html')
+
+@app.route('/graph/offline')
+def graph_chart_offline():
+    return render_template('graph_offline.html')
+
+
 if __name__ == '__main__':
     if platform.system() == "Linux":
         setproctitle.setproctitle('ninewatt_web')
 
-    app.run(host="0.0.0.0", port="7070")
+    app.run(host="0.0.0.0", port="7070", debug=True)
 
     print("======Done=====")

@@ -23,8 +23,6 @@ class GemsModbus():
         except Exception as e:
             client.close()
 
-# if __name__ == "__main__":
-
 #     import time
 #     import logging
 #     from logging import handlers

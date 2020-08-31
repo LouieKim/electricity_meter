@@ -156,7 +156,7 @@ a{color:#5d5d5d; text-decoration: none;}
 /* .chart_app .box{width: 1000px; margin: auto; display: flex; align-items: flex-end; justify-content: space-between; padding: 20px 40px; box-sizing: border-box;} */
 .chart_app .box{width: 1000px; margin: auto; display: flex; justify-content: space-between; padding: 20px 40px; box-sizing: border-box;}
 .chart_app .box .left{width: 70%;}
-.chart_app .box .left .chart_btm{display: flex; align-items: center; justify-content: space-between; padding-left: 45px; color: #FFF; font-size: 12px;}
+.chart_app .box .left .chart_btm{display: flex; align-items: center; justify-content: space-between; padding-left: 60px; color: #FFF; font-size: 12px;}
 .chart_app .box .left .chart_btm .time12{display: block;}
 .chart_app .box .right{right: 30%;}
 .chart_app .box .right .logo_box{width: 140px; height: 140px; margin-left: auto; position: relative; overflow: hidden;}
