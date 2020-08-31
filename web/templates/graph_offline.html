@@ -251,7 +251,7 @@
                         addData2(chart, target, 0);
                         //}
                     });
-                }, 10000)
+                }, 60000)
             });
 
         function addData(chart, data, datasetIndex) {
@@ -338,7 +338,7 @@
                     document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
                 }
             })
-        }, 10000);
+        }, 60000);
 
         setInterval(function () {
             $.ajax({
@@ -353,7 +353,7 @@
                     document.querySelector('#hdd_usage').innerHTML = data['hdd'];
                 }
             })
-        }, 10000);
+        }, 60000);
 
         setInterval(function () {
             $.ajax({
@@ -376,7 +376,7 @@
                     $("#dynamicTbody").append(html);
                 }
             })
-        }, 10000);
+        }, 60000);
 
         setInterval(function () {
             $.ajax({
@@ -389,7 +389,7 @@
                     document.querySelector('#timenow').innerHTML = data['time'];
                 }
             })
-        }, 10000);
+        }, 60000);
 
     </script>
 </body>

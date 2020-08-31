@@ -18,7 +18,7 @@ def main():
             subprocess.call("supervisord -c /home/pi/electricity_meter/supervisord.conf", shell=True)
             #proc = subprocess.Popen("supervisord -c /etc/supervisord.conf")
             #print(proc.pid)
-        time.sleep(10)
+        time.sleep(60)
 
 if __name__ == "__main__":
     if platform.system() == "Linux":
