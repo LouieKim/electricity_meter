@@ -22,7 +22,6 @@ class GemsModbus():
 
         except Exception as e:
             client.close()
-            _LOGGER.error(e)
 
 # if __name__ == "__main__":
 
