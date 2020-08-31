@@ -409,8 +409,8 @@ def get_history_graph(point_id, history_date):
 @app.route('/graph/<point_id>')
 def get_today_history_graph(point_id):
     #Select Data From Graph History Table
-    
-    str_dt_txt = datetime.now().strftime('%Y-%m-%d 00:00:00'
+
+    str_dt_txt = datetime.now().strftime('%Y-%m-%d 00:00:00')
 
     raw_history_data = CalcHistory.query.filter(and_(CalcHistory.date >= str_dt_txt, CalcHistory.point_id == point_id)).order_by(CalcHistory.date).all()
     

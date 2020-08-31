@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="kr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1000, user-scalable=yes, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+    <script src="{{ url_for('static', filename='js/jquery-3.4.1.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
+
+
+    <!-- Javascript of Chart -->
+    <script src="{{ url_for('static', filename='js/chart.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/chartjs-plugin-annotation.js')}}"></script>
+    <!-- END Javascript of Chart -->
+
+    <title>키패드</title>
+</head>
+
+<body>
+
+    <div class="chart_app">
+        <div class="box">
+            <div class="left">
+                <div>
+                    <canvas id="myChart"></canvas>
+                    <div class="chart_btm">
+                        <span>0시</span>
+                        <span>6시</span>
+                        <span class="time12">12시</span>
+                        <span>18시</span>
+                        <span>24시</span>
+                    </div>
+                </div>
+
+                <div>
+                    <button type="button" onclick="location.href='http://localhost:7070/chart/offline'" class="btn btn-light" id="btn_power01">현재값</button>
+                    <button type="button" onclick="location.href='http://localhost:7070/graph/offline'" class="btn btn-light" id="btn_power02">그래프</button>
+                </div>
+
+            </div>
+            <div class="right">
+                <div class="logo_box">
+                    <a href="/"><img src="{{ url_for('static',filename='images/ninewatt-logo-3d.gif') }}" alt=""></a>
+                </div>
+                <div class="input_content">
+                    <div class="title_box">
+                        <!-- <span class="icon"><i class="fas fa-bolt fa-lg"></i></span> -->
+                        <span class="txt">Time</span>
+                        <span class="txt" id="timenow"></span>
+                    </div>
+                </div>
+
+                <div class="monitor_content">
+                    <div class="table_box">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>프로세스</th>
+                                    <th>동작여부</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>APP</td>
+                                    <td id="app_process"></td>
+                                </tr>
+                                <tr>
+                                    <td>WebServer</td>
+                                    <td id="web_process"></td>
+                                </tr>
+                                <tr>
+                                    <td>Manager</td>
+                                    <td id="manager_process"></td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp</td>
+                                    <td>&nbsp</td>
+                                </tr>
+                            </tbody>
+
+                            <thead>
+                                <tr>
+                                    <th>리소스</th>
+                                    <th>사용율(%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>CPU</td>
+                                    <td id="cpu_usage"></td>
+                                </tr>
+                                <tr>
+                                    <td>메모리</td>
+                                    <td id="mem_usage"></td>
+                                </tr>
+                                <tr>
+                                    <td>디스크</td>
+                                    <td id="hdd_usage"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+        $.ajax({
+            url: 'http://localhost:5000/graph/1',
+            //url: 'http://ec2-13-125-22-29.ap-northeast-2.compute.amazonaws.com/chart.php',
+            type: 'GET',
+            data: {
+                // 보낼 데이터
+            },
+            dataType: 'json'
+        })
+            .done(function (res) {
+                // 성공 시 동작
+                console.log('성공', res)
+                var checkSum = res.checksum;
+                var resDate = [];
+                var hour = [];
+                var current = [];
+                var target = [];
+                for (var i = 0; i <= 23; i += 1) {
+                    for (var v = 0; v <= 50; v += 15) {
+                        // console.log(v)
+                        if (i < 10) {
+                            if (v < 10) {
+                                hour.push(`0${i}:0${v}`)
+                            } else {
+                                hour.push(`0${i}:${v}`)
+                            }
+                        } else {
+                            if (v < 10) {
+                                hour.push(`${i}:0${v}`)
+                            } else {
+                                hour.push(`${i}:${v}`)
+                            }
+                        }
+                    }
+                }
+                res.forEach(function (i) {
+                    //console.log(i)
+                    if (i.label !== '') {
+                        resDate.push(i.label)
+                    }
+                    //current.push(i[3])
+                    target.push(i[2])
+                })
+
+                var ctx = document.getElementById('myChart').getContext('2d');
+
+                var chart = new Chart(ctx, {
+                    // The type of chart we want to create
+                    type: 'line',
+
+                    // The data for our dataset
+                    data: {
+                        labels: hour,
+                        datasets: [
+                            {
+                                label: '목표량',
+                                // backgroundColor: 'rgb(255, 99, 132)',
+                                borderColor: 'rgb(234, 195, 100)',
+                                // backgroundColor : 'rgba(39,39,39)',
+                                pointRadius: 0,
+                                data: current
+                            },
+                            {
+                                label: '사용량',
+                                // backgroundColor: 'rgb(255, 99, 132)',
+                                borderColor: 'tomato',
+                                // backgroundColor : 'rgba(39,39,39)',
+                                pointRadius: 0,
+                                data: target
+                            }
+                        ]
+                    },
+
+                    // Configuration options go here
+                    options: {
+                        scales: {
+                            xAxes: [{
+                                gridLines: {
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: "시간",
+                                    fontColor: "rgb(234, 195, 100)"
+                                },
+                                ticks: {
+                                    autoSkip: true,
+                                    fontSize: 0,
+                                }
+                            }],
+                            yAxes: [{
+                                id: 'y-axis-1',
+                                gridLines: {
+                                },
+                                ticks: {
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: "전력량",
+                                    fontColor: "rgb(234, 195, 100)"
+                                }
+                            }]
+                        },
+                        annotation: {
+                            drawTime: "afterDraw" // (default)
+                        }
+                    }
+                });
+                
+                setInterval(function () {
+                $.ajax({
+                    url: 'http://localhost:5000/graph/1',
+                    type: 'GET',
+                    data: {
+                        // 보낼 데이터
+                    },
+                    dataType: 'json'
+                })
+                    .done(function (res) {
+                        //console.log('res', res)
+                        //if(checkSum !== res.checksum) {
+                        checkSum = res.checksum
+                        var current = []
+                        var target = [];
+                        
+                        res.forEach(function (i) {
+                            //console.log(i)
+                            if(i.label !=='') {
+                                resDate.push(i.label)
+                            }
+                            //current.push(i.current)
+                            target.push(i.target)
+                        })                        
+                        addData(chart, current, 0);
+                        addData2(chart, target, 0);
+                        //}
+                    });
+                }, 10000)
+            });
+
+        function addData(chart, data, datasetIndex) {
+            chart.data.datasets[datasetIndex].data = data;
+            chart.update();
+        }
+        function addData2(chart, data) {
+            chart.data.datasets[0].data = data;
+            chart.update();
+        }
+
+        $.ajax({
+            url: 'http://localhost:5000/process',
+            type: 'GET',
+            contentType: 'javascript/json; charset=utf-8',
+            data: {},
+            dataType: 'json',
+            success: function (data) {
+                document.querySelector('#app_process').innerHTML = data['ninewatt_app'];
+                document.querySelector('#manager_process').innerHTML = data['ninewatt_manager'];
+                document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
+            }
+        });
+
+        $.ajax({
+            url: 'http://localhost:5000/resource',
+            type: 'GET',
+            contentType: 'javascript/json; charset=utf-8',
+            data: {},
+            dataType: 'json',
+            success: function (data) {
+                document.querySelector('#cpu_usage').innerHTML = data['cpu'];
+                document.querySelector('#mem_usage').innerHTML = data['mem'];
+                document.querySelector('#hdd_usage').innerHTML = data['hdd'];
+            }
+        });
+
+
+        $.ajax({
+            url: 'http://localhost:5000/realtime',
+            type: 'GET',
+            contentType: 'javascript/json; charset=utf-8',
+            data: {},
+            dataType: 'json',
+            success: function (data) {
+                var html = '';
+                var raw_data = data['data'];
+
+                for (key in raw_data) {
+                    html += '<tr>';
+                    html += '<td>' + raw_data[key].point_id + '</td>';
+                    html += '<td>' + raw_data[key].value + '</td>';
+                    html += '</tr>';
+                }
+                $("#dynamicTbody").empty();
+                $("#dynamicTbody").append(html);
+            }
+        });
+
+
+        $.ajax({
+            url: 'http://localhost:5000/timenow',
+            type: 'GET',
+            contentType: 'javascript/json; charset=utf-8',
+            data: {},
+            dataType: 'json',
+            success: function (data) {
+                document.querySelector('#timenow').innerHTML = data['time'];
+            }
+        });
+
+        //=================================================================
+
+        setInterval(function () {
+            $.ajax({
+                url: 'http://localhost:5000/process',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    document.querySelector('#app_process').innerHTML = data['ninewatt_app'];
+                    document.querySelector('#manager_process').innerHTML = data['ninewatt_manager'];
+                    document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
+                }
+            })
+        }, 10000);
+
+        setInterval(function () {
+            $.ajax({
+                url: 'http://localhost:5000/resource',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    document.querySelector('#cpu_usage').innerHTML = data['cpu'];
+                    document.querySelector('#mem_usage').innerHTML = data['mem'];
+                    document.querySelector('#hdd_usage').innerHTML = data['hdd'];
+                }
+            })
+        }, 10000);
+
+        setInterval(function () {
+            $.ajax({
+                url: 'http://localhost:5000/realtime',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    var html = '';
+                    var raw_data = data['data'];
+
+                    for (key in raw_data) {
+                        html += '<tr>';
+                        html += '<td>' + raw_data[key].point_id + '</td>';
+                        html += '<td>' + raw_data[key].value + '</td>';
+                        html += '</tr>';
+                    }
+                    $("#dynamicTbody").empty();
+                    $("#dynamicTbody").append(html);
+                }
+            })
+        }, 10000);
+
+        setInterval(function () {
+            $.ajax({
+                url: 'http://localhost:5000/timenow',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    document.querySelector('#timenow').innerHTML = data['time'];
+                }
+            })
+        }, 10000);
+
+    </script>
+</body>
+
+</html>
