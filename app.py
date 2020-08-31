@@ -33,9 +33,9 @@ DATABASE = 'ninewatt_bems.db'
 app = Flask(__name__)
 CORS(app, support_credentials=True)
 
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + DATABASE
 db = SQLAlchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + DATABASE
+
 
 #============================================
 LOG_FILENAME = "ninewatt_app.log"
@@ -68,6 +68,7 @@ def init_db():
         with app.open_resource('schema.sql') as f:
             db.cursor().executescript(f.read().decode('utf-8'))
         db.commit()
+
 
 class ModbusInfo(db.Model):
     point_id = db.Column(db.Integer, primary_key=True)
@@ -313,6 +314,7 @@ def get_modbus_info():
 
 #     return "success"
 
+#Reference: https://stackoverflow.com/questions/57726047/sqlalchemy-expression-language-and-sqlites-on-delete-cascade
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
 from sqlite3 import Connection as SQLite3Connection
@@ -325,8 +327,7 @@ def _set_sqlite_pragma(dbapi_connection, connection_record):
         cursor.close()
 
 @app.route('/modbus/delete', methods = ['GET', 'POST'])
-def abab():
-
+def del_modbus_info():
     try:
 
         if request.method == 'POST':
@@ -474,6 +475,7 @@ def get_graph_history(send_date):
 """
 
 def main():
+    #_LOGGER.error("aaa")
     app.run(host="localhost", port="5000", debug=True)
 
 if __name__ == "__main__":
@@ -483,7 +485,6 @@ if __name__ == "__main__":
         setproctitle.setproctitle('ninewatt_app')
     
     main()
-
     
     #aa = model_modbus_info()
     #print(aa[0].get_description())

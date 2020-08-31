@@ -8,7 +8,11 @@ app = Flask(__name__)
 
 @app.route('/')
 def chart():
-    return render_template('chart.html')    
+    return render_template('chart_offline.html')
+
+@app.route('/offline')
+def chart_offline():
+    return render_template('chart_offline.html')
 
 @app.route('/test')
 def test_chart():
@@ -16,7 +20,11 @@ def test_chart():
 
 @app.route('/setting')
 def setting_modbus_info():
-    return render_template('setting.html')
+    return render_template('setting_offline.html')
+
+@app.route('/setting/offline')
+def setting_modbus_info_offline():
+    return render_template('setting_offline.html')
 
 if __name__ == '__main__':
     if platform.system() == "Linux":
