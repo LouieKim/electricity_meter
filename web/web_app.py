@@ -43,6 +43,6 @@ if __name__ == '__main__':
     if platform.system() == "Linux":
         setproctitle.setproctitle('ninewatt_web')
 
-    app.run(host="localhost", port="7070", debug=True)
+    app.run(host="localhost", port="7070")
 
-    print("======Done=====")
+    #print("======Done=====")

@@ -514,7 +514,7 @@ def get_graph_history(send_date):
 
 def main():
     #_LOGGER.error("aaa")
-    app.run(host="localhost", port="5000", debug=True)
+    app.run(host="localhost", port="5000")
 
 if __name__ == "__main__":
     init_db()
