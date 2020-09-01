@@ -12,6 +12,7 @@ def main():
         pid_check = "supervisord" in (p.name() for p in psutil.process_iter())
 
         if pid_check == True:
+            pass
             #print("eccServer running")
         else:
             #print("eccServer not")
