@@ -38,6 +38,13 @@ def graph_chart_online():
 def graph_chart_offline():
     return render_template('graph_offline.html')
 
+@app.route('/graph/test')
+def graph_chart_offline_test():
+    return render_template('graph_offline_test01.html')
+
+@app.route('/chart/test')
+def chart_offline_test():
+    return render_template('chart_offline_test01.html')
 
 if __name__ == '__main__':
     if platform.system() == "Linux":
