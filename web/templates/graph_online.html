@@ -39,7 +39,7 @@
         <div class="box">
             <div class="left">
                 <div>
-                    <canvas id="myChart"></canvas>
+                    <canvas id="myChart" style="display:block; height:300px;width:408px"></canvas>
                     <div class="chart_btm">
                         <span>0시</span>
                         <span>6시</span>
@@ -48,17 +48,12 @@
                         <span>24시</span>
                     </div>
                 </div>
-
-                <div class="toggle_btn_container">
-                    <div class="toggle_btn_box">
-                        <input class="toggle_input " id="toggle_btn" type="checkbox" />
-                        <label class="toggle_label" for="toggle_btn">
-                            <span class="txt1">자동</span>
-                            <span class="txt2">수동</span>
-                        </label>
-                    </div>
+                
+                <div class="reload_button" style="float:left;margin-top:20px;margin-left:40px">
+                    <button type="button" onclick="location.href='http://localhost:7070/chart/online'" class="btn btn-light" id="btn_power01">현재값</button>
+                    <button type="button" onclick="location.href='http://localhost:7070/graph/online'" class="btn btn-light" id="btn_power02" style="margin-left:20px">그래프</button>
+                    <button type="button" onclick="window.location.reload()" class="btn btn-light" id="btn_power03" style="margin-left:20px">새로고침</button>
                 </div>
-
             </div>
             <div class="right">
                 <div class="logo_box">
@@ -224,6 +219,7 @@
                                 gridLines: {
                                 },
                                 ticks: {
+                                    min : 0
                                 },
                                 scaleLabel: {
                                     display: true,

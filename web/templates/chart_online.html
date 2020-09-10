@@ -23,7 +23,7 @@
         <div class="box">
             <div class="left">
                 <div class="ct_sensor">
-                    <div class="table_box">
+                    <div class="table_box" style="height:auto;min-height:340px">
                         <table>
                             <thead>
                                 <tr>
@@ -38,7 +38,13 @@
                     </div>
                 </div>
 
+                <div class="reload_button" style="float:left;margin-top:20px;margin-left:40px">
+                    <button type="button" onclick="location.href='http://localhost:7070/chart/online'" class="btn btn-light" id="btn_power01">현재값</button>
+                    <button type="button" onclick="location.href='http://localhost:7070/graph/online'" class="btn btn-light" id="btn_power02" style="margin-left:20px">그래프</button>
+                    <button type="button" onclick="window.location.reload()" class="btn btn-light" id="btn_power03" style="margin-left:20px">새로고침</button>
+                </div>
             </div>
+
             <div class="right">
                 <div class="logo_box">
                     <a href="/"><img src="{{ url_for('static',filename='images/ninewatt-logo-3d.gif') }}" alt=""></a>
