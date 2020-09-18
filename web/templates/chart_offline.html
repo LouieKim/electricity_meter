@@ -40,6 +40,7 @@
                 <div>
                     <button type="button" onclick="location.href='http://localhost:7070/chart/offline'" class="btn btn-light" id="btn_power01">현재값</button>
                     <button type="button" onclick="location.href='http://localhost:7070/graph/offline'" class="btn btn-light" id="btn_power02">그래프</button>
+                    <button type="button" onclick="window.location.reload()" class="btn btn-light" id="btn_power03">새로고침</button>
                 </div>
 
             </div>
@@ -113,28 +114,28 @@
 
 <script>
     
-    // $(function tableCreate(){
+     //$(function tableCreate(){
 
-    //     var tc = new Array();
-    //     var html = '';
-                
-    //     tc.push({name : '남궁민수', job : '기관사'}); 
-    //     tc.push({name : '유재석', job : 'MC'}); 
-    //     tc.push({name : '박명수', job : '개그맨'}); 
-    //     tc.push({name : '정준하', job : '엔터테이너'}); 
-    //     tc.push({name : '정형돈', job : '개그맨'});
+     //    var tc = new Array();
+     //    var html = '';
 
-    //     for(key in tc){
-    //     html += '<tr>';
-    //     html += '<td>'+tc[key].name+'</td>';
-    //     html += '<td>'+tc[key].job+'</td>';
-    //     html += '</tr>';
-    //     }
-                    
-    //     $("#dynamicTbody").empty();
-    //     $("#dynamicTbody").append(html);
+     //    tc.push({name : '남궁민수', job : '기관사'});
+     //    tc.push({name : '유재석', job : 'MC'});
+     //    tc.push({name : '박명수', job : '개그맨'});
+     //   tc.push({name : '정준하', job : '엔터테이너'});
+     //    tc.push({name : '정형돈', job : '개그맨'});
 
-    // });
+     //    for(key in tc){
+     //    html += '<tr>';
+     //    html += '<td>'+tc[key].name+'</td>';
+     //    html += '<td>'+tc[key].job+'</td>';
+     //    html += '</tr>';
+     //    }
+
+     //    $("#dynamicTbody").empty();
+     //    $("#dynamicTbody").append(html);
+
+     //});
     
     $.ajax({
         url: 'http://localhost:5000/process',

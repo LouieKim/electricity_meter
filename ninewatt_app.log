@@ -1,0 +1,4 @@
+2020-09-18 10:56:22,503 ERROR (Thread-5628) [__main__] (sqlite3.IntegrityError) NOT NULL constraint failed: history.value
+[SQL: INSERT INTO history (point_id, date, value) VALUES (?, ?, ?)]
+[parameters: (1, '2020-09-18 10:56:22.499408', None)]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)

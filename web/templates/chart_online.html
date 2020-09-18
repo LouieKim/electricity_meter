@@ -1,47 +1,80 @@
 <!DOCTYPE html>
 <html lang="kr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1000, user-scalable=yes, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
-    
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    
+
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <title>키패드</title>
 </head>
+
 <body>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
 
     <div class="chart_app">
         <div class="box">
             <div class="left">
                 <div class="ct_sensor">
-                    <div class="table_box" style="height:auto;min-height:340px">
-                        <table>
-                            <thead>
+                    <div class="table_box" style="height:270px">
+                        <table style="display:block;width:490px;border-collapse:collapse">
+                            <thead style="height:20%">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Current</th>
+                                    <th style="width:160px">ID</th>
+                                    <th style="width:165px">Current</th>
+                                    <th style="width:165px">kW</th>
                                 </tr>
                             </thead>
-                            <tbody id=dynamicTbody>
-                                
+
+                            <tbody id="dynamicTbody" 
+                            style="display:block;overflow-y:scroll;height:90%">
+
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <div class="reload_button" style="float:left;margin-top:20px;margin-left:40px">
-                    <button type="button" onclick="location.href='http://localhost:7070/chart/online'" class="btn btn-light" id="btn_power01">현재값</button>
-                    <button type="button" onclick="location.href='http://localhost:7070/graph/online'" class="btn btn-light" id="btn_power02" style="margin-left:20px">그래프</button>
-                    <button type="button" onclick="window.location.reload()" class="btn btn-light" id="btn_power03" style="margin-left:20px">새로고침</button>
+                <div>
+                    <label style="float:right;margin-right:10px;margin-top:5px; color:white">Power factor : 100%</label>
+                </div><br>
+
+                <div class="reload_button" style="float:left;margin-top:5px;margin-left:30px">
+                    <button type="button" onclick="location.href='http://localhost:7070/chart/online'"
+                        class="btn btn-light" id="btn_power01">현재값</button>
+                    <button type="button" onclick="location.href='http://localhost:7070/graph/online'"
+                        class="btn btn-light" id="btn_power02" style="margin-left:10px">그래프</button>
+                    <button type="button" onclick="window.location.reload()" class="btn btn-light" id="btn_power03"
+                        style="margin-left:10px">새로고침</button>
+                    <br>
+
+                    <select id="id_select" style="margin-top:5px">
+                        <option value="select_0" selected disabled hidden>==ID 선택==</option>
+                        <option value="select_1">1</option>
+                        <option value="select_2">2</option>
+                    </select>
+
+                    <label style="color:white; margin-top:10px"> 을(를)
+                        <input id="change_name" type="text" style ="width:100px" value="원하는 이름"
+                            onfocus="if(!this._haschanged){this.value=''};this._haschanged=true;"> (으)로
+                        <button class="btn btn-dark" id="change_btn" onclick="Change()">
+                            변경
+                        </button>
+                    </label>
                 </div>
             </div>
 
@@ -56,7 +89,7 @@
                         <span class="txt" id="timenow"></span>
                     </div>
                 </div>
-                
+
                 <div class="monitor_content">
                     <div class="table_box">
                         <table>
@@ -84,7 +117,7 @@
                                     <td>&nbsp</td>
                                 </tr>
                             </tbody>
-                            
+
                             <thead>
                                 <tr>
                                     <th>리소스</th>
@@ -109,165 +142,176 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
-<script>
-    
-    // $(function tableCreate(){
-
-    //     var tc = new Array();
-    //     var html = '';
-                
-    //     tc.push({name : '남궁민수', job : '기관사'}); 
-    //     tc.push({name : '유재석', job : 'MC'}); 
-    //     tc.push({name : '박명수', job : '개그맨'}); 
-    //     tc.push({name : '정준하', job : '엔터테이너'}); 
-    //     tc.push({name : '정형돈', job : '개그맨'});
-
-    //     for(key in tc){
-    //     html += '<tr>';
-    //     html += '<td>'+tc[key].name+'</td>';
-    //     html += '<td>'+tc[key].job+'</td>';
-    //     html += '</tr>';
-    //     }
-                    
-    //     $("#dynamicTbody").empty();
-    //     $("#dynamicTbody").append(html);
-
-    // });
-    
-    $.ajax({
-        url: 'http://localhost:5000/process',
-        type: 'GET',
-        contentType:'javascript/json; charset=utf-8',
-        data: {},
-        dataType: 'json',
-        success: function(data){
-            document.querySelector('#app_process').innerHTML = data['ninewatt_app'];
-            document.querySelector('#manager_process').innerHTML = data['ninewatt_manager'];
-            document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
+    <script>
+        function Change() {
+            document.getElementById('change_name').value = '원하는 이름';
+            $("#id_select").val("select_0").prop("selected",true);
+            // '선택한 ID'를 '입력한 이름'으로 바꿔주는 기능 필요
         }
-    });
-
-    $.ajax({
-        url: 'http://localhost:5000/resource',
-        type: 'GET',
-        contentType:'javascript/json; charset=utf-8',
-        data: {},
-        dataType: 'json',
-        success: function(data){
-            document.querySelector('#cpu_usage').innerHTML = data['cpu'];
-            document.querySelector('#mem_usage').innerHTML = data['mem'];
-            document.querySelector('#hdd_usage').innerHTML = data['hdd'];
-        }
-    });
-
     
-    $.ajax({
-        url: 'http://localhost:5000/realtime',
-        type: 'GET',
-        contentType:'javascript/json; charset=utf-8',
-        data: {},
-        dataType: 'json',
-        success: function(data){
+        $(function tableCreate() {
+            var tc = new Array();
             var html = '';
-            var raw_data = data['data'];
 
-            for(key in raw_data)
-            {
-                html += '<tr>';
-                html += '<td>'+raw_data[key].point_id+'</td>';
-                html += '<td>'+raw_data[key].value+'</td>';
+            tc.push({ name: '남궁민수', job: '기관사', last: '허헝헣' });
+            tc.push({ name: '유재석', job: 'MC', last: '허헝헣' });
+            tc.push({ name: '박명수', job: '개그맨', last: '허헝헣' });
+            tc.push({ name: '정준하', job: '엔터테이너', last: '허헝헣' });
+            tc.push({ name: '정형돈', job: '개그맨', last: '허헝헣' });
+            tc.push({ name: '정형돈', job: '개그맨', last: '허헝헣' });
+            tc.push({ name: '정형돈', job: '개그맨', last: '허헝헣' });
+            tc.push({ name: '정형돈', job: '개그맨', last: '허헝헣' });
+            tc.push({ name: '정형돈', job: '개그맨', last: '허헝헣' });
+            tc.push({ name: '정형돈', job: '개그맨', last: '허헝헣' });
+            tc.push({ name: '정형돈', job: '개그맨', last: '허헝헣' });
+            tc.push({ name: '정형돈', job: '개그맨', last: '허헝헣' });
+
+            for (key in tc) {
+                html += '<tr style="margin-left:20px">';
+                html += '<td style="width:200px">' + tc[key].name + '</td>';
+                html += '<td style="width:200px">' + tc[key].job + '</td>';
+                html += '<td style="width:200px">' + tc[key].last + '</td>';
                 html += '</tr>';
             }
+
             $("#dynamicTbody").empty();
             $("#dynamicTbody").append(html);
-        }
-    });
+        });
 
-    
-    $.ajax({
-        url: 'http://localhost:5000/timenow',
-        type: 'GET',
-        contentType:'javascript/json; charset=utf-8',
-        data: {},
-        dataType: 'json',
-        success: function(data){
-            document.querySelector('#timenow').innerHTML = data['time'];
-        }
-    });
-
-    //=================================================================
-
-    setInterval(function(){
         $.ajax({
             url: 'http://localhost:5000/process',
             type: 'GET',
-            contentType:'javascript/json; charset=utf-8',
+            contentType: 'javascript/json; charset=utf-8',
             data: {},
             dataType: 'json',
-            success: function(data){
+            success: function (data) {
                 document.querySelector('#app_process').innerHTML = data['ninewatt_app'];
                 document.querySelector('#manager_process').innerHTML = data['ninewatt_manager'];
                 document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
             }
-        })
-        }, 10000);
+        });
 
-    setInterval(function(){
         $.ajax({
             url: 'http://localhost:5000/resource',
             type: 'GET',
-            contentType:'javascript/json; charset=utf-8',
+            contentType: 'javascript/json; charset=utf-8',
             data: {},
             dataType: 'json',
-            success: function(data){
+            success: function (data) {
                 document.querySelector('#cpu_usage').innerHTML = data['cpu'];
                 document.querySelector('#mem_usage').innerHTML = data['mem'];
                 document.querySelector('#hdd_usage').innerHTML = data['hdd'];
             }
-        })
-    }, 10000);
+        });
 
-    setInterval(function(){
-        $.ajax({
-            url: 'http://localhost:5000/realtime',
-            type: 'GET',
-            contentType:'javascript/json; charset=utf-8',
-            data: {},
-            dataType: 'json',
-            success: function(data){
-                var html = '';
-                var raw_data = data['data'];
 
-                for(key in raw_data)
-                {
-                    html += '<tr>';
-                    html += '<td>'+raw_data[key].point_id+'</td>';
-                    html += '<td>'+raw_data[key].value+'</td>';
-                    html += '</tr>';
-                }
-                $("#dynamicTbody").empty();
-                $("#dynamicTbody").append(html);
-            }
-        })
-    }, 10000);
+        // $.ajax({
+        //     url: 'http://localhost:5000/realtime',
+        //     type: 'GET',
+        //     contentType:'javascript/json; charset=utf-8',
+        //     data: {},
+        //     dataType: 'json',
+        //     success: function(data){
+        //         var html = '';
+        //         var raw_data = data['data'];
 
-    setInterval(function(){
+        //         for(key in raw_data)
+        //         {
+        //             html += '<tr>';
+        //             html += '<td>'+raw_data[key].point_id+'</td>';
+        //             html += '<td>'+raw_data[key].value+'</td>';
+        //             html += '</tr>';
+        //         }
+        //         $("#dynamicTbody").empty();
+        //         $("#dynamicTbody").append(html);
+        //     }
+        // });
+
+
         $.ajax({
             url: 'http://localhost:5000/timenow',
             type: 'GET',
-            contentType:'javascript/json; charset=utf-8',
+            contentType: 'javascript/json; charset=utf-8',
             data: {},
             dataType: 'json',
-            success: function(data){
+            success: function (data) {
                 document.querySelector('#timenow').innerHTML = data['time'];
             }
-        })
-    }, 10000);
-    
-</script>
+        });
+
+        //=================================================================
+
+        setInterval(function () {
+            $.ajax({
+                url: 'http://localhost:5000/process',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    document.querySelector('#app_process').innerHTML = data['ninewatt_app'];
+                    document.querySelector('#manager_process').innerHTML = data['ninewatt_manager'];
+                    document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
+                }
+            })
+        }, 10000);
+
+        setInterval(function () {
+            $.ajax({
+                url: 'http://localhost:5000/resource',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    document.querySelector('#cpu_usage').innerHTML = data['cpu'];
+                    document.querySelector('#mem_usage').innerHTML = data['mem'];
+                    document.querySelector('#hdd_usage').innerHTML = data['hdd'];
+                }
+            })
+        }, 10000);
+
+        // setInterval(function(){
+        //     $.ajax({
+        //         url: 'http://localhost:5000/realtime',
+        //         type: 'GET',
+        //         contentType:'javascript/json; charset=utf-8',
+        //         data: {},
+        //         dataType: 'json',
+        //         success: function(data){
+        //             var html = '';
+        //             var raw_data = data['data'];
+
+        //             for(key in raw_data)
+        //             {
+        //                 html += '<tr>';
+        //                 html += '<td>'+raw_data[key].point_id+'</td>';
+        //                 html += '<td>'+raw_data[key].value+'</td>';
+        //                 html += '</tr>';
+        //             }
+        //             $("#dynamicTbody").empty();
+        //             $("#dynamicTbody").append(html);
+        //         }
+        //     })
+        // }, 10000);
+
+        setInterval(function () {
+            $.ajax({
+                url: 'http://localhost:5000/timenow',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    document.querySelector('#timenow').innerHTML = data['time'];
+                }
+            })
+        }, 10000);
+
+    </script>
 </body>
+
 </html>
