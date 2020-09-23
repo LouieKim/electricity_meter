@@ -199,6 +199,9 @@
                 변경
             </button>
         </label>
+        
+        <button class="btn btn-dark" id="power_saving" 
+        style="float:right;margin-top:10px;margin-right:20px">절전모드</button>
 
     <script>
          $('#change_btn').on("click", function () {
@@ -213,7 +216,7 @@
                 },
                 error:function(result){
                     alert("이미 수정되거나 존재하지 않는 id 입니다."); // 내용은 바꾸면 됨
-                    refreshMemList();
+                    refreshMemList()
                 }
             })
         });

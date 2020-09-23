@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    return render_template('chart_online.html')
+    return render_template('chart_offline.html')
 
 @app.route('/test')
 def test_chart():

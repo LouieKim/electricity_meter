@@ -39,10 +39,19 @@
                     </div>
                 </div>
 
-                <div>
-                    <button type="button" onclick="location.href='http://localhost:7070/chart/offline'" class="btn btn-light" id="btn_power01">현재값</button>
-                    <button type="button" onclick="location.href='http://localhost:7070/graph/offline'" class="btn btn-light" id="btn_power02">그래프</button>
-                     <button type="button" onclick="window.location.reload()" class="btn btn-light" id="btn_power03">새로고침</button>
+                <div class="reload_button" style="float:left;margin-top:10px;margin-left:40px">
+                    <button type="button" onclick="location.href='http://localhost:7070/chart/offline'"
+                        class="btn btn-light" id="btn_power01">현재값</button>
+                    <button type="button" onclick="location.href='http://localhost:7070/graph/offline'"
+                        class="btn btn-light" id="btn_power02" style="margin-left:10px">그래프</button>
+                    <button type="button" onclick="window.location.reload()" class="btn btn-light" id="btn_power03"
+                        style="margin-left:10px">새로고침</button>
+
+                    <label style="margin-left:30px"><input type="checkbox" name="graph1" checked="checked"> 목표량</label>
+                    <label style="margin-left:10px"><input type="checkbox" name="graph2" checked="checked">
+                        사용량</label>
+                    <label style="margin-left:10px"><input type="checkbox" name="graph3" checked="checked">
+                        미정</label>
                 </div>
 
             </div>
@@ -185,6 +194,14 @@
                                 // backgroundColor : 'rgba(39,39,39)',
                                 pointRadius: 0,
                                 data: target
+                            },
+                            {
+                                label: '미정',
+                                // backgroundColor: 'rgb(255, 99, 132)',
+                                borderColor: 'white',
+                                // backgroundColor : 'rgba(39,39,39)',
+                                pointRadius: 0
+                                //data: target
                             }
                         ]
                     },
@@ -223,6 +240,31 @@
                         }
                     }
                 });
+                
+                $(':checkbox[name="graph1"]').change(function () {
+                    chart.data.datasets.find(function (ds) {
+                        if (ds.label == '목표량')
+                            ds.hidden = !ds.hidden;
+                    });
+                    chart.update();
+                })
+
+                $(':checkbox[name="graph2"]').change(function () {
+                    chart.data.datasets.find(function (ds) {
+                        if (ds.label == '사용량')
+                            ds.hidden = !ds.hidden;
+                    });
+                    chart.update();
+                })
+
+                $(':checkbox[name="graph3"]').change(function () {
+                    chart.data.datasets.find(function (ds) {
+                        if (ds.label == '미정')
+                            ds.hidden = !ds.hidden;
+                    });
+                    chart.update();
+                })
+                // checkbox part -> visible/invisible
                 
                 setInterval(function () {
                 $.ajax({

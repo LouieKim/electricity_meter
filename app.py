@@ -451,8 +451,7 @@ def get_today_history_graph(point_id):
     return dict_rows_json
 
 @app.route('/idname',methods=['GET','POST'])
-def get_id_to_name_table():
-    #어떤 point_id가 어떤 이름을 가지고 있는지 보여줌
+def id_to_name_table():
     try:
         if request.method == 'POST':
             req_point_id = request.form['point_id']
@@ -468,6 +467,32 @@ def get_id_to_name_table():
     except Exception as e:
         _LOGGER.error(e)
         return jsonify({'error': 'Admin access is required'}), 401
+
+@app.route('/idnameinfo')
+def get_id_to_name_info():
+    #IdToName 데이터베이스 정보를 보여주는 URL
+    try:
+        result_list = list()
+
+        id_to_name_info_dates = IdToName.query.all()
+
+        for info_date in id_to_name_info_dates:
+            result_status = dict()
+            result_status["point_id"] = info_date.point_id
+            result_status["dev_name"] = info_date.dev_name
+            result_list.append(result_status)
+
+        dict_rows = {"id_to_name_info": result_list}
+        dict_rows_json = json.dumps(dict_rows, ensure_ascii=False)
+
+        return dict_rows_json
+
+        # return jsonify(dict_rows_json), 200
+
+    except Exception as e:
+        _LOGGER.error(e)
+        return jsonify({'error': 'Admin access is required'}), 401
+
 
 
 """

@@ -130,7 +130,28 @@
     </div>
 
     <script>
+        //$(function tableCreate(){
 
+        //    var tc = new Array();
+        //    var html = '';
+
+        //    tc.push({name : '남궁민수', job : '기관사'});
+        //    tc.push({name : '유재석', job : 'MC'});
+        //    tc.push({name : '박명수', job : '개그맨'});
+        //   tc.push({name : '정준하', job : '엔터테이너'});
+        //    tc.push({name : '정형돈', job : '개그맨'});
+
+        //    for(key in tc){
+        //    html += '<tr>';
+        //    html += '<td>'+tc[key].name+'</td>';
+        //    html += '<td>'+tc[key].job+'</td>';
+        //    html += '</tr>';
+        //    }
+
+        //    $("#dynamicTbody").empty();
+        //    $("#dynamicTbody").append(html);
+
+        //});
 
         $.ajax({
             url: 'http://localhost:5000/process',
@@ -194,7 +215,7 @@
                     html += '<tr style="margin-left:20px">';
                     html += '<td style="width:200px">' + raw_data[key].point_id + '</td>';
                     html += '<td style="width:200px">' + raw_data[key].value + '</td>';
-                    html += '<td style="width:200px">'+ '' +'</td>';
+                    html += '<td style="width:200px">' + '' + '</td>';
                     html += '</tr>';
                 }
                 $("#dynamicTbody").empty();
@@ -261,7 +282,7 @@
                         html += '<tr style="margin-left:20px">';
                         html += '<td style="width:200px">' + raw_data[key].point_id + '</td>';
                         html += '<td style="width:200px">' + raw_data[key].value + '</td>';
-                        html += '<td style="width:200px">'+ '' +'</td>';
+                        html += '<td style="width:200px">' + '' + '</td>';
                         html += '</tr>';
                     }
                     $("#dynamicTbody").empty();
