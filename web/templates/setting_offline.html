@@ -32,49 +32,47 @@
                 <th>del</th>
             </tr>
         </thead>
+
         <tbody id=dynamicTbody>
         </tbody>
     </table>
+
     <script>
         $.ajax({
-        url: 'http://localhost:5000/modbusinfo',
-        type: 'GET',
-        contentType:'javascript/json; charset=utf-8',
-        dataType: 'json',
-        success: function(data){
-            var html = '';
-            var raw_data = data['modbus_info'];
+            url: 'http://localhost:5000/modbusinfo',
+            type: 'GET',
+            contentType: 'javascript/json; charset=utf-8',
+            dataType: 'json',
+            success: function (data) {
+                var html = '';
+                var raw_data = data['modbus_info'];
 
-            for(key in raw_data)
-            {
-                html += '<tr>';
-                html += '<td id="req_point_id">'+raw_data[key].point_id+'</td>';
-                html += '<td>'+raw_data[key].slave+'</td>';
-                html += '<td>'+raw_data[key].function_code+'</td>';
-                html += '<td>'+raw_data[key].map_address+'</td>';
-                html += '<td>'+raw_data[key].unit+'</td>';
-                //html += '<td><a href="http://localhost:5000/modbus/delete/' + raw_data[key].point_id + '" class="delete-link">Delete</a></td>';
-                html += '<td><a href="#" onclick="modbusdel(' + raw_data[key].point_id + ')" class="delete-link">Delete</a></td>';
+                for (key in raw_data) {
+                    html += '<tr>';
+                    html += '<td id="req_point_id">' + raw_data[key].point_id + '</td>';
+                    html += '<td>' + raw_data[key].slave + '</td>';
+                    html += '<td>' + raw_data[key].function_code + '</td>';
+                    html += '<td>' + raw_data[key].map_address + '</td>';
+                    html += '<td>' + raw_data[key].unit + '</td>';
+                    //html += '<td><a href="http://localhost:5000/modbus/delete/' + raw_data[key].point_id + '" class="delete-link">Delete</a></td>';
+                    html += '<td><a href="#" onclick="modbusdel(' + raw_data[key].point_id + ')" class="delete-link">Delete</a></td>';
 
-                html += '</tr>';
+                    html += '</tr>';
+                }
+                $("#dynamicTbody").empty();
+                $("#dynamicTbody").append(html);
             }
-            $("#dynamicTbody").empty();
-            $("#dynamicTbody").append(html);
-            }
-         });
-
-
+        });
     </script>
 
     <h3>추가 입력 테이블</h3>
 
     <table id="append_table" class="table">
         <colgroup>
-            <col style="width:15%">
-            <col style="width:30%">
-            <col style="width:30%">
-            <col style="width:15%">
-            <col style="width:10%">
+            <col style="width:25%">
+            <col style="width:25%">
+            <col style="width:25%">
+            <col style="width:20%">
         </colgroup>
 
         <thead class="thead-light">
@@ -88,10 +86,10 @@
 
         <tbody>
             <tr>
-                <td><input type="text" id="slave"></td>
-                <td><input type="text" id="function_code"></td>
-                <td><input type="text" id="map_address"></td>
-                <td><input type="text" id="unit"></td>
+                <td><input type="text" id="slave" style="width:130px"></td>
+                <td><input type="text" id="function_code" style="width:130px"></td>
+                <td><input type="text" id="map_address" style="width:130px"></td>
+                <td><input type="text" id="unit" style="width:130px"></td>
                 <td><button type="button" id="append_row">데이터 추가</button></td>
             </tr>
 
@@ -119,73 +117,106 @@
     </div>
 
     <script type="text/javascript">
-    
-        function refreshMemList(){
+
+        function refreshMemList() {
             location.reload();
         }
 
-        function modbusdel(point_id){
+        function modbusdel(point_id) {
             $.ajax({
-			url: 'http://localhost:5000/modbus/delete',
-			dataType: 'json',
-			type: 'POST',
-			data: {point_id: point_id},
-			success: function(result){
-                refreshMemList();
-            }
-			})
+                url: 'http://localhost:5000/modbus/delete',
+                dataType: 'json',
+                type: 'POST',
+                data: { point_id: point_id },
+                success: function (result) {
+                    refreshMemList();
+                }
+            })
         }
 
-        $('#append_row').on("click", function (){
-			$.ajax({
-			url: 'http://localhost:5000/modbus/new',
-			dataType: 'json',
-			type: 'POST',
-			data: {slave: $('#slave').val(), function_code: $('#function_code').val(), map_address: $('#map_address').val(), unit: $('#unit').val()},
-            
-			success: function(result){
-                refreshMemList();
-            }
-			})
-		});
+        $('#append_row').on("click", function () {
+            $.ajax({
+                url: 'http://localhost:5000/modbus/new',
+                dataType: 'json',
+                type: 'POST',
+                data: { slave: $('#slave').val(), function_code: $('#function_code').val(), map_address: $('#map_address').val(), unit: $('#unit').val() },
 
-        $('#manager_start').on("click", function (){
-			$.ajax({
-            url: 'http://localhost:5000/process/start',
-            type: 'GET',
-            contentType:'javascript/json; charset=utf-8',
-            data: {},
-            dataType: 'json',
-            success: {}
+                success: function (result) {
+                    refreshMemList();
+                }
             })
-		});
+        });
 
-        $('#manager_stop').on("click", function (){
-			$.ajax({
-            url: 'http://localhost:5000/process/stop',
-            type: 'GET',
-            contentType:'javascript/json; charset=utf-8',
-            data: {},
-            dataType: 'json',
-            success: {}
+        $('#manager_start').on("click", function () {
+            $.ajax({
+                url: 'http://localhost:5000/process/start',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: {}
             })
-		});
+        });
 
-        $('#manager_status').on("click", function (){
-			$.ajax({
-            url: 'http://localhost:5000/process',
-            type: 'GET',
-            contentType:'javascript/json; charset=utf-8',
-            data: {},
-            dataType: 'json',
-            success: function(data){
-                document.querySelector('#app_process').innerHTML = data['ninewatt_app'];
-                document.querySelector('#manager_process').innerHTML = data['ninewatt_manager'];
-                document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
-            }
+        $('#manager_stop').on("click", function () {
+            $.ajax({
+                url: 'http://localhost:5000/process/stop',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: {}
             })
-		});
+        });
 
+        $('#manager_status').on("click", function () {
+            $.ajax({
+                url: 'http://localhost:5000/process',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    document.querySelector('#app_process').innerHTML = data['ninewatt_app'];
+                    document.querySelector('#manager_process').innerHTML = data['ninewatt_manager'];
+                    document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
+                }
+            })
+        });
+
+    </script>
+
+    <br><br>
+    <h3 style="margin-left:20px">## 이름 변경 ##</h3> 
+    <!--id와 변경하고싶은 이름을 적어서 변경버튼을 누르면 해당 내용을 DB에 올림-->
+        <input id="id_select" type="text" style="width:150px" value="==ID 입력=="
+            onfocus="if(!this._haschanged){this.value=''};this._haschanged=true;">
+
+        <label style="color:black; margin-top:10px"> 을(를)
+            <input id="change_name" type="text" style="width:150px" value="==이름 입력=="
+                onfocus="if(!this._haschanged){this.value=''};this._haschanged=true;"> (으)로
+            <button class="btn btn-dark" id="change_btn">
+                변경
+            </button>
+        </label>
+
+    <script>
+         $('#change_btn').on("click", function () {
+            $.ajax({
+                url: 'http://localhost:5000/idname',
+                dataType: 'json',
+                type: 'POST',
+                data: { point_id: $('#id_select').val(), dev_name: $('#change_name').val()},
+
+                success: function (result) {
+                    refreshMemList();
+                },
+                error:function(result){
+                    alert("이미 수정되거나 존재하지 않는 id 입니다."); // 내용은 바꾸면 됨
+                    refreshMemList();
+                }
+            })
+        });
     </script>
 
 </body>

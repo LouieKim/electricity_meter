@@ -1,4 +1,134 @@
-2020-09-18 10:56:22,503 ERROR (Thread-5628) [__main__] (sqlite3.IntegrityError) NOT NULL constraint failed: history.value
+2020-09-22 09:40:21,555 ERROR (Thread-21) [__main__] (sqlite3.IntegrityError) NOT NULL constraint failed: history.value
 [SQL: INSERT INTO history (point_id, date, value) VALUES (?, ?, ?)]
-[parameters: (1, '2020-09-18 10:56:22.499408', None)]
+[parameters: (1, '2020-09-22 09:40:21.526890', None)]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 10:33:52,695 ERROR (Thread-25) [__main__] (sqlite3.OperationalError) no such column: id_to_name.name
+[SQL: SELECT modbus_info.point_id AS modbus_info_point_id, id_to_name.name AS id_to_name_name 
+FROM modbus_info, id_to_name]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-22 14:04:01,544 ERROR (Thread-6) [__main__] name 'IdToNode' is not defined
+2020-09-22 14:27:17,262 ERROR (Thread-124) [__main__] name 'IdToNode' is not defined
+2020-09-22 14:28:20,977 ERROR (Thread-8) [__main__] name 'IdToNode' is not defined
+2020-09-22 14:28:21,501 ERROR (Thread-9) [__main__] name 'IdToNode' is not defined
+2020-09-22 14:30:56,737 ERROR (Thread-1) [__main__] name 'IdToNode' is not defined
+2020-09-22 14:40:10,612 ERROR (Thread-9) [__main__] name 'IdToNode' is not defined
+2020-09-22 15:56:59,918 ERROR (Thread-10) [__main__] (sqlite3.IntegrityError) FOREIGN KEY constraint failed
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('asdf', 'asdf')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 15:57:04,321 ERROR (Thread-17) [__main__] (sqlite3.IntegrityError) FOREIGN KEY constraint failed
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('asdf', 'asdf')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 15:57:05,262 ERROR (Thread-18) [__main__] (sqlite3.IntegrityError) FOREIGN KEY constraint failed
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('asdf', 'asdf')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 15:57:06,840 ERROR (Thread-19) [__main__] (sqlite3.IntegrityError) FOREIGN KEY constraint failed
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('asdf', 'asdf')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 15:57:07,687 ERROR (Thread-20) [__main__] (sqlite3.IntegrityError) FOREIGN KEY constraint failed
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('asdf', 'asdf')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 15:57:08,297 ERROR (Thread-21) [__main__] (sqlite3.IntegrityError) FOREIGN KEY constraint failed
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('asdf', 'asdf')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 15:57:09,375 ERROR (Thread-22) [__main__] (sqlite3.IntegrityError) FOREIGN KEY constraint failed
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('asdf', 'asdf')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 16:15:24,121 ERROR (Thread-453) [__main__] (sqlite3.IntegrityError) UNIQUE constraint failed: id_to_name.point_id, id_to_name.dev_name
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('1', '에어컨')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 16:15:26,446 ERROR (Thread-454) [__main__] (sqlite3.IntegrityError) UNIQUE constraint failed: id_to_name.point_id, id_to_name.dev_name
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('1', '에어컨')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 16:15:28,040 ERROR (Thread-455) [__main__] (sqlite3.IntegrityError) UNIQUE constraint failed: id_to_name.point_id, id_to_name.dev_name
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('1', '에어컨')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 16:15:40,882 ERROR (Thread-471) [__main__] (sqlite3.IntegrityError) UNIQUE constraint failed: id_to_name.point_id, id_to_name.dev_name
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('1', '에어컨')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 16:15:42,090 ERROR (Thread-472) [__main__] (sqlite3.IntegrityError) UNIQUE constraint failed: id_to_name.point_id, id_to_name.dev_name
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('1', '에어컨')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 16:15:42,824 ERROR (Thread-473) [__main__] (sqlite3.IntegrityError) UNIQUE constraint failed: id_to_name.point_id, id_to_name.dev_name
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('1', '에어컨')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 16:15:43,988 ERROR (Thread-474) [__main__] (sqlite3.IntegrityError) UNIQUE constraint failed: id_to_name.point_id, id_to_name.dev_name
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('1', '에어컨')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 16:15:44,240 ERROR (Thread-475) [__main__] (sqlite3.IntegrityError) UNIQUE constraint failed: id_to_name.point_id, id_to_name.dev_name
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('1', '에어컨')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 16:15:44,468 ERROR (Thread-476) [__main__] (sqlite3.IntegrityError) UNIQUE constraint failed: id_to_name.point_id, id_to_name.dev_name
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('1', '에어컨')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 16:53:07,285 ERROR (Thread-396) [__main__] (sqlite3.IntegrityError) UNIQUE constraint failed: id_to_name.point_id, id_to_name.dev_name
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('1', '초파리')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 16:53:13,367 ERROR (Thread-405) [__main__] (sqlite3.IntegrityError) UNIQUE constraint failed: id_to_name.point_id, id_to_name.dev_name
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('1', '초파리')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 16:53:36,716 ERROR (Thread-424) [__main__] (sqlite3.IntegrityError) UNIQUE constraint failed: id_to_name.point_id, id_to_name.dev_name
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('1', '초파리')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 16:54:02,809 ERROR (Thread-452) [__main__] (sqlite3.IntegrityError) UNIQUE constraint failed: id_to_name.point_id, id_to_name.dev_name
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('1', '초파리')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 17:16:14,647 ERROR (Thread-511) [__main__] (sqlite3.IntegrityError) FOREIGN KEY constraint failed
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('4', '배고파')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 17:16:26,756 ERROR (Thread-522) [__main__] (sqlite3.IntegrityError) UNIQUE constraint failed: id_to_name.point_id, id_to_name.dev_name
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('1', '초파리')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 17:16:34,989 ERROR (Thread-533) [__main__] (sqlite3.IntegrityError) FOREIGN KEY constraint failed
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('4', '')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 17:17:34,755 ERROR (Thread-586) [__main__] (sqlite3.IntegrityError) FOREIGN KEY constraint failed
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('4', 'ㅁㄴㅇㄹ')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 17:18:00,848 ERROR (Thread-608) [__main__] (sqlite3.IntegrityError) FOREIGN KEY constraint failed
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('', 'ㅁㄴㅇㄻㄴㅇㄻㄴㅇㄹ')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 17:27:03,636 ERROR (Thread-9) [__main__] (sqlite3.OperationalError) database is locked
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('1', '에어컨')]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-22 17:27:19,201 ERROR (Thread-28) [__main__] (sqlite3.OperationalError) database is locked
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('1', '에어컨')]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-22 17:32:17,292 ERROR (Thread-23) [__main__] (sqlite3.IntegrityError) FOREIGN KEY constraint failed
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('11', '1234')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 17:32:28,110 ERROR (Thread-36) [__main__] (sqlite3.IntegrityError) UNIQUE constraint failed: id_to_name.point_id, id_to_name.dev_name
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('2', '1234')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-22 17:32:42,949 ERROR (Thread-60) [__main__] (sqlite3.IntegrityError) FOREIGN KEY constraint failed
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('4', '2345')]
 (Background on this error at: http://sqlalche.me/e/13/gkpj)

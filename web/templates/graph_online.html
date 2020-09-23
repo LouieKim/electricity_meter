@@ -15,6 +15,14 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+
+    <!-- Javascript of Chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.js"></script>
+    <!-- END Javascript of Chart -->
+
     <title>키패드</title>
 </head>
 
@@ -30,45 +38,43 @@
     <div class="chart_app">
         <div class="box">
             <div class="left">
-                <div class="ct_sensor">
-                    <div class="table_box" style="height:270px">
-                        <table style="display:block;width:490px;border-collapse:collapse">
-                            <thead style="height:20%">
-                                <tr>
-                                    <th style="width:160px">ID</th>
-                                    <th style="width:165px">Current</th>
-                                    <th style="width:165px">kW</th>
-                                </tr>
-                            </thead>
-
-                            <tbody id="dynamicTbody" style="display:block;overflow-y:scroll;height:90%">
-
-                            </tbody>
-                        </table>
+                <div>
+                    <canvas id="myChart" style="display:block; height:300px;width:408px"></canvas>
+                    <div class="chart_btm">
+                        <span>0시</span>
+                        <span>6시</span>
+                        <span class="time12">12시</span>
+                        <span>18시</span>
+                        <span>24시</span>
                     </div>
                 </div>
 
-                <div>
-                    <label style="float:right;margin-right:10px;margin-top:5px; color:white">Power factor : 100%</label>
-                </div><br><br><br>
-
-                <div class="reload_button" style="float:left;margin-top:5px;margin-left:30px">
+                <div class="reload_button" style="float:left;margin-top:10px;margin-left:40px">
                     <button type="button" onclick="location.href='http://localhost:7070/chart/online'"
                         class="btn btn-light" id="btn_power01">현재값</button>
                     <button type="button" onclick="location.href='http://localhost:7070/graph/online'"
                         class="btn btn-light" id="btn_power02" style="margin-left:10px">그래프</button>
                     <button type="button" onclick="window.location.reload()" class="btn btn-light" id="btn_power03"
                         style="margin-left:10px">새로고침</button>
+
+                    <label style="margin-left:30px"><input type="checkbox" name="graph1" checked="checked"> 목표량</label>
+                    <label style="margin-left:10px"><input type="checkbox" name="graph2" checked="checked">
+                        사용량</label>
+                    <label style="margin-left:10px"><input type="checkbox" name="graph3" checked="checked">
+                        미정</label>
+                </div>
+
+                <div>
+                    <p id="choices"></p>
                 </div>
             </div>
-
             <div class="right">
                 <div class="logo_box">
                     <a href="/"><img src="{{ url_for('static',filename='images/ninewatt-logo-3d.gif') }}" alt=""></a>
                 </div>
                 <div class="input_content">
                     <div class="title_box">
-                        <span class="icon"><i class="fas fa-bolt fa-lg"></i></span>
+                        <!-- <span class="icon"><i class="fas fa-bolt fa-lg"></i></span> -->
                         <span class="txt">Time</span>
                         <span class="txt" id="timenow"></span>
                     </div>
@@ -126,11 +132,187 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
     <script>
 
+        $.ajax({
+            url: 'http://localhost:5000/graph/1/200831',
+            //url: 'http://ec2-13-125-22-29.ap-northeast-2.compute.amazonaws.com/chart.php',
+            type: 'GET',
+            data: {
+                // 보낼 데이터
+            },
+            dataType: 'json'
+        })
+            .done(function (res) {
+                // 성공 시 동작
+                console.log('성공', res)
+
+                var checkSum = res.checksum;
+                var resDate = [];
+                var hour = [];
+                var current = [];
+                var target = [];
+
+                for (var i = 0; i <= 23; i += 1) {
+                    for (var v = 0; v <= 50; v += 15) {
+                        // console.log(v)
+                        if (i < 10) {
+                            if (v < 10) {
+                                hour.push(`0${i}:0${v}`)
+                            } else {
+                                hour.push(`0${i}:${v}`)
+                            }
+                        } else {
+                            if (v < 10) {
+                                hour.push(`${i}:0${v}`)
+                            } else {
+                                hour.push(`${i}:${v}`)
+                            }
+                        }
+                    }
+                }
+                res.forEach(function (i) {
+                    //console.log(i)
+                    if (i.label !== '') {
+                        resDate.push(i.label)
+                    }
+                    //current.push(i[3])
+                    target.push(i[2])
+                })
+
+                var ctx = document.getElementById('myChart').getContext('2d');
+
+                var chart = new Chart(ctx, {
+                    // The type of chart we want to create
+                    type: 'line',
+
+                    // The data for our dataset
+                    data: {
+
+                        labels: hour,
+                        datasets: [
+                            {
+                                label: '목표량',
+                                // backgroundColor: 'rgb(255, 99, 132)',
+                                borderColor: 'rgb(234, 195, 100)',
+                                // backgroundColor : 'rgba(39,39,39)',
+                                pointRadius: 0,
+                                data: current
+                            },
+                            {
+                                label: '사용량',
+                                // backgroundColor: 'rgb(255, 99, 132)',
+                                borderColor: 'tomato',
+                                // backgroundColor : 'rgba(39,39,39)',
+                                pointRadius: 0,
+                                data: target
+                            },
+                            {
+                                label: '미정',
+                                // backgroundColor: 'rgb(255, 99, 132)',
+                                borderColor: 'white',
+                                // backgroundColor : 'rgba(39,39,39)',
+                                pointRadius: 0
+                                //data: target
+                            }
+                        ]
+                    },
+
+                    // Configuration options go here
+                    options: {
+                        scales: {
+                            xAxes: [{
+                                gridLines: {
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: "시간",
+                                    fontColor: "rgb(234, 195, 100)"
+                                },
+                                ticks: {
+                                    autoSkip: true,
+                                    fontSize: 0,
+                                }
+                            }],
+                            yAxes: [{
+                                id: 'y-axis-1',
+                                gridLines: {
+                                },
+                                ticks: {
+                                    min: 0
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: "전력량",
+                                    fontColor: "rgb(234, 195, 100)"
+                                }
+                            }]
+                        },
+                        annotation: {
+                            drawTime: "afterDraw" // (default)
+                        }
+                    }
+                });
+
+                $(':checkbox[name="graph1"]').change(function () {
+                    chart.data.datasets.find(function (ds) {
+                        if (ds.label == '목표량')
+                            ds.hidden = !ds.hidden;
+                    });
+                    chart.update();
+                })
+
+                $(':checkbox[name="graph2"]').change(function () {
+                    chart.data.datasets.find(function (ds) {
+                        if (ds.label == '사용량')
+                            ds.hidden = !ds.hidden;
+                    });
+                    chart.update();
+                })
+
+                $(':checkbox[name="graph3"]').change(function () {
+                    chart.data.datasets.find(function (ds) {
+                        if (ds.label == '미정')
+                            ds.hidden = !ds.hidden;
+                    });
+                    chart.update();
+                })
+                // checkbox part -> visible/invisible
+
+                setInterval(function () {
+                    $.ajax({
+                        url: 'http://localhost:5000/graph/1/200831',
+                        type: 'GET',
+                        data: {
+                            // 보낼 데이터
+                        },
+                        dataType: 'json'
+                    })
+                        .done(function (res) {
+                            //console.log('res', res)
+                            //if(checkSum !== res.checksum) {
+                            checkSum = res.checksum
+                            var current = []
+                            var target = [];
+
+                            res.forEach(function (i) {
+                                //console.log(i)
+                                if (i.label !== '') {
+                                    resDate.push(i.label)
+                                }
+                                //current.push(i.current)
+                                target.push(i.target)
+                            })
+                            addData(chart, current, 0);
+                            addData2(chart, target, 0);
+                            //}
+                        });
+                }, 10000)
+            });
 
         $.ajax({
             url: 'http://localhost:5000/process',
@@ -158,27 +340,6 @@
             }
         });
 
-        // $(function tableCreate() {
-        //     var tc = new Array();
-        //     var html = '';
-
-        //     tc.push({ name: '남궁민수', job: '기관사', last: '허헝헣' });
-        //     tc.push({ name: '유재석', job: 'MC', last: '허헝헣' });
-        //     tc.push({ name: '박명수', job: '개그맨', last: '허헝헣' });
-        //     tc.push({ name: '정준하', job: '엔터테이너', last: '허헝헣' });
-        //     tc.push({ name: '정형돈', job: '개그맨', last: '허헝헣' });
-
-        //     for (key in tc) {
-        //         html += '<tr style="margin-left:20px">';
-        //         html += '<td style="width:200px">' + tc[key].name + '</td>';
-        //         html += '<td style="width:200px">' + tc[key].job + '</td>';
-        //         html += '<td style="width:200px">' + tc[key].last + '</td>';
-        //         html += '</tr>';
-        //     }
-
-        //     $("#dynamicTbody").empty();
-        //     $("#dynamicTbody").append(html);
-        // });
 
         $.ajax({
             url: 'http://localhost:5000/realtime',
@@ -191,10 +352,9 @@
                 var raw_data = data['data'];
 
                 for (key in raw_data) {
-                    html += '<tr style="margin-left:20px">';
-                    html += '<td style="width:200px">' + raw_data[key].point_id + '</td>';
-                    html += '<td style="width:200px">' + raw_data[key].value + '</td>';
-                    html += '<td style="width:200px">'+ '' +'</td>';
+                    html += '<tr>';
+                    html += '<td>' + raw_data[key].point_id + '</td>';
+                    html += '<td>' + raw_data[key].value + '</td>';
                     html += '</tr>';
                 }
                 $("#dynamicTbody").empty();
@@ -258,10 +418,9 @@
                     var raw_data = data['data'];
 
                     for (key in raw_data) {
-                        html += '<tr style="margin-left:20px">';
-                        html += '<td style="width:200px">' + raw_data[key].point_id + '</td>';
-                        html += '<td style="width:200px">' + raw_data[key].value + '</td>';
-                        html += '<td style="width:200px">'+ '' +'</td>';
+                        html += '<tr>';
+                        html += '<td>' + raw_data[key].point_id + '</td>';
+                        html += '<td>' + raw_data[key].value + '</td>';
                         html += '</tr>';
                     }
                     $("#dynamicTbody").empty();

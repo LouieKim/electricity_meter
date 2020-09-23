@@ -4,15 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Insert title here</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <!-- Referece: https://qkrrudtjr954.github.io/jquery/2018/01/29/jquery-dynamic-table.html -->
 </head>
 
 <body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
     <!-- 동적 테이블 -->
     <table id="list_table" class="table">
         <colgroup>
@@ -38,31 +43,30 @@
     </table>
     <script>
         $.ajax({
-        url: 'http://localhost:5000/modbusinfo',
-        type: 'GET',
-        contentType:'javascript/json; charset=utf-8',
-        dataType: 'json',
-        success: function(data){
-            var html = '';
-            var raw_data = data['modbus_info'];
+            url: 'http://localhost:5000/modbusinfo',
+            type: 'GET',
+            contentType: 'javascript/json; charset=utf-8',
+            dataType: 'json',
+            success: function (data) {
+                var html = '';
+                var raw_data = data['modbus_info'];
 
-            for(key in raw_data)
-            {
-                html += '<tr>';
-                html += '<td id="req_point_id">'+raw_data[key].point_id+'</td>';
-                html += '<td>'+raw_data[key].slave+'</td>';
-                html += '<td>'+raw_data[key].function_code+'</td>';
-                html += '<td>'+raw_data[key].map_address+'</td>';
-                html += '<td>'+raw_data[key].unit+'</td>';
-                //html += '<td><a href="http://localhost:5000/modbus/delete/' + raw_data[key].point_id + '" class="delete-link">Delete</a></td>';
-                html += '<td><a href="#" onclick="modbusdel(' + raw_data[key].point_id + ')" class="delete-link">Delete</a></td>';
+                for (key in raw_data) {
+                    html += '<tr>';
+                    html += '<td id="req_point_id">' + raw_data[key].point_id + '</td>';
+                    html += '<td>' + raw_data[key].slave + '</td>';
+                    html += '<td>' + raw_data[key].function_code + '</td>';
+                    html += '<td>' + raw_data[key].map_address + '</td>';
+                    html += '<td>' + raw_data[key].unit + '</td>';
+                    //html += '<td><a href="http://localhost:5000/modbus/delete/' + raw_data[key].point_id + '" class="delete-link">Delete</a></td>';
+                    html += '<td><a href="#" onclick="modbusdel(' + raw_data[key].point_id + ')" class="delete-link">Delete</a></td>';
 
-                html += '</tr>';
+                    html += '</tr>';
+                }
+                $("#dynamicTbody").empty();
+                $("#dynamicTbody").append(html);
             }
-            $("#dynamicTbody").empty();
-            $("#dynamicTbody").append(html);
-            }
-         });
+        });
 
 
     </script>
@@ -120,72 +124,72 @@
     </div>
 
     <script type="text/javascript">
-    
-        function refreshMemList(){
+
+        function refreshMemList() {
             location.reload();
         }
 
-        function modbusdel(point_id){
+        function modbusdel(point_id) {
             $.ajax({
-			url: 'http://localhost:5000/modbus/delete',
-			dataType: 'json',
-			type: 'POST',
-			data: {point_id: point_id},
-			success: function(result){
-                refreshMemList();
-            }
-			})
+                url: 'http://localhost:5000/modbus/delete',
+                dataType: 'json',
+                type: 'POST',
+                data: { point_id: point_id },
+                success: function (result) {
+                    refreshMemList();
+                }
+            })
         }
 
-        $('#append_row').on("click", function (){
-			$.ajax({
-			url: 'http://localhost:5000/modbus/new',
-			dataType: 'json',
-			type: 'POST',
-			data: {slave: $('#slave').val(), function_code: $('#function_code').val(), map_address: $('#map_address').val(), unit: $('#unit').val()},
-            
-			success: function(result){
-                refreshMemList();
-            }
-			})
-		});
+        $('#append_row').on("click", function () {
+            $.ajax({
+                url: 'http://localhost:5000/modbus/new',
+                dataType: 'json',
+                type: 'POST',
+                data: { slave: $('#slave').val(), function_code: $('#function_code').val(), map_address: $('#map_address').val(), unit: $('#unit').val() },
 
-        $('#manager_start').on("click", function (){
-			$.ajax({
-            url: 'http://localhost:5000/process/start',
-            type: 'GET',
-            contentType:'javascript/json; charset=utf-8',
-            data: {},
-            dataType: 'json',
-            success: {}
+                success: function (result) {
+                    refreshMemList();
+                }
             })
-		});
+        });
 
-        $('#manager_stop').on("click", function (){
-			$.ajax({
-            url: 'http://localhost:5000/process/stop',
-            type: 'GET',
-            contentType:'javascript/json; charset=utf-8',
-            data: {},
-            dataType: 'json',
-            success: {}
+        $('#manager_start').on("click", function () {
+            $.ajax({
+                url: 'http://localhost:5000/process/start',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: {}
             })
-		});
+        });
 
-        $('#manager_status').on("click", function (){
-			$.ajax({
-            url: 'http://localhost:5000/process',
-            type: 'GET',
-            contentType:'javascript/json; charset=utf-8',
-            data: {},
-            dataType: 'json',
-            success: function(data){
-                document.querySelector('#app_process').innerHTML = data['ninewatt_app'];
-                document.querySelector('#manager_process').innerHTML = data['ninewatt_manager'];
-                document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
-            }
+        $('#manager_stop').on("click", function () {
+            $.ajax({
+                url: 'http://localhost:5000/process/stop',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: {}
             })
-		});
+        });
+
+        $('#manager_status').on("click", function () {
+            $.ajax({
+                url: 'http://localhost:5000/process',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    document.querySelector('#app_process').innerHTML = data['ninewatt_app'];
+                    document.querySelector('#manager_process').innerHTML = data['ninewatt_manager'];
+                    document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
+                }
+            })
+        });
 
     </script>
 
