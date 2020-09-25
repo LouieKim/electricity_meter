@@ -29,7 +29,14 @@
         <div class="box">
             <div class="left">
                 <div>
-                    <canvas id="myChart"></canvas>
+                    <label style="color:white; margin-left:30px">장치 선택</label>
+                    <select id="graph_select">
+
+                    </select>
+                </div>
+
+                <div style="height:75%">
+                    <canvas id="myChart" style="margin-top:40px"></canvas>
                     <div class="chart_btm">
                         <span>0시</span>
                         <span>6시</span>
@@ -46,12 +53,12 @@
                         class="btn btn-light" id="btn_power02" style="margin-left:10px">그래프</button>
                     <button type="button" onclick="window.location.reload()" class="btn btn-light" id="btn_power03"
                         style="margin-left:10px">새로고침</button>
+                </div>
 
-                    <label style="margin-left:30px"><input type="checkbox" name="graph1" checked="checked"> 목표량</label>
-                    <label style="margin-left:10px"><input type="checkbox" name="graph2" checked="checked">
-                        사용량</label>
-                    <label style="margin-left:10px"><input type="checkbox" name="graph3" checked="checked">
-                        미정</label>
+                <div style="float:right; margin-top:10px">
+                    <label><input type="checkbox" name="yesterday" checked="checked"> 어제</label>
+                    <label style="margin-left:10px; margin-right:10px"><input type="checkbox" name="today"
+                            checked="checked"> 오늘</label>
                 </div>
 
             </div>
@@ -119,14 +126,33 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
     <script>
+        $.ajax({
+            url: 'http://localhost:5000/modbusinfo',
+            type: 'GET',
+            contentType: 'javascript/json; charset=utf-8',
+            data: {},
+            dataType: 'json',
+            success: function (data) {
+                var html = '';
+                var raw_data = data['modbus_info'];
+
+                for (key in raw_data) {
+                    if (raw_data[key].point_id == 1)
+                        html += '<option value="' + raw_data[key].point_id + '" selected>' + 'ch_' + raw_data[key].point_id + '</option>';
+                    else
+                        html += '<option value="' + raw_data[key].point_id + '">' + 'ch_' + raw_data[key].point_id + '</option>';
+                }
+                $("#graph_select").append(html);
+            }
+        });
+        // select box's options -> ch_1, ch_2 ....
 
         $.ajax({
-            url: 'http://localhost:5000/graph/1',
+            url: 'http://localhost:5000/graph/1/200831',
             //url: 'http://ec2-13-125-22-29.ap-northeast-2.compute.amazonaws.com/chart.php',
             type: 'GET',
             data: {
@@ -180,7 +206,7 @@
                         labels: hour,
                         datasets: [
                             {
-                                label: '목표량',
+                                label: '어제',
                                 // backgroundColor: 'rgb(255, 99, 132)',
                                 borderColor: 'rgb(234, 195, 100)',
                                 // backgroundColor : 'rgba(39,39,39)',
@@ -188,20 +214,12 @@
                                 data: current
                             },
                             {
-                                label: '사용량',
+                                label: '오늘',
                                 // backgroundColor: 'rgb(255, 99, 132)',
                                 borderColor: 'tomato',
                                 // backgroundColor : 'rgba(39,39,39)',
                                 pointRadius: 0,
                                 data: target
-                            },
-                            {
-                                label: '미정',
-                                // backgroundColor: 'rgb(255, 99, 132)',
-                                borderColor: 'white',
-                                // backgroundColor : 'rgba(39,39,39)',
-                                pointRadius: 0
-                                //data: target
                             }
                         ]
                     },
@@ -240,71 +258,140 @@
                         }
                     }
                 });
-                
-                $(':checkbox[name="graph1"]').change(function () {
-                    chart.data.datasets.find(function (ds) {
-                        if (ds.label == '목표량')
-                            ds.hidden = !ds.hidden;
-                    });
-                    chart.update();
-                })
-
-                $(':checkbox[name="graph2"]').change(function () {
-                    chart.data.datasets.find(function (ds) {
-                        if (ds.label == '사용량')
-                            ds.hidden = !ds.hidden;
-                    });
-                    chart.update();
-                })
-
-                $(':checkbox[name="graph3"]').change(function () {
-                    chart.data.datasets.find(function (ds) {
-                        if (ds.label == '미정')
-                            ds.hidden = !ds.hidden;
-                    });
-                    chart.update();
-                })
-                // checkbox part -> visible/invisible
-                
-                setInterval(function () {
-                $.ajax({
-                    url: 'http://localhost:5000/graph/1',
-                    type: 'GET',
-                    data: {
-                        // 보낼 데이터
-                    },
-                    dataType: 'json'
-                })
-                    .done(function (res) {
-                        //console.log('res', res)
-                        //if(checkSum !== res.checksum) {
-                        checkSum = res.checksum
-                        var current = []
-                        var target = [];
-                        
-                        res.forEach(function (i) {
-                            //console.log(i)
-                            if(i.label !=='') {
-                                resDate.push(i.label)
-                            }
-                            //current.push(i.current)
-                            target.push(i.target)
-                        })                        
-                        addData(chart, current, 0);
-                        addData2(chart, target, 0);
-                        //}
-                    });
-                }, 60000)
             });
+        // 이부분은 페이지 처음에 ch_1 장치 보여주는 부분
 
-        function addData(chart, data, datasetIndex) {
-            chart.data.datasets[datasetIndex].data = data;
-            chart.update();
-        }
-        function addData2(chart, data) {
-            chart.data.datasets[0].data = data;
-            chart.update();
-        }
+        $("#graph_select").change(function () {
+            var select_value = $("#graph_select option:selected").val();
+            //console.log(select_value[0], select_value[1], select_value[2]);
+
+            $.ajax({
+                url: 'http://localhost:5000/graph/' + select_value + '/200831',
+                //url: 'http://ec2-13-125-22-29.ap-northeast-2.compute.amazonaws.com/chart.php',
+                type: 'GET',
+                data: {
+                    // 보낼 데이터
+                },
+                dataType: 'json'
+            })
+                .done(function (res) {
+                    // 성공 시 동작
+                    //console.log('성공', res)
+                    var checkSum = res.checksum;
+                    var resDate = [];
+                    var hour = [];
+                    var current = [];
+                    var target = [];
+                    for (var i = 0; i <= 23; i += 1) {
+                        for (var v = 0; v <= 50; v += 15) {
+                            // console.log(v)
+                            if (i < 10) {
+                                if (v < 10) {
+                                    hour.push(`0${i}:0${v}`)
+                                } else {
+                                    hour.push(`0${i}:${v}`)
+                                }
+                            } else {
+                                if (v < 10) {
+                                    hour.push(`${i}:0${v}`)
+                                } else {
+                                    hour.push(`${i}:${v}`)
+                                }
+                            }
+                        }
+                    }
+                    res.forEach(function (i) {
+                        //console.log(i)
+                        if (i.label !== '') {
+                            resDate.push(i.label)
+                        }
+                        //current.push(i[3])
+                        target.push(i[2])
+                    })
+
+                    var ctx = document.getElementById('myChart').getContext('2d');
+
+                    var chart = new Chart(ctx, {
+                        // The type of chart we want to create
+                        type: 'line',
+
+                        // The data for our dataset
+                        data: {
+                            labels: hour,
+                            datasets: [
+                                {
+                                    label: '어제',
+                                    // backgroundColor: 'rgb(255, 99, 132)',
+                                    borderColor: 'rgb(234, 195, 100)',
+                                    // backgroundColor : 'rgba(39,39,39)',
+                                    pointRadius: 0,
+                                    data: current
+                                },
+                                {
+                                    label: '오늘',
+                                    // backgroundColor: 'rgb(255, 99, 132)',
+                                    borderColor: 'tomato',
+                                    // backgroundColor : 'rgba(39,39,39)',
+                                    pointRadius: 0,
+                                    data: target
+                                }
+                            ]
+                        },
+
+                        // Configuration options go here
+                        options: {
+                            scales: {
+                                xAxes: [{
+                                    gridLines: {
+                                    },
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: "시간",
+                                        fontColor: "rgb(234, 195, 100)"
+                                    },
+                                    ticks: {
+                                        autoSkip: true,
+                                        fontSize: 0,
+                                    }
+                                }],
+                                yAxes: [{
+                                    id: 'y-axis-1',
+                                    gridLines: {
+                                    },
+                                    ticks: {
+                                    },
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: "전력량",
+                                        fontColor: "rgb(234, 195, 100)"
+                                    }
+                                }]
+                            },
+                            annotation: {
+                                drawTime: "afterDraw" // (default)
+                            }
+                        }
+                    });
+
+                    $(':checkbox[name="yesterday"]').change(function () {
+                        chart.data.datasets.find(function (ds) {
+                            if (ds.label == '어제')
+                                ds.hidden = !ds.hidden;
+                        });
+                        chart.update();
+                    })
+                    $(':checkbox[name="today"]').change(function () {
+                        chart.data.datasets.find(function (ds) {
+                            if (ds.label == '오늘')
+                                ds.hidden = !ds.hidden;
+                        });
+                        chart.update();
+                    })
+
+
+                });
+        });
+        // 콤보박스에서 장치 선택했을 때, 선택된 id 링크를 보여주는 부분
 
         $.ajax({
             url: 'http://localhost:5000/process',
@@ -367,6 +454,52 @@
         });
 
         //=================================================================
+
+        //$("#graph_select").change(function () {
+        setInterval(function () {
+            var select_value = $("#graph_select option:selected").val();
+
+            $.ajax({
+                url: 'http://localhost:5000/graph/' + select_value + '/200831',
+                //요부분이 문제..옵션이 selected인 상태의 모든 option을 다 긁어옴....
+                //selected 해제하는 방법은??
+                type: 'GET',
+                data: {
+                    // 보낼 데이터
+                },
+                dataType: 'json'
+            })
+                .done(function (res) {
+
+                    //console.log('res', res)
+                    //if(checkSum !== res.checksum) {
+                    checkSum = res.checksum;
+                    var current = [];
+                    var target = [];
+
+                    res.forEach(function (i) {
+                        //console.log(i)
+                        if (i.label !== '') {
+                            resDate.push(i.label);
+                        }
+                        current.push(i.current)
+                        target.push(i.target);
+                    })
+                    addData(chart, current, 0);
+                    addData2(chart, target, 0);
+                    //}
+                });
+        }, 1000)
+        //});
+
+        function addData(chart, data, datasetIndex) {
+            chart.data.datasets[datasetIndex].data = data;
+            chart.update();
+        }
+        function addData2(chart, data) {
+            chart.data.datasets[0].data = data;
+            chart.update();
+        }
 
         setInterval(function () {
             $.ajax({

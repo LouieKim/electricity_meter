@@ -15,6 +15,7 @@
     <script src="{{ url_for('static', filename='js/jquery-3.4.1.js')}}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
 
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/toggle.css')}}">
 
     <title>키패드</title>
 </head>
@@ -30,8 +31,8 @@
                             <thead style="height:20%">
                                 <tr>
                                     <th style="width:160px">ID</th>
-                                    <th style="width:165px">Current</th>
-                                    <th style="width:165px">kW</th>
+                                    <th style="width:165px">kW/h</th>
+                                    <th style="width:165px">전기 요금</th>
                                 </tr>
                             </thead>
                             <tbody id="dynamicTbody" style="display:block;overflow-y:scroll;height:90%">
@@ -46,12 +47,18 @@
                 </div><br><br><br>
 
                 <div class="reload_button" style="float:left;margin-top:5px;margin-left:30px">
-                    <button type="button" onclick="location.href='http://localhost:7070/chart/offline'"
-                        class="btn btn-light" id="btn_power01">현재값</button>
-                    <button type="button" onclick="location.href='http://localhost:7070/graph/offline'"
-                        class="btn btn-light" id="btn_power02" style="margin-left:10px">그래프</button>
-                    <button type="button" onclick="window.location.reload()" class="btn btn-light" id="btn_power03"
-                        style="margin-left:10px">새로고침</button>
+                    <button type="button" onclick="location.href='http://localhost:7070/chart/offline'" class="btn btn-light" id="btn_power01">현재값</button>
+                    <button type="button" onclick="location.href='http://localhost:7070/graph/offline'" class="btn btn-light" id="btn_power02" style="margin-left:10px">그래프</button>
+                    <button type="button" onclick="window.location.reload()" class="btn btn-light" id="btn_power03" style="margin-left:10px">새로고침</button>
+                    <button type="button" onclick="location.href='http://localhost:7070/setting/offline'" class="btn btn-light" id="btn_power04" style="margin-left:10px">설정</button>
+                </div>
+
+                <div class="toggle_button" style="float:right;margin-right:10px">
+                    <p style="color:white">절전</p>
+                    <label class="switch">
+                        <input type="checkbox" onclick="toggle()">
+                        <span class="slider round"></span>
+                    </label>
                 </div>
             </div>
 
@@ -123,7 +130,6 @@
     </div>
 
     <script>
-
         //$(function tableCreate(){
 
         //    var tc = new Array();
@@ -186,7 +192,7 @@
 
                 for (key in raw_data) {
                     html += '<tr style="margin-left:20px">';
-                    html += '<td style="width:200px">' + raw_data[key].point_id + '</td>';
+                    html += '<td style="width:200px">' + 'ch_' + raw_data[key].point_id + '</td>';
                     html += '<td style="width:200px">' + raw_data[key].value + '</td>';
                     html += '<td style="width:200px">' + '' + '</td>';
                     //세번째항목(kW)들어와야 함
