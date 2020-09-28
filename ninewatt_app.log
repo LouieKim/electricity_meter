@@ -17,3 +17,165 @@
 [SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
 [parameters: ('==ID 입력==', '==이름 입력==')]
 (Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-23 14:23:53,213 ERROR (Thread-7) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:24:52,596 ERROR (Thread-15) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:25:52,624 ERROR (Thread-23) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:28:35,143 ERROR (Thread-10) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:28:35,990 ERROR (Thread-11) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:28:36,334 ERROR (Thread-12) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:28:36,631 ERROR (Thread-13) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:28:36,912 ERROR (Thread-14) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:28:37,113 ERROR (Thread-15) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:28:37,279 ERROR (Thread-16) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:28:37,620 ERROR (Thread-17) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:28:52,556 ERROR (Thread-25) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:29:52,925 ERROR (Thread-34) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:30:52,623 ERROR (Thread-42) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:31:52,608 ERROR (Thread-50) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:32:52,593 ERROR (Thread-58) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:33:20,512 ERROR (Thread-60) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:33:56,863 ERROR (Thread-7) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:33:58,480 ERROR (Thread-10) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:33:59,188 ERROR (Thread-11) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:33:59,732 ERROR (Thread-12) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:34:00,035 ERROR (Thread-13) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:34:00,178 ERROR (Thread-14) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:34:00,349 ERROR (Thread-15) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:34:00,657 ERROR (Thread-16) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:34:52,615 ERROR (Thread-23) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 14:35:52,599 ERROR (Thread-31) [__main__] (sqlite3.OperationalError) no such column: history.dev_name
+[SQL: SELECT history.point_id AS history_point_id, max(history.date) AS max_1, history.value AS history_value, history.dev_name AS history_dev_name 
+FROM history GROUP BY history.point_id]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 15:04:33,219 ERROR (Thread-244) [__main__] (sqlite3.OperationalError) database is locked
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('3', '이름!!')]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 15:04:34,637 ERROR (Thread-245) [__main__] (sqlite3.OperationalError) database is locked
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('3', '이름!!')]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 15:04:38,561 ERROR (Thread-246) [__main__] (sqlite3.OperationalError) database is locked
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('3', '이름!!')]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 15:04:47,689 ERROR (Thread-249) [__main__] (sqlite3.OperationalError) database is locked
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('3', '이름')]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2020-09-23 16:04:28,081 ERROR (Thread-3) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:04:40,119 ERROR (Thread-7) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:05:02,826 ERROR (Thread-18) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:06:53,721 ERROR (Thread-16) [__main__] (sqlite3.IntegrityError) UNIQUE constraint failed: id_to_name.point_id, id_to_name.dev_name
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('1', '지렁이')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-23 16:07:17,372 ERROR (Thread-22) [__main__] (sqlite3.IntegrityError) FOREIGN KEY constraint failed
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('4', '지렁이')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-23 16:07:23,938 ERROR (Thread-25) [__main__] (sqlite3.IntegrityError) UNIQUE constraint failed: id_to_name.point_id, id_to_name.dev_name
+[SQL: INSERT INTO id_to_name (point_id, dev_name) VALUES (?, ?)]
+[parameters: ('1', '지렁이')]
+(Background on this error at: http://sqlalche.me/e/13/gkpj)
+2020-09-23 16:08:06,257 ERROR (Thread-3) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:08:13,673 ERROR (Thread-5) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:08:20,302 ERROR (Thread-8) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:08:42,578 ERROR (Thread-11) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:08:56,280 ERROR (Thread-24) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:09:01,418 ERROR (Thread-26) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:09:07,725 ERROR (Thread-29) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:09:12,550 ERROR (Thread-32) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:09:23,067 ERROR (Thread-34) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:09:27,420 ERROR (Thread-37) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:09:31,674 ERROR (Thread-39) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:09:35,893 ERROR (Thread-42) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:10:06,177 ERROR (Thread-56) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:10:58,219 ERROR (Thread-66) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:11:03,562 ERROR (Thread-69) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:11:10,480 ERROR (Thread-71) [__main__] Class 'builtins.str' is not mapped
+2020-09-23 16:20:01,987 ERROR (Thread-12) [__main__] 'scoped_session' object is not subscriptable
+2020-09-23 16:20:09,392 ERROR (Thread-15) [__main__] 'scoped_session' object is not subscriptable
+2020-09-23 16:20:17,893 ERROR (Thread-18) [__main__] 'scoped_session' object is not subscriptable
+2020-09-23 16:20:33,169 ERROR (Thread-21) [__main__] 'scoped_session' object is not subscriptable
+2020-09-23 16:20:36,621 ERROR (Thread-24) [__main__] 'scoped_session' object is not subscriptable
+2020-09-23 16:20:47,510 ERROR (Thread-29) [__main__] 'scoped_session' object is not subscriptable
+2020-09-23 16:20:50,593 ERROR (Thread-31) [__main__] 'scoped_session' object is not subscriptable

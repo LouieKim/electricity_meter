@@ -11,7 +11,7 @@ from model import ModbusPointInfo
 from meter_calc import MeterCalc
 from sqlalchemy import and_, func
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import sqlite3
 from contextlib import closing
@@ -93,15 +93,15 @@ class CalcHistory(db.Model):
         'modbus_info.point_id', ondelete='cascade'))
     date = db.Column(db.DateTime, default=datetime.now, primary_key=True)
     value = db.Column(db.Integer, nullable=False)
-
     #modbusinfo = db.relationship("ModbusInfo", cascade="all, delete", passive_deletes=True)
 
     #modbusinfo = db.relationship("ModbusInfo", backref='CalcHistory', cascade="all, delete")
 
+
 class IdToName(db.Model):
     point_id = db.Column(db.Integer, db.ForeignKey(
         'modbus_info.point_id', ondelete='cascade'))
-    dev_name=db.Column(db.String(20),primary_key=True)
+    dev_name = db.Column(db.String(10), primary_key=True)
 
 
 @app.route('/polling')
@@ -416,7 +416,7 @@ def get_history_graph(point_id, history_date):
     length = 2
     a = [history_date[i:i+length] for i in range(0, len(history_date), length)]
     str_dt_txt = "20" + a[0] + "-" + a[1] + "-" + a[2] + " 00:00:00"
-
+    # a[0] : 년도 뒤 두글자, a[1] : 월, a[2] : 일
     raw_history_data = CalcHistory.query.filter(and_(
         CalcHistory.date >= str_dt_txt, CalcHistory.point_id == point_id)).order_by(CalcHistory.date).all()
 
@@ -450,13 +450,14 @@ def get_today_history_graph(point_id):
 
     return dict_rows_json
 
-@app.route('/idname',methods=['GET','POST'])
+
+@app.route('/idname', methods=['GET', 'POST'])
 def id_to_name_table():
     try:
         if request.method == 'POST':
             req_point_id = request.form['point_id']
             req_dev_name = request.form['dev_name']
-            
+
             job_query = IdToName(point_id=req_point_id, dev_name=req_dev_name)
 
             db.session.add(job_query)
@@ -467,6 +468,7 @@ def id_to_name_table():
     except Exception as e:
         _LOGGER.error(e)
         return jsonify({'error': 'Admin access is required'}), 401
+
 
 @app.route('/idnameinfo')
 def get_id_to_name_info():
@@ -492,7 +494,6 @@ def get_id_to_name_info():
     except Exception as e:
         _LOGGER.error(e)
         return jsonify({'error': 'Admin access is required'}), 401
-
 
 
 """

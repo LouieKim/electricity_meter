@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS calc_history (
 );
 
 CREATE TABLE IF NOT EXISTS id_to_name (
-  point_id INTEGER ,
+  point_id INTEGER,
   dev_name varchar(20) NOT NULL,
   PRIMARY KEY(point_id,dev_name),
   FOREIGN KEY(point_id) REFERENCES modbus_info(point_id) ON DELETE CASCADE
