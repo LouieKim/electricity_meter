@@ -9,9 +9,21 @@
     <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <!-- Referece: https://qkrrudtjr954.github.io/jquery/2018/01/29/jquery-dynamic-table.html -->
+
+    <style>
+        .container::-webkit-scrollbar{
+            width:30px;
+            background-color:white;
+        }
+        .container::-webkit-scrollbar-thumb{
+            border-radius:30px;
+            background-color:grey;
+            box-shadow:inset 0px 0px 10px white;
+        }
+    </style>
 </head>
 
-<body>
+<body class="container">
     <!-- 동적 테이블 -->
     <table id="list_table" class="table">
         <colgroup>
