@@ -46,7 +46,6 @@ def graph_chart_offline_test():
 def chart_offline_test():
     return render_template('chart_offline_test01.html')
 
-#aaaaaaaaaaaaaaaa TESTESTEST
 
 if __name__ == '__main__':
     if platform.system() == "Linux":
