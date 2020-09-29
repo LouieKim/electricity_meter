@@ -18,10 +18,20 @@
     <link rel="stylesheet" href="{{ url_for('static',filename='css/toggle.css')}}">
 
     <title>키패드</title>
+
+    <style>
+        .OnOff {
+            margin: 0px;
+            display: inline-block;
+            font-size: 15px;
+            font-weight: bold;
+            color: white;
+        }
+    </style>
+
 </head>
 
 <body>
-
     <div class="chart_app">
         <div class="box">
             <div class="left">
@@ -30,9 +40,9 @@
                         <table style="display:block;width:490px;border-collapse:collapse">
                             <thead style="height:20%">
                                 <tr>
-                                    <th style="width:160px">ID</th>
-                                    <th style="width:165px">kW/h</th>
-                                    <th style="width:165px">전기 요금</th>
+                                    <th style="width:241px">ID</th>
+                                    <th style="width:240px">kW/h</th>
+                                    <!-- <th>전기 요금</th> -->
                                 </tr>
                             </thead>
                             <tbody id="dynamicTbody" style="display:block;overflow-y:scroll;height:90%">
@@ -46,7 +56,7 @@
                     <label style="float:right;margin-right:10px;margin-top:5px; color:white">Power factor : 100%</label>
                 </div><br><br><br>
 
-                <div class="reload_button" style="float:left;margin-top:5px;margin-left:30px">
+                <div class="reload_button" style="margin-top:5px;margin-left:30px">
                     <button type="button" onclick="location.href='http://localhost:7070/chart/offline'"
                         class="btn btn-light" id="btn_power01">현재값</button>
                     <button type="button" onclick="location.href='http://localhost:7070/graph/offline'"
@@ -55,14 +65,13 @@
                         style="margin-left:10px">새로고침</button>
                     <button type="button" onclick="location.href='http://localhost:7070/setting/offline'"
                         class="btn btn-light" id="btn_power04" style="margin-left:10px">설정</button>
-                </div>
 
-                <div class="toggle_button" style="float:right;margin-right:10px">
-                    <p style="color:white">절전</p>
-                    <label class="switch">
-                        <input type="checkbox" onclick="toggle()">
+                    <label class="switch" style="margin-left:50px">
+                        <input type="checkbox">
                         <span class="slider round"></span>
                     </label>
+                    <p class="OnOff">절전OFF</p>
+                    <p class="OnOff" style="display:none">절전ON</p>
                 </div>
             </div>
 
@@ -134,28 +143,33 @@
     </div>
 
     <script>
-        //$(function tableCreate(){
+        var check = $("input[type='checkbox']");
+        check.click(function () {
+            $("p").toggle();
+        });
+        
+        // $(function tableCreate() {
 
-        //    var tc = new Array();
-        //    var html = '';
+        //     var tc = new Array();
+        //     var html = '';
 
-        //    tc.push({name : '남궁민수', job : '기관사'});
-        //    tc.push({name : '유재석', job : 'MC'});
-        //    tc.push({name : '박명수', job : '개그맨'});
-        //   tc.push({name : '정준하', job : '엔터테이너'});
-        //    tc.push({name : '정형돈', job : '개그맨'});
+        //     tc.push({ name: '남궁민수', job: '기관사' });
+        //     tc.push({ name: '유재석', job: 'MC' });
+        //     tc.push({ name: '박명수', job: '개그맨' });
+        //     tc.push({ name: '정준하', job: '엔터테이너' });
+        //     tc.push({ name: '정형돈', job: '개그맨' });
 
-        //    for(key in tc){
-        //    html += '<tr>';
-        //    html += '<td>'+tc[key].name+'</td>';
-        //    html += '<td>'+tc[key].job+'</td>';
-        //    html += '</tr>';
-        //    }
+        //     for (key in tc) {
+        //         html += '<tr style="margin-left:20px">';
+        //         html += '<td style="width:245px">' + tc[key].name + '</td>';
+        //         html += '<td style="width:245px">' + tc[key].job + '</td>';
+        //         html += '</tr>';
+        //     }
 
-        //    $("#dynamicTbody").empty();
-        //    $("#dynamicTbody").append(html);
+        //     $("#dynamicTbody").empty();
+        //     $("#dynamicTbody").append(html);
 
-        //});
+        // });
 
         $.ajax({
             url: 'http://localhost:5000/process',
@@ -183,7 +197,6 @@
             }
         });
 
-
         $.ajax({
             url: 'http://localhost:5000/realtime',
             type: 'GET',
@@ -195,25 +208,11 @@
                 var raw_data = data['data'];
 
                 for (key in raw_data) {
-                    var fare = 0;
-                    var temp = raw_data[key].value;
-
-                    if (temp <= 200) {
-                        fare = 910 + temp + 93.3
-                    }
-                    else if (temp <= 400) {
-                        fare = 1600 + 200 * 93.3 + (temp - 200) * 187.9
-                    }
-                    else {
-                        fare = 7300 + 200 * 93.3 + 200 * 187.9 + (temp - 400) * 280.6
-                    }
-                    //-----------------------//
-
                     html += '<tr style="margin-left:20px">';
-                    html += '<td style="width:200px">' + 'ch_' + raw_data[key].point_id + '</td>';
-                    html += '<td style="width:200px">' + raw_data[key].value + '</td>';
-                    html += '<td style="width:200px">' + fare + ' 원</td>';
+                    html += '<td style="width:245px">ch_' + raw_data[key].point_id + '</td>';
+                    html += '<td style="width:245px">' + raw_data[key].value + '</td>';
                     html += '</tr>';
+                    // value값에 1/10을 해야 암페어 값이 나옴
                 }
                 $("#dynamicTbody").empty();
                 $("#dynamicTbody").append(html);
@@ -276,26 +275,11 @@
                     var raw_data = data['data'];
 
                     for (key in raw_data) {
-                        //------전기요금계산------//
-                        var fare = 0;
-                        var temp = raw_data[key].value;
-
-                        if (temp <= 200) {
-                            fare = 910 + temp + 93.3
-                        }
-                        else if (temp <= 400) {
-                            fare = 1600 + 200 * 93.3 + (temp - 200) * 187.9
-                        }
-                        else {
-                            fare = 7300 + 200 * 93.3 + 200 * 187.9 + (temp - 400) * 280.6
-                        }
-                        //-----------------------//
-
                         html += '<tr style="margin-left:20px">';
-                        html += '<td style="width:200px">' + raw_data[key].point_id + '</td>';
-                        html += '<td style="width:200px">' + raw_data[key].value + '</td>';
-                        html += '<td style="width:200px">' + fare + ' 원</td>';
+                        html += '<td style="width:245px">ch_' + raw_data[key].point_id + '</td>';
+                        html += '<td style="width:245px">' + raw_data[key].value + '</td>';
                         html += '</tr>';
+                        //value값에 1/10 해야지 암페어 값이 나옴
                     }
                     $("#dynamicTbody").empty();
                     $("#dynamicTbody").append(html);

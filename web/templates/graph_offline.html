@@ -215,6 +215,8 @@
         })
         // select box -> visible/invisible
 
+        get_history(1);
+
         function get_history(select_num) {
             $.ajax({
                 url: 'http://localhost:5000/graph/' + select_num + '/200831',
@@ -263,7 +265,7 @@
                                 current.push(i[2]);
                             })
 
-                            addData3(chart, hour, '오늘', target, 'tomato', '어제', current, 'rgb(234,195,100)');
+                            addData3(chart, hour, '오늘', target, '#FFF59D', '어제', current, '#80CBC4');
                         })
                     //어제 데이터까지 받아서 차트에 적용
                 })
@@ -299,7 +301,7 @@
         setInterval(function () {
             var select_value = $("#graph_select option:selected").val();
             get_history(select_value);
-        }, 10000)
+        }, 60000)
         //일정 시간마다 그래프 불러와서 띄워줌
 
         //========================그래프 관련 코드(끝)===============================//

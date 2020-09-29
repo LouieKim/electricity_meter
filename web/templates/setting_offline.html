@@ -52,10 +52,10 @@
                     html += '<tr>';
                     html += '<td id="req_point_id">' + raw_data[key].point_id + '</td>';
 
-                    if(raw_data[key].point_id < 10)
-                        html += '<td>' + 'ch0'+raw_data[key].point_id+'</td>';
+                    if (raw_data[key].point_id < 10)
+                        html += '<td>' + 'ch0' + raw_data[key].point_id + '</td>';
                     else
-                        html += '<td>' + 'ch'+raw_data[key].point_id+'</td>';
+                        html += '<td>' + 'ch' + raw_data[key].point_id + '</td>';
 
                     html += '<td>' + raw_data[key].slave + '</td>';
                     html += '<td>' + raw_data[key].function_code + '</td>';
@@ -99,7 +99,6 @@
                 <td><input type="text" id="unit" style="width:130px"></td>
                 <td><button type="button" id="append_row">데이터 추가</button></td>
             </tr>
-
             <tr>
                 <td>APP</td>
                 <td id="app_process"></td>
@@ -112,19 +111,18 @@
                 <td>Manager</td>
                 <td id="manager_process"></td>
             </tr>
-
         </tbody>
     </table>
-
 
     <div>
         <button type="button" id="manager_start">manager ON</button>
         <button type="button" id="manager_stop">manager OFF</button>
         <button type="button" id="manager_status">Status</button>
+        <button type="button" onclick="location.href='http://localhost:7070/chart/offline'"
+            style="float:right;margin-right:20px">현재값</button>
     </div>
 
     <script type="text/javascript">
-
         function refreshMemList() {
             location.reload();
         }
@@ -190,46 +188,8 @@
                 }
             })
         });
-
     </script>
 
-    <br><br>
-    <h3 style="margin-left:20px">## 이름 변경 ##</h3> 
-    <!--id와 변경하고싶은 이름을 적어서 변경버튼을 누르면 해당 내용을 DB에 올림-->
-        <input id="id_select" type="text" style="width:150px" value="==ID 입력=="
-            onfocus="if(!this._haschanged){this.value=''};this._haschanged=true;">
-
-        <label style="color:black; margin-top:10px"> 을(를)
-            <input id="change_name" type="text" style="width:150px" value="==이름 입력=="
-                onfocus="if(!this._haschanged){this.value=''};this._haschanged=true;"> (으)로
-            <button class="btn btn-dark" id="change_btn">
-                변경
-            </button>
-        </label>
-        
-        <button type="button" onclick="location.href='http://localhost:7070/chart/offline'" class="btn btn-dark" id="btn_power04" style="margin-left:10px">현재값</button>
-        <button class="btn btn-dark" id="power_saving" 
-        style="float:right;margin-top:10px;margin-right:20px">절전모드</button>
-        
-
-    <script>
-         $('#change_btn').on("click", function () {
-            $.ajax({
-                url: 'http://localhost:5000/idname',
-                dataType: 'json',
-                type: 'POST',
-                data: { point_id: $('#id_select').val(), dev_name: $('#change_name').val()},
-
-                success: function (result) {
-                    refreshMemList();
-                },
-                error:function(result){
-                    alert("이미 수정되거나 존재하지 않는 id 입니다."); // 내용은 바꾸면 됨
-                    refreshMemList()
-                }
-            })
-        });
-    </script>
 
 </body>
 
