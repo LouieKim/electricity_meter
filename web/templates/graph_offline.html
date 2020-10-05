@@ -175,8 +175,8 @@
             options: {
                 scales: {
                     xAxes: [{
-                        ticks:{
-                            display:false
+                        ticks: {
+                            display: false
                         },
                         scaleLabel: {
                             display: true,
@@ -219,7 +219,7 @@
 
         function get_history(select_num) {
             $.ajax({
-                url: 'http://localhost:5000/graph/' + select_num + '/200831',
+                url: 'http://localhost:5000/graph/' + select_num + '/'+getToday(),
                 type: 'GET',
                 data: {},
                 dataType: 'json'
@@ -253,7 +253,7 @@
                     //오늘 데이터 받음
 
                     $.ajax({
-                        url: 'http://localhost:5000/graph/' + select_num + '/200830',
+                        url: 'http://localhost:5000/graph/' + select_num + '/'+getYesterday(),
                         type: 'GET',
                         data: {},
                         dataType: 'json',
@@ -387,6 +387,49 @@
                 }
             })
         }, 60000);
+
+        function getToday() {
+            var today = new Date();
+
+            var year = today.getFullYear() % 100;
+            var month = today.getMonth() + 1;
+            var date = today.getDate();
+
+            if (year < 10)
+                year = '0' + year;
+            if (month < 10)
+                month = '0' + month;
+            if (date < 10)
+                date = '0' + date;
+
+            year = String(year);
+            month = String(month);
+            date = String(date);
+
+            return year + month + date;
+        }
+
+        function getYesterday() {
+            var today = new Date();
+            today.setTime(today.getTime() - 86400000);
+
+            var year = today.getFullYear() % 100;
+            var month = today.getMonth() + 1;
+            var date = today.getDate();
+
+            if (year < 10)
+                year = '0' + year;
+            if (month < 10)
+                month = '0' + month;
+            if (date < 10)
+                date = '0' + date;
+
+            year = String(year);
+            month = String(month);
+            date = String(date);
+
+            return year + month + date;
+        }
 
     </script>
 </body>

@@ -432,10 +432,12 @@ def get_history_graph(point_id, history_date):
 
 
 @app.route('/graph/<point_id>')
+# 데이터가 누락되었을 때 NULL값 넣어주는 기능 필요!!
 def get_today_history_graph(point_id):
     # Select Data From Graph History Table
 
     str_dt_txt = datetime.now().strftime('%Y-%m-%d 00:00:00')
+    str_yesterday_txt=datetime.now()
 
     raw_history_data = CalcHistory.query.filter(and_(
         CalcHistory.date >= str_dt_txt, CalcHistory.point_id == point_id)).order_by(CalcHistory.date).all()
