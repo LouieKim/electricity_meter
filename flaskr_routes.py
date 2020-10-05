@@ -310,7 +310,7 @@ def get_today_history_graph(point_id):
         history_data_list = list()
 
         for row in raw_history_data:
-            tmp_data = (row.point_id, row.date.strftime('%H:%M'), row.value)
+            tmp_data = (row.point_id, row.date.strftime('%H:%M'), row.value, yesterday)
             history_data_list.append(tmp_data)
 
         dict_rows_json = json.dumps(history_data_list)
