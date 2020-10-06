@@ -8,13 +8,20 @@ from flaskr import db
 from sqlalchemy import and_, func
 import json
 import psutil
-from datetime import datetime
+from datetime import datetime, time, timedelta
 
 #Reference: https://stackoverflow.com/questions/57726047/sqlalchemy-expression-language-and-sqlites-on-delete-cascade
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
 from sqlite3 import Connection as SQLite3Connection
 import subprocess
+
+def add_secs_to_time(timeval, secs_to_add):
+    secs = timeval.hour * 3600 + timeval.minute * 60 + timeval.second
+    secs += secs_to_add
+    return time(secs // 3600, (secs % 3600) // 60, secs % 60)
+
+LIST_15m_DAY = [add_secs_to_time(time(0), i).strftime("%H:%M") for i in range(0, 86400, 900)]
 
 @event.listens_for(Engine, "connect")
 def _set_sqlite_pragma(dbapi_connection, connection_record):
@@ -277,18 +284,25 @@ def start_process():
 def get_history_graph(point_id, day_date):
     try:
         length = 2
-        a = [day_date[i:i+length] for i in range(0, len(day_date), length)]
-        str_dt_txt = "20" + a[0] + "-" + a[1] + "-" + a[2] + " 00:00:00"
+        tmp_list = [day_date[i:i+length] for i in range(0, len(day_date), length)]
+        str_dt_txt = "20" + tmp_list[0] + "-" + tmp_list[1] + "-" + tmp_list[2] + " 00:00:00"
 
-        raw_history_data = CalcHistory.query.filter(and_(CalcHistory.date >= str_dt_txt, CalcHistory.point_id == point_id)).order_by(CalcHistory.date).all()
-        
-        bb = list()
+        end_dt_txt = datetime.strptime(str_dt_txt, "%Y-%m-%d %H:%M:%S") + timedelta(days=1)
 
-        for row in raw_history_data:
-            a = (row.point_id, row.date.strftime('%H:%M'), row.value)
-            bb.append(a)
+        raw_history_data = CalcHistory.query.filter(and_(CalcHistory.date >= str_dt_txt, CalcHistory.date < end_dt_txt, CalcHistory.point_id == point_id)).order_by(CalcHistory.date).all()
 
-        dict_rows_json = json.dumps(bb)
+        history_data_list = list()
+
+        for i in LIST_15m_DAY:
+            tmp_data = (point_id, i, "null")
+            for row in raw_history_data:
+                if i == row.date.strftime('%H:%M'):
+                    tmp_data = (point_id, row.date.strftime('%H:%M'), row.value)
+                    break
+
+            history_data_list.append(tmp_data)
+
+        dict_rows_json = json.dumps(history_data_list)
         
         return dict_rows_json
 
@@ -309,8 +323,11 @@ def get_today_history_graph(point_id):
         
         history_data_list = list()
 
+        for i in len(LIST_15m_DAY):
+            pass
+
         for row in raw_history_data:
-            tmp_data = (row.point_id, row.date.strftime('%H:%M'), row.value, yesterday)
+            tmp_data = (row.point_id, row.date.strftime('%H:%M'), row.value)
             history_data_list.append(tmp_data)
 
         dict_rows_json = json.dumps(history_data_list)
@@ -321,3 +338,13 @@ def get_today_history_graph(point_id):
         #_LOGGER.error(e)
         print(e)
         return jsonify({'error': 'get_today_history_graph'}), 500
+
+#author: hyeok0724.kim@ninewatt.com
+#update date: 20.09.18
+#descript: Select Data From Graph History Table
+#param: point_id
+@bp.route('/xscreensaver/<status>')
+def xscreensaver(status):
+    pass
+    #Todo
+    #xscreensaver로 구현하기
