@@ -339,12 +339,19 @@ def get_today_history_graph(point_id):
         print(e)
         return jsonify({'error': 'get_today_history_graph'}), 500
 
+
 #author: hyeok0724.kim@ninewatt.com
 #update date: 20.09.18
 #descript: Select Data From Graph History Table
-#param: point_id
+#param: status
 @bp.route('/xscreensaver/<status>')
 def xscreensaver(status):
-    pass
-    #Todo
-    #xscreensaver로 구현하기
+    if status == 'off':
+        subprocess.call("xscreensaver-command -exit", shell=True)
+        return jsonify({'success':"xscreensaver off"}), 200
+    elif status == 'on':
+        subprocess.call("xscreensaver &", shell=True)
+        return jsonify({'success':"xscreensaver on"}), 200
+    else:
+        print("error")
+        return jsonify({'error':"xscreensaver error"}), 500
