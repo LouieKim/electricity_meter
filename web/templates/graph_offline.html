@@ -219,7 +219,7 @@
 
         function get_history(select_num) {
             $.ajax({
-                url: 'http://localhost:5000/graph/' + select_num + '/'+getToday(),
+                url: 'http://localhost:5000/graph/' + select_num + '/' + getToday(),
                 type: 'GET',
                 data: {},
                 dataType: 'json'
@@ -227,6 +227,7 @@
                 .done(function (res) {
                     hour = [];
                     target = [];
+                    //console.log(res[0],res[1],res[2]); // res => [point_id, hour, value]
 
                     for (var i = 0; i <= 23; i += 1) {
                         for (var v = 0; v <= 50; v += 15) {
@@ -245,15 +246,25 @@
                             }
                         }
                     }
-                    //시간값 hour list에 넣어주기
+                    //시간값 hour list에 넣어주기 - x축 라벨링
 
                     res.forEach(function (i) {
-                        target.push(i[2]);
+                        for (j = 0; j < hour.length; j++) { // 라벨에 맞춰서 데이터 넣어주기 => 앞부분 건너뛴 경우 빈 부분은 공백으로 넣어서 인식은 못하지만 값이 존재하게
+                            if (i[1] == hour[j]) {
+                                for (k = 0; k < j; k++) {
+                                    if (isEmpty(target[k])) {
+                                        target[k] = "NULL";
+                                    }
+                                }
+                                target[j] = i[2];
+                            }
+                        }
+                        //target.push(i[2]);
                     })
                     //오늘 데이터 받음
 
                     $.ajax({
-                        url: 'http://localhost:5000/graph/' + select_num + '/'+getYesterday(),
+                        url: 'http://localhost:5000/graph/' + select_num + '/' + getYesterday(),
                         type: 'GET',
                         data: {},
                         dataType: 'json',
@@ -262,7 +273,17 @@
                             current = [];
 
                             res.forEach(function (i) {
-                                current.push(i[2]);
+                                for (j = 0; j < hour.length; j++) { // 라벨에 맞춰서 데이터 넣어주기 => 앞부분 건너뛴 경우 빈 부분은 공백으로 넣어서 인식은 못하지만 값이 존재하게
+                                    if (i[1] == hour[j]) {
+                                        for (k = 0; k < j; k++) {
+                                            if (isEmpty(current[k])) {
+                                                current[k] = "NULL";
+                                            }
+                                        }
+                                        current[j] = i[2];
+                                    }
+                                }
+                                //current.push(i[2]);
                             })
 
                             addData3(chart, hour, '오늘', target, '#00FFFF', '어제', current, '#FFFF99');
@@ -391,8 +412,8 @@
         function getToday() {
             var today = new Date();
 
-            var year = today.getFullYear() % 100;
-            var month = today.getMonth() + 1;
+            var year = today.getFullYear() % 100; // 연도 뒤 2자리만 사용
+            var month = today.getMonth() + 1; // 0~11까지 나오므로 +1 해줌
             var date = today.getDate();
 
             if (year < 10)
@@ -401,17 +422,20 @@
                 month = '0' + month;
             if (date < 10)
                 date = '0' + date;
+            // 각각의 숫자가 10보다 작을경우 앞에 0을 붙여서 표현
 
             year = String(year);
             month = String(month);
             date = String(date);
+            // 모두 String 데이터형으로 바꿔서
 
-            return year + month + date;
+            return year + month + date; // String 리턴해줌 => "YYMMDD"
         }
 
         function getYesterday() {
             var today = new Date();
             today.setTime(today.getTime() - 86400000);
+            // 1 * 24 * 60 * 60 * 1000 => getTime()이 1/1000 초까지 계산하므로 하루는 "1일 * 24시간 * 60분 * 60초 * 1000밀리초 = 86400000밀리초"
 
             var year = today.getFullYear() % 100;
             var month = today.getMonth() + 1;
@@ -430,6 +454,15 @@
 
             return year + month + date;
         }
+
+        var isEmpty = function (value) {
+            if (value === "" || value == null || value == undefined || (value != null && typeof value == "object" && !Object.keys(value).length)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }// target/current list에 문자열 데이터, null, undefined, 비어있는 객체는 비어있다고 판단 => 숫자 0은 비어있는 것이 아님
 
     </script>
 </body>

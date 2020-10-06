@@ -416,9 +416,10 @@ def get_history_graph(point_id, history_date):
     length = 2
     a = [history_date[i:i+length] for i in range(0, len(history_date), length)]
     str_dt_txt = "20" + a[0] + "-" + a[1] + "-" + a[2] + " 00:00:00"
+    end_dt_txt = "20" + a[0] + "-" + a[1] + "-" + a[2] + " 23:46:00"
     # a[0] : 년도 뒤 두글자, a[1] : 월, a[2] : 일
     raw_history_data = CalcHistory.query.filter(and_(
-        CalcHistory.date >= str_dt_txt, CalcHistory.point_id == point_id)).order_by(CalcHistory.date).all()
+        CalcHistory.date >= str_dt_txt, CalcHistory.date < end_dt_txt, CalcHistory.point_id == point_id)).order_by(CalcHistory.date).all() #**
 
     bb = list()
 
@@ -437,7 +438,7 @@ def get_today_history_graph(point_id):
     # Select Data From Graph History Table
 
     str_dt_txt = datetime.now().strftime('%Y-%m-%d 00:00:00')
-    str_yesterday_txt=datetime.now()
+    str_yesterday_txt=datetime.now() # ??
 
     raw_history_data = CalcHistory.query.filter(and_(
         CalcHistory.date >= str_dt_txt, CalcHistory.point_id == point_id)).order_by(CalcHistory.date).all()
