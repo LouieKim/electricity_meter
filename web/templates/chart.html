@@ -154,9 +154,9 @@
             if(check.is(":checked")==true){
                 //절전모드 on 일때
                 $.ajax({
-                    type:'POST',
+                    type:'GET',
                     contentTypes: 'javascript/json; charset=utf-8',
-                    data:{status:'on'},
+                    data:{},
                     dataType:'json',
                     url:'http://localhost:5000/xscreensaver/on',
                     success:function(e){
@@ -167,9 +167,9 @@
             else{
                 // 절전모드 off 일때
                 $.ajax({
-                    type:'POST',
+                    type:'GET',
                     contentTypes: 'javascript/json; charset=utf-8',
-                    data:{status:'off'},
+                    data:{},
                     dataType:'json',
                     url:'http://localhost:5000/xscreensaver/off',
                     success:function(e){
