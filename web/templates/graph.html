@@ -160,7 +160,7 @@
         $.ajax({
             type: 'GET',
             contentTypes: 'javascript/json; charset=utf-8',
-            data: 'xscreensaver_status',
+            data:{},
             dataType: 'json',
             url: 'http://localhost:5000/xscreensaver',
             success:function(e){
@@ -169,11 +169,11 @@
 
                 if(e.xscreensaver_status == "on"){
                     //console.log("on...");
-                    check.checked = true;
+                    check.checked="checked";
                 }
                 else if(e.xscreensaver_status == "off"){
                     //console.log("off...");
-                    check.checked = false;
+                    check.checked="";
                 }
             }
         });
