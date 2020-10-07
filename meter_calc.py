@@ -5,7 +5,7 @@ class MeterCalc():
         pass
 
     def electricity_calc(power_data):
-        power_avg = (sum(power_data) / len(power_data)) * 55 #220v / 4(15분/60분)
+        power_avg = (sum(power_data) / len(power_data)) * 0.25 #15분 / 60분
 
         return power_avg
 
