@@ -345,7 +345,7 @@ def get_today_history_graph(point_id):
 #descript: Select Data From Graph History Table
 #param: status
 @bp.route('/xscreensaver/<status>')
-def xscreensaver(status):
+def xscreensaver_control(status):
     if status == 'off':
         subprocess.call("xscreensaver-command -exit", shell=True)
         return jsonify({'success':"xscreensaver off"}), 200
@@ -357,7 +357,7 @@ def xscreensaver(status):
         return jsonify({'error':"xscreensaver error"}), 500
 
 @bp.route('/xscreensaver')
-def xscreensaver():
+def xscreensaver_status():
     pid_check = "supervisord" in (p.name() for p in psutil.process_iter())
 
     if pid_check == True:
