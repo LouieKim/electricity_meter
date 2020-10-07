@@ -68,9 +68,9 @@
 
                 <div>
                     <label style="float:right; color:white">Power factor : 100%</label>
-                </div>
+                </div><br><br>
 
-                <div class="reload_button" style="float:left;margin-top:10px;margin-left:40px">
+                <div class="reload_button" style="margin-top:10px;margin-left:40px">
                     <button type="button" onclick="location.href='http://localhost:7070/chart'" class="btn btn-light"
                         id="btn_power01">현재값</button>
                     <button type="button" onclick="location.href='http://localhost:7070/graph'" class="btn btn-light"
@@ -85,17 +85,17 @@
                     <p class="OnOff">절전OFF</p>
                     <p class="OnOff" style="display:none">절전ON</p> -->
 
-                    <div class="toggle_btn_container">
+                    <div class="toggle_btn_container" style="float:right; margin-left:20px">
                         <div class="toggle_btn_box">
                             <input class="toggle_input " id="toggle_btn" type="checkbox" />
                             <label class="toggle_label" for="toggle_btn">
-                                <span class="txt1">자동</span>
-                                <span class="txt2">수동</span>
+                                <span class="txt1">절전X</span>
+                                <span class="txt2">절전O</span>
                             </label>
                         </div>
-                    </div>
+                    </div><br>
 
-                    <button type="button" onclick="testfun()">ㅁㅁㅁ</button>
+                    <button type="button" onclick="testfun()" style="margin-top:10px">ㅁㅁㅁ</button>
 
                 </div>
 
@@ -172,21 +172,51 @@
 
         var toggleBtn = document.querySelector('#toggle_btn');
         // toggleBtn.checked = true;
-        toggleBtn.addEventListener('change' , function(){
+        toggleBtn.addEventListener('change', function () {
             console.log(toggleBtn.checked)
-            if(toggleBtn.checked) {
+            if (toggleBtn.checked) {
                 console.log("True")
+
+                $.ajax({
+                    type: 'GET',
+                    contentTypes: 'javascript/json; charset=utf-8',
+                    data: {},
+                    dataType: 'json',
+                    url: 'http://localhost:5000/xscreensaver/on',
+                    success: function (e) {
+                        console.log("ON");
+                    }
+                })
             } else {
                 console.log("FALSE")
+
+                $.ajax({
+                    type: 'GET',
+                    contentTypes: 'javascript/json; charset=utf-8',
+                    data: {},
+                    dataType: 'json',
+                    url: 'http://localhost:5000/xscreensaver/off',
+                    success: function (e) {
+                        console.log("OFF");
+                    }
+                })
             }
         })
 
-        function testfun(){
+        function testfun() {
             toggleBtn.checked = false;
+
+            $.ajax({
+                type: 'GET',
+                contentTypes: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                url: 'http://localhost:5000/xscreensaver/off',
+                success: function (e) {
+                    console.log("OFF");
+                }
+            })
         }
-
-
-
 
         // var check = $("input:checkbox[name=screen_saver]");
 
@@ -222,8 +252,8 @@
         //     }
         // });
 
-        // check.click(function () {
-        //     $("p").toggle();
+        // toggleBtn.click(function () {
+        //     //$("p").toggle();
 
         //     if (check.is(":checked") == true) {
         //         //절전모드 on 일때
@@ -234,7 +264,7 @@
         //             dataType: 'json',
         //             url: 'http://localhost:5000/xscreensaver/on',
         //             success: function (e) {
-        //                 //console.log("ON");
+        //                 console.log("ON");
         //             }
         //         })
         //     }
@@ -247,7 +277,7 @@
         //             dataType: 'json',
         //             url: 'http://localhost:5000/xscreensaver/off',
         //             success: function (e) {
-        //                 //console.log("OFF");
+        //                 console.log("OFF");
         //             }
         //         })
         //     }

@@ -66,12 +66,24 @@
                     <button type="button" onclick="location.href='http://localhost:7070/setting'"
                         class="btn btn-light" id="btn_power04" style="margin-left:10px">설정</button>
 
-                    <label class="switch" style="margin-left:40px">
+                    <!-- <label class="switch" style="margin-left:40px">
                         <input type="checkbox" name="screen_saver">
                         <span class="slider round"></span>
                     </label>
                     <p class="OnOff">절전OFF</p>
-                    <p class="OnOff" style="display:none">절전ON</p>
+                    <p class="OnOff" style="display:none">절전ON</p> -->
+
+                    <div class="toggle_btn_container" style="float:right; margin-left:20px">
+                        <div class="toggle_btn_box">
+                            <input class="toggle_input " id="toggle_btn" type="checkbox" />
+                            <label class="toggle_label" for="toggle_btn">
+                                <span class="txt1">절전X</span>
+                                <span class="txt2">절전O</span>
+                            </label>
+                        </div>
+                    </div><br>
+
+                    <button type="button" onclick="testfun()" style="margin-top:10px">ㅁㅁㅁ</button>
                 </div>
             </div>
 
@@ -143,36 +155,13 @@
     </div>
 
     <script>
-        var check = $("input:checkbox[name=screen_saver]");
+         var toggleBtn = document.querySelector('#toggle_btn');
+        // toggleBtn.checked = true;
+        toggleBtn.addEventListener('change' , function(){
+            console.log(toggleBtn.checked)
+            if(toggleBtn.checked) {
+                console.log("True")
 
-        $.ajax({
-            type: 'GET',
-            contentTypes: 'javascript/json; charset=utf-8',
-            data: 'xscreensaver_status',
-            dataType: 'json',
-            url: 'http://localhost:5000/xscreensaver',
-            success:function(e){
-                //console.log(e);
-                //console.log(e.xscreensaver_status);
-
-                if(e.xscreensaver_status == "on"){
-                    //console.log("on...");
-                    check.checked=true;
-                }
-                else if(e.xscreensaver_status == "off"){
-                    check.checked=false;
-                }
-            }
-        });
-        
-        check.click(function () {
-            $("p").toggle();
-
-            //console.log(check.is(":checked"));
-            // 절전모드on(파란색)인 경우 true, 절전모드off(회색)인 경우 false
-            
-            if(check.is(":checked")==true){
-                //절전모드 on 일때
                 $.ajax({
                     type:'GET',
                     contentTypes: 'javascript/json; charset=utf-8',
@@ -183,21 +172,91 @@
                         //console.log("ON");
                     }
                 })
-            }
-            else{
-                // 절전모드 off 일때
+            } else {
+                console.log("FALSE")
+
                 $.ajax({
-                    type:'GET',
+                    type: 'GET',
                     contentTypes: 'javascript/json; charset=utf-8',
-                    data:{},
-                    dataType:'json',
-                    url:'http://localhost:5000/xscreensaver/off',
-                    success:function(e){
+                    data: {},
+                    dataType: 'json',
+                    url: 'http://localhost:5000/xscreensaver/off',
+                    success: function (e) {
                         //console.log("OFF");
                     }
                 })
             }
-        });
+        })
+
+        function testfun(){
+            toggleBtn.checked = false;
+
+            $.ajax({
+                type: 'GET',
+                contentTypes: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                url: 'http://localhost:5000/xscreensaver/off',
+                success: function (e) {
+                    console.log("OFF");
+                }
+            })
+        }
+        // var check = $("input:checkbox[name=screen_saver]");
+
+        // $.ajax({
+        //     type: 'GET',
+        //     contentTypes: 'javascript/json; charset=utf-8',
+        //     data: 'xscreensaver_status',
+        //     dataType: 'json',
+        //     url: 'http://localhost:5000/xscreensaver',
+        //     success:function(e){
+        //         //console.log(e);
+        //         //console.log(e.xscreensaver_status);
+
+        //         if(e.xscreensaver_status == "on"){
+        //             //console.log("on...");
+        //             check.checked=true;
+        //         }
+        //         else if(e.xscreensaver_status == "off"){
+        //             check.checked=false;
+        //         }
+        //     }
+        // });
+        
+        // toggleBtn.click(function () {
+        //     //$("p").toggle();
+
+        //     //console.log(check.is(":checked"));
+        //     // 절전모드on(파란색)인 경우 true, 절전모드off(회색)인 경우 false
+            
+        //     if(check.is(":checked")==true){
+        //         //절전모드 on 일때
+        //         $.ajax({
+        //             type:'GET',
+        //             contentTypes: 'javascript/json; charset=utf-8',
+        //             data:{},
+        //             dataType:'json',
+        //             url:'http://localhost:5000/xscreensaver/on',
+        //             success:function(e){
+        //                 //console.log("ON");
+        //             }
+        //         })
+        //     }
+        //     else{
+        //         // 절전모드 off 일때
+        //         $.ajax({
+        //             type:'GET',
+        //             contentTypes: 'javascript/json; charset=utf-8',
+        //             data:{},
+        //             dataType:'json',
+        //             url:'http://localhost:5000/xscreensaver/off',
+        //             success:function(e){
+        //                 //console.log("OFF");
+        //             }
+        //         })
+        //     }
+        // });
 
         // function cal_Watt(data){
 

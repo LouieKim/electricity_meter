@@ -162,20 +162,22 @@ a{color:#5d5d5d; text-decoration: none;}
 .chart_app .box .right .logo_box{width: 140px; height: 140px; margin-left: auto; position: relative; overflow: hidden;}
 .chart_app .box .right .logo_box img{position: absolute; right: -22px; top: 0; width: 100%; height: auto; transform: scale(2);}
 
-.chart_app .box .toggle_btn_container{margin-top: 20px;}
+.chart_app .box .toggle_btn_container{}
+/* .chart_app .box .toggle_btn_container{margin-top: 20px;} */
 .chart_app .box .toggle_input{display: none;}
-.chart_app .box .toggle_input + .toggle_label {outline: 0; margin-left: auto; display: block;width: 130px;height: 40px;position: relative;cursor: pointer;user-select: none;}
+/* .chart_app .box .toggle_input + .toggle_label {outline: 0; margin-left: auto; display: block;width: 130px;height: 40px;position: relative;cursor: pointer;user-select: none;} */
+.chart_app .box .toggle_input + .toggle_label {outline: 0; margin-left: 0; display: inline-block; width: 100px;height: 40px;position: relative;cursor: pointer;user-select: none;}
 .chart_app .box .toggle_input + .toggle_label:after, 
-.chart_app .box .toggle_input + .toggle_label:before {position: relative;display: block;content: "";width: 60px;height: 100%;}
+.chart_app .box .toggle_input + .toggle_label:before {position: relative;display: block;content: "";width: 45px;height: 100%;}
 .chart_app .box .toggle_input + .toggle_label:after {left: 0;}
 .chart_app .box .toggle_input + .toggle_label:before {display: none;}
 .chart_app .box .toggle_input:checked + .toggle_label:after {left: 50%;}
-.chart_app .box .toggle_input + .toggle_label {background: #272727;border-radius: 2em;padding: 3px;transition: all 0.4s ease; box-sizing: border-box;}
-.chart_app .box .toggle_input + .toggle_label:after {border-radius: 30px;background: #32313c;transition: all 0.2s ease;}
-.chart_app .box .toggle_input:checked + .toggle_label {background: #272727;}
-.chart_app .box .toggle_input + .toggle_label span{position: absolute; z-index: 1; color: #FFF; top: 50%; font-size: 14px; transform: translateY(-50%); font-family: 'Nanum Gothic'}
-.chart_app .box .toggle_input + .toggle_label span.txt1{left: 19px; font-weight: bold; }
-.chart_app .box .toggle_input + .toggle_label span.txt2{right: 21px; font-weight: normal; }
+.chart_app .box .toggle_input + .toggle_label {background-color: #ccc;border-radius: 2em;padding: 3px;transition: all 0.4s ease; box-sizing: border-box;}
+.chart_app .box .toggle_input + .toggle_label:after {border-radius: 30px; background-color : #ffffff; transition: all 0.2s ease;}
+.chart_app .box .toggle_input:checked + .toggle_label {background-color: #2196F3;}
+.chart_app .box .toggle_input + .toggle_label span{position: absolute; z-index: 1; color: rgb(9, 9, 9); top: 50%; font-size: 14px; transform: translateY(-50%); font-family: 'Nanum Gothic'}
+.chart_app .box .toggle_input + .toggle_label span.txt1{left: 7px; font-weight: bold; }
+.chart_app .box .toggle_input + .toggle_label span.txt2{right: 9px; font-weight: normal; }
 
 .chart_app .box .toggle_input:checked + .toggle_label span.txt1{font-weight: normal; }
 .chart_app .box .toggle_input:checked + .toggle_label span.txt2{font-weight: bold; }
