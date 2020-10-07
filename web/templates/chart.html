@@ -157,11 +157,10 @@
 
                 if(e.xscreensaver_status == "on"){
                     //console.log("on...");
-                    check.checked = true;
+                    check.attr('checked',true);
                 }
                 else if(e.xscreensaver_status == "off"){
-                    //console.log("off...");
-                    check.checked = false;
+                    check.attr('checked',false);
                 }
             }
         });
