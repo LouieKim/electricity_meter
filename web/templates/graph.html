@@ -65,6 +65,10 @@
                     </div>
                 </div>
 
+                <div>
+                    <label style="float:right; color:white">Power factor : 100%</label>
+                </div>
+
                 <div class="reload_button" style="float:left;margin-top:10px;margin-left:40px">
                     <button type="button" onclick="location.href='http://localhost:7070/chart'" class="btn btn-light"
                         id="btn_power01">현재값</button>
@@ -81,9 +85,6 @@
                     <p class="OnOff" style="display:none">절전ON</p>
                 </div>
 
-                <div>
-                    <label style="float:right; color:white">Power factor : 100%</label>
-                </div>
                 
             </div>
             <div class="right">
@@ -159,18 +160,20 @@
         $.ajax({
             type: 'GET',
             contentTypes: 'javascript/json; charset=utf-8',
-            data: {},
+            data: 'xscreensaver_status',
             dataType: 'json',
             url: 'http://localhost:5000/xscreensaver',
             success:function(e){
-                console.log(e);
-                console.log(e["xscreensaver_status"]);
+                //console.log(e);
+                //console.log(e.xscreensaver_status);
 
-                if(e["xscreensaver_sataus"]=="on"){
-                    check.is(":checked") = true;
+                if(e.xscreensaver_status == "on"){
+                    //console.log("on...");
+                    check.checked = true;
                 }
-                else if(e["xscreensaver_sataus"]=="off"){
-                    check.is(":checked") = false;
+                else if(e.xscreensaver_status == "off"){
+                    //console.log("off...");
+                    check.checked = false;
                 }
             }
         });
