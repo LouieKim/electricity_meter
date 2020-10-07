@@ -169,11 +169,7 @@
 
                 if(e.xscreensaver_status == "on"){
                     //console.log("on...");
-                    check.checked="checked";
-                }
-                else if(e.xscreensaver_status == "off"){
-                    //console.log("off...");
-                    check.checked="";
+                    check.toggle();
                 }
             }
         });
