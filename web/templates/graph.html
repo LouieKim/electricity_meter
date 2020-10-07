@@ -155,7 +155,7 @@
     </div>
 
     <script>
-        var check = $(':checkbox[name="screen_saver"]');
+        var check = $("input:checkbox[name=screen_saver]");
 
         $.ajax({
             type: 'GET',
@@ -169,10 +169,10 @@
 
                 if(e.xscreensaver_status == "on"){
                     //console.log("on...");
-                    check.prop("checked",true);
+                    check.checked=true;
                 }
                 else if(e.xscreensaver_status == "off"){
-                    check.prop("checked",false);
+                    check.checked=false;
                 }
             }
         });
