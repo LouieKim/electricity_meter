@@ -350,7 +350,7 @@ def xscreensaver_control(status):
         subprocess.call("xscreensaver-command -exit", shell=True)
         return jsonify({'success':"xscreensaver off"}), 200
     elif status == 'on':
-        subprocess.call("xscreensaver &", shell=True)
+        subprocess.call("xscreensaver -no-splash &", shell=True)
         return jsonify({'success':"xscreensaver on"}), 200
     else:
         print("error")
