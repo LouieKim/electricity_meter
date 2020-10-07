@@ -356,8 +356,6 @@ def xscreensaver(status):
         print("error")
         return jsonify({'error':"xscreensaver error"}), 500
 
-pid_check = "supervisord" in (p.name() for p in psutil.process_iter())
-
 @bp.route('/xscreensaver')
 def xscreensaver():
     pid_check = "supervisord" in (p.name() for p in psutil.process_iter())
