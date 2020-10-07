@@ -45,7 +45,7 @@ def get_modbus_value():
         rows = ModbusInfo.query.all()
 
         for row in rows:
-            raw_modbus_value = GemsModbus.read_device_map(row.slave, row.map_address) * 2.2 #0.01 * 220v
+            raw_modbus_value = round(GemsModbus.read_device_map(row.slave, row.map_address) * 2.2, 2) #0.01 * 220v
 
             #Insert History Data          
             job_query = History(point_id = row.point_id, value = raw_modbus_value)
