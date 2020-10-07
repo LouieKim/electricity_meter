@@ -41,7 +41,7 @@
                             <thead style="height:20%">
                                 <tr>
                                     <th style="width:241px">ID</th>
-                                    <th style="width:240px">kW/h</th>
+                                    <th style="width:240px">전력(W)</th>
                                     <!-- <th>전기 요금</th> -->
                                 </tr>
                             </thead>
@@ -143,8 +143,8 @@
     </div>
 
     <script>
-        var check = $("input[type='checkbox']");
 
+        var check = $("input[type='checkbox']");
         check.click(function () {
             $("p").toggle();
 
@@ -160,7 +160,7 @@
                     dataType:'json',
                     url:'http://localhost:5000/xscreensaver/on',
                     success:function(e){
-                        console.log("ON");
+                        //console.log("ON");
                     }
                 })
             }
@@ -173,7 +173,7 @@
                     dataType:'json',
                     url:'http://localhost:5000/xscreensaver/off',
                     success:function(e){
-                        console.log("OFF");
+                        //console.log("OFF");
                     }
                 })
             }

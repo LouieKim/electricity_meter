@@ -20,7 +20,19 @@
     <script src="{{ url_for('static', filename='js/chartjs-plugin-annotation.js')}}"></script>
     <!-- END Javascript of Chart -->
 
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/toggle.css')}}">
+
     <title>키패드</title>
+
+    <style>
+        .OnOff {
+            margin: 0px;
+            display: inline-block;
+            font-size: 15px;
+            font-weight: bold;
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
@@ -33,6 +45,10 @@
                     <select id="graph_select">
 
                     </select>
+                </div>
+
+                <div>
+                    <label style="float:right;margin-right:10px;margin-top:5px; color:white">Power factor : 100%</label>
                 </div>
 
                 <div>
@@ -54,6 +70,13 @@
                         id="btn_power02" style="margin-left:10px">그래프</button>
                     <button type="button" onclick="window.location.reload()" class="btn btn-light" id="btn_power03"
                         style="margin-left:10px">새로고침</button>
+
+                    <label class="switch" style="margin-left:40px">
+                        <input type="checkbox" name="screen_saver">
+                        <span class="slider round"></span>
+                    </label>
+                    <p class="OnOff">절전OFF</p>
+                    <p class="OnOff" style="display:none">절전ON</p>
                 </div>
 
                 <div style="float:right; margin-top:10px">
@@ -131,6 +154,59 @@
     </div>
 
     <script>
+        var check = $(':checkbox[name="screen_saver"]');
+
+        $.ajax({
+            type: 'GET',
+            contentTypes: 'javascript/json; charset=utf-8',
+            data: {},
+            dataType: 'json',
+            url: 'http://localhost:5000/xscreensaver',
+            success:function(e){
+                console.log(e);
+                console.log(e["xscreensaver_status"]);
+
+                if(e["xscreensaver_sataus"]=="on"){
+                    check.is(":checked") = true;
+                }
+                else if(e["xscreensaver_sataus"]=="off"){
+                    check.is(":checked") = false;
+                }
+            }
+        });
+        
+        check.click(function () {
+            $("p").toggle();
+
+            if (check.is(":checked") == true) {
+                //절전모드 on 일때
+                $.ajax({
+                    type: 'GET',
+                    contentTypes: 'javascript/json; charset=utf-8',
+                    data: {},
+                    dataType: 'json',
+                    url: 'http://localhost:5000/xscreensaver/on',
+                    success: function (e) {
+                        console.log("ON");
+                    }
+                })
+            }
+            else {
+                // 절전모드 off 일때
+                $.ajax({
+                    type: 'GET',
+                    contentTypes: 'javascript/json; charset=utf-8',
+                    data: {},
+                    dataType: 'json',
+                    url: 'http://localhost:5000/xscreensaver/off',
+                    success: function (e) {
+                        console.log("OFF");
+                    }
+                })
+            }
+        });
+
+        
         //========================그래프 관련 코드(시작)===============================//
 
         $.ajax({
@@ -190,7 +266,7 @@
                         },
                         scaleLabel: {
                             display: true,
-                            labelString: "전력량",
+                            labelString: "전력량(Wh)",
                             fontColor: "white"
                         }
                     }]
