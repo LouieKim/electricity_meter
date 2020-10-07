@@ -93,14 +93,10 @@
                                 <span class="txt2">절전O</span>
                             </label>
                         </div>
-                    </div><br>
-
-                    <button type="button" onclick="testfun()" style="margin-top:10px">ㅁㅁㅁ</button>
-
+                    </div>
                 </div>
-
-
             </div>
+            
             <div class="right">
                 <div class="logo_box">
                     <a href="/"><img src="{{ url_for('static',filename='images/ninewatt-logo-3d.gif') }}" alt=""></a>
@@ -169,8 +165,28 @@
     </div>
 
     <script>
-
         var toggleBtn = document.querySelector('#toggle_btn');
+
+        $.ajax({
+            type: 'GET',
+            contentTypes: 'javascript/json; charset=utf-8',
+            data: {},
+            dataType: 'json',
+            url: 'http://localhost:5000/xscreensaver',
+            success: function (e) {
+                //console.log(e);
+                //console.log(e.xscreensaver_status);
+
+                if (e.xscreensaver_status == "on") {
+                    //console.log("on...");
+                    toggleBtn.checked = true;
+                }
+                else if (e.xscreensaver_status == "off") {
+                    toggleBtn.checked = false;
+                }
+            }
+        })
+
         // toggleBtn.checked = true;
         toggleBtn.addEventListener('change', function () {
             console.log(toggleBtn.checked)
@@ -202,21 +218,6 @@
                 })
             }
         })
-
-        function testfun() {
-            toggleBtn.checked = false;
-
-            $.ajax({
-                type: 'GET',
-                contentTypes: 'javascript/json; charset=utf-8',
-                data: {},
-                dataType: 'json',
-                url: 'http://localhost:5000/xscreensaver/off',
-                success: function (e) {
-                    console.log("OFF");
-                }
-            })
-        }
 
         // var check = $("input:checkbox[name=screen_saver]");
 
