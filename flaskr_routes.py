@@ -358,7 +358,7 @@ def xscreensaver_control(status):
 
 @bp.route('/xscreensaver')
 def xscreensaver_status():
-    pid_check = "supervisord" in (p.name() for p in psutil.process_iter())
+    pid_check = "xscreensaver" in (p.name() for p in psutil.process_iter())
 
     if pid_check == True:
         return jsonify({'xscreensaver_status':"on"}), 200
