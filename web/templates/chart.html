@@ -57,13 +57,13 @@
                 </div><br><br><br>
 
                 <div class="reload_button" style="margin-top:5px;margin-left:30px">
-                    <button type="button" onclick="location.href='http://localhost:7070/chart/offline'"
+                    <button type="button" onclick="location.href='http://localhost:7070/chart'"
                         class="btn btn-light" id="btn_power01">현재값</button>
-                    <button type="button" onclick="location.href='http://localhost:7070/graph/offline'"
+                    <button type="button" onclick="location.href='http://localhost:7070/graph'"
                         class="btn btn-light" id="btn_power02" style="margin-left:10px">그래프</button>
                     <button type="button" onclick="window.location.reload()" class="btn btn-light" id="btn_power03"
                         style="margin-left:10px">새로고침</button>
-                    <button type="button" onclick="location.href='http://localhost:7070/setting/offline'"
+                    <button type="button" onclick="location.href='http://localhost:7070/setting'"
                         class="btn btn-light" id="btn_power04" style="margin-left:10px">설정</button>
 
                     <label class="switch" style="margin-left:40px">
@@ -144,8 +144,39 @@
 
     <script>
         var check = $("input[type='checkbox']");
+
         check.click(function () {
             $("p").toggle();
+
+            //console.log(check.is(":checked"));
+            // 절전모드on(파란색)인 경우 true, 절전모드off(회색)인 경우 false
+            
+            if(check.is(":checked")==true){
+                //절전모드 on 일때
+                $.ajax({
+                    type:'GET',
+                    contentTypes: 'javascript/json; charset=utf-8',
+                    data:{},
+                    dataType:'json',
+                    url:'http://localhost:5000/xscreensaver/on',
+                    success:function(e){
+                        console.log("ON");
+                    }
+                })
+            }
+            else{
+                // 절전모드 off 일때
+                $.ajax({
+                    type:'GET',
+                    contentTypes: 'javascript/json; charset=utf-8',
+                    data:{},
+                    dataType:'json',
+                    url:'http://localhost:5000/xscreensaver/off',
+                    success:function(e){
+                        console.log("OFF");
+                    }
+                })
+            }
         });
 
         // function cal_Watt(data){
