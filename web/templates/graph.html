@@ -169,7 +169,10 @@
 
                 if(e.xscreensaver_status == "on"){
                     //console.log("on...");
-                    check.toggle();
+                    check.attr('checked',true);
+                }
+                else if(e.xscreensaver_status == "off"){
+                    check.attr('checked',false);
                 }
             }
         });
@@ -186,7 +189,7 @@
                     dataType: 'json',
                     url: 'http://localhost:5000/xscreensaver/on',
                     success: function (e) {
-                        console.log("ON");
+                        //console.log("ON");
                     }
                 })
             }
@@ -199,7 +202,7 @@
                     dataType: 'json',
                     url: 'http://localhost:5000/xscreensaver/off',
                     success: function (e) {
-                        console.log("OFF");
+                        //console.log("OFF");
                     }
                 })
             }
