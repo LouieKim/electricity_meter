@@ -157,10 +157,10 @@
 
                 if(e.xscreensaver_status == "on"){
                     //console.log("on...");
-                    check.attr('data-isChecked',true);
+                    check.prop('checked',true);
                 }
                 else if(e.xscreensaver_status == "off"){
-                    check.attr('data-isChecked',false);
+                    check.prop('checked',false);
                 }
             }
         });
