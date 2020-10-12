@@ -16,6 +16,10 @@ from sqlalchemy.engine import Engine
 from sqlite3 import Connection as SQLite3Connection
 import subprocess
 
+from config import(
+    RELEASE_VERSION
+)
+
 def add_secs_to_time(timeval, secs_to_add):
     secs = timeval.hour * 3600 + timeval.minute * 60 + timeval.second
     secs += secs_to_add
@@ -365,8 +369,15 @@ def xscreensaver_status():
     else:
         return jsonify({'xscreensaver_status':"off"}), 200
 
-
-
+@bp.route('/version')
+def get_version():
+    result_dict = dict()
+    result_dict['version']=RELEASE_VERSION
+        
+    result_dict_json = json.dumps(result_dict)
+        
+    return result_dict_json
+# return version
 
 
 
