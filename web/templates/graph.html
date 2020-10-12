@@ -23,16 +23,6 @@
     <link rel="stylesheet" href="{{ url_for('static',filename='css/toggle.css')}}">
 
     <title>키패드</title>
-
-    <style>
-        .OnOff {
-            margin: 0px;
-            display: inline-block;
-            font-size: 15px;
-            font-weight: bold;
-            color: white;
-        }
-    </style>
 </head>
 
 <body>
@@ -55,7 +45,6 @@
                 </div>
 
                 <div>
-                    <!--style="height:75%"> -->
                     <canvas id="myChart" style="margin-top:40px"></canvas>
                     <div class="chart_btm">
                         <span>0시</span>
@@ -78,13 +67,6 @@
                     <button type="button" onclick="window.location.reload()" class="btn btn-light" id="btn_power03"
                         style="margin-left:10px">새로고침</button>
 
-                    <!-- <label class="switch" style="margin-left:40px">
-                        <input type="checkbox" name="screen_saver">
-                        <span class="slider round"></span>
-                    </label>
-                    <p class="OnOff">절전OFF</p>
-                    <p class="OnOff" style="display:none">절전ON</p> -->
-
                     <div class="toggle_btn_container" style="float:right; margin-left:20px">
                         <div class="toggle_btn_box">
                             <input class="toggle_input " id="toggle_btn" type="checkbox" />
@@ -103,7 +85,6 @@
                 </div>
                 <div class="input_content">
                     <div class="title_box">
-                        <!-- <span class="icon"><i class="fas fa-bolt fa-lg"></i></span> -->
                         <span class="txt">Time</span>
                         <span class="txt" id="timenow"></span>
                     </div>
@@ -174,11 +155,8 @@
             dataType: 'json',
             url: 'http://localhost:5000/xscreensaver',
             success: function (e) {
-                //console.log(e);
-                //console.log(e.xscreensaver_status);
 
                 if (e.xscreensaver_status == "on") {
-                    //console.log("on...");
                     toggleBtn.checked = true;
                 }
                 else if (e.xscreensaver_status == "off") {
@@ -187,7 +165,6 @@
             }
         })
 
-        // toggleBtn.checked = true;
         toggleBtn.addEventListener('change', function () {
             console.log(toggleBtn.checked)
             if (toggleBtn.checked) {
@@ -218,72 +195,6 @@
                 })
             }
         })
-
-        // var check = $("input:checkbox[name=screen_saver]");
-
-        // $.ajax({
-        //     type: 'GET',
-        //     contentTypes: 'javascript/json; charset=utf-8',
-        //     data: {},
-        //     dataType: 'json',
-        //     url: 'http://localhost:5000/xscreensaver',
-        //     success: function (e) {
-        //         //console.log(e);
-        //         //console.log(e.xscreensaver_status);
-
-        //         if (e.xscreensaver_status == "on") {
-        //             //console.log("on...");
-        //             check.checked = true;
-        //             $("p").toggle();
-
-        //             $.ajax({
-        //                 type: 'GET',
-        //                 contentTypes: 'javascript/json; charset=utf-8',
-        //                 data: {},
-        //                 dataType: 'json',
-        //                 url: 'http://localhost:5000/xscreensaver/on',
-        //                 success: function (e) {
-        //                     //console.log("ON");
-        //                 }
-        //             })
-        //         }
-        //         else if (e.xscreensaver_status == "off") {
-        //             check.checked = false;
-        //         }
-        //     }
-        // });
-
-        // toggleBtn.click(function () {
-        //     //$("p").toggle();
-
-        //     if (check.is(":checked") == true) {
-        //         //절전모드 on 일때
-        //         $.ajax({
-        //             type: 'GET',
-        //             contentTypes: 'javascript/json; charset=utf-8',
-        //             data: {},
-        //             dataType: 'json',
-        //             url: 'http://localhost:5000/xscreensaver/on',
-        //             success: function (e) {
-        //                 console.log("ON");
-        //             }
-        //         })
-        //     }
-        //     else {
-        //         // 절전모드 off 일때
-        //         $.ajax({
-        //             type: 'GET',
-        //             contentTypes: 'javascript/json; charset=utf-8',
-        //             data: {},
-        //             dataType: 'json',
-        //             url: 'http://localhost:5000/xscreensaver/off',
-        //             success: function (e) {
-        //                 console.log("OFF");
-        //             }
-        //         })
-        //     }
-        // });
-
 
         //========================그래프 관련 코드(시작)===============================//
 
@@ -399,10 +310,9 @@
                             }
                         }
                     }
-                    //시간값 hour list에 넣어주기
 
                     res.forEach(function (i) {
-                        for (j = 0; j < hour.length; j++) { // 라벨에 맞춰서 데이터 넣어주기 => 앞부분 건너뛴 경우 빈 부분은 공백으로 넣어서 인식은 못하지만 값이 존재하게
+                        for (j = 0; j < hour.length; j++) { // 라벨(시간)에 맞춰서 데이터 넣어주기
                             if (i[1] == hour[j]) {
                                 for (k = 0; k < j; k++) {
                                     if (isEmpty(target[k])) {
@@ -412,9 +322,8 @@
                                 target[j] = i[2];
                             }
                         }
-                        //target.push(i[2]);
                     })
-                    //오늘 데이터 받음
+                    //get today's data
 
                     $.ajax({
                         url: 'http://localhost:5000/graph/' + select_num + '/' + getYesterday(),
@@ -426,7 +335,7 @@
                             current = [];
 
                             res.forEach(function (i) {
-                                for (j = 0; j < hour.length; j++) { // 라벨에 맞춰서 데이터 넣어주기 => 앞부분 건너뛴 경우 빈 부분은 공백으로 넣어서 인식은 못하지만 값이 존재하게
+                                for (j = 0; j < hour.length; j++) {// 라벨(시간)에 맞춰서 데이터 넣어주기
                                     if (i[1] == hour[j]) {
                                         for (k = 0; k < j; k++) {
                                             if (isEmpty(current[k])) {
@@ -436,7 +345,6 @@
                                         current[j] = i[2];
                                     }
                                 }
-                                //current.push(i[2]);
                             })
 
                             addData3(chart, hour, '오늘', target, '#00FFFF', '어제', current, '#FFFF99');
@@ -444,7 +352,6 @@
                     //어제 데이터까지 받아서 차트에 적용
                 })
         }
-        //어제오늘 데이터 차트에 추가
 
         function addData3(chart, hour, today, target, backgd, yesterday, current, backgd_2) {
             chart.data.labels = hour;
@@ -466,7 +373,6 @@
         //차트에 필요한 데이터 적용(이틀)
 
         $("#graph_select").change(function () {
-            //var select_value = $("#graph_select option:selected").val();
             var select_value = this.value;
             get_history(select_value);
         });
@@ -582,6 +488,7 @@
 
             return year + month + date;
         }
+        // get today date ex)201012
 
         function getYesterday() {
             var today = new Date();
@@ -604,6 +511,7 @@
 
             return year + month + date;
         }
+        // get yesterday date ex)201011
 
         var isEmpty = function (value) {
             if (value === "" || value == null || value == undefined || (value != null && typeof value == "object" && !Object.keys(value).length)) {

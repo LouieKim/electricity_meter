@@ -18,17 +18,6 @@
     <link rel="stylesheet" href="{{ url_for('static',filename='css/toggle.css')}}">
 
     <title>키패드</title>
-
-    <style>
-        .OnOff {
-            margin: 0px;
-            display: inline-block;
-            font-size: 15px;
-            font-weight: bold;
-            color: white;
-        }
-    </style>
-
 </head>
 
 <body>
@@ -42,7 +31,6 @@
                                 <tr>
                                     <th style="width:241px">ID</th>
                                     <th style="width:240px">전력(W)</th>
-                                    <!-- <th>전기 요금</th> -->
                                 </tr>
                             </thead>
                             <tbody id="dynamicTbody" style="display:block;overflow-y:scroll;height:90%">
@@ -66,13 +54,6 @@
                     <button type="button" onclick="location.href='http://localhost:7070/setting'"
                         class="btn btn-light" id="btn_power04" style="margin-left:10px">설정</button>
 
-                    <!-- <label class="switch" style="margin-left:40px">
-                        <input type="checkbox" name="screen_saver">
-                        <span class="slider round"></span>
-                    </label>
-                    <p class="OnOff">절전OFF</p>
-                    <p class="OnOff" style="display:none">절전ON</p> -->
-
                     <div class="toggle_btn_container" style="float:right; margin-left:20px">
                         <div class="toggle_btn_box">
                             <input class="toggle_input " id="toggle_btn" type="checkbox" />
@@ -91,7 +72,6 @@
                 </div>
                 <div class="input_content">
                     <div class="title_box">
-                        <!-- <span class="icon"><i class="fas fa-bolt fa-lg"></i></span> -->
                         <span class="txt">Time</span>
                         <span class="txt" id="timenow"></span>
                     </div>
@@ -153,8 +133,7 @@
     </div>
 
     <script>
-         var toggleBtn = document.querySelector('#toggle_btn');
-        // toggleBtn.checked = true;
+         var toggleBtn = document.querySelector('#toggle_btn'); // get toggle_btn's true/false status
 
         $.ajax({
             type: 'GET',
@@ -163,24 +142,17 @@
             dataType: 'json',
             url: 'http://localhost:5000/xscreensaver',
             success: function (e) {
-                //console.log(e);
-                //console.log(e.xscreensaver_status);
-
                 if (e.xscreensaver_status == "on") {
-                    //console.log("on...");
                     toggleBtn.checked = true;
                 }
                 else if (e.xscreensaver_status == "off") {
                     toggleBtn.checked = false;
                 }
             }
-        })
+        }) // set toggle_btn's status according to raspberry pi's screen saver status
 
         toggleBtn.addEventListener('change' , function(){
-            console.log(toggleBtn.checked)
             if(toggleBtn.checked) {
-                console.log("True")
-
                 $.ajax({
                     type:'GET',
                     contentTypes: 'javascript/json; charset=utf-8',
@@ -188,12 +160,9 @@
                     dataType:'json',
                     url:'http://localhost:5000/xscreensaver/on',
                     success:function(e){
-                        //console.log("ON");
                     }
                 })
             } else {
-                console.log("FALSE")
-
                 $.ajax({
                     type: 'GET',
                     contentTypes: 'javascript/json; charset=utf-8',
@@ -201,94 +170,10 @@
                     dataType: 'json',
                     url: 'http://localhost:5000/xscreensaver/off',
                     success: function (e) {
-                        //console.log("OFF");
                     }
                 })
             }
-        })
-
-        // var check = $("input:checkbox[name=screen_saver]");
-
-        // $.ajax({
-        //     type: 'GET',
-        //     contentTypes: 'javascript/json; charset=utf-8',
-        //     data: 'xscreensaver_status',
-        //     dataType: 'json',
-        //     url: 'http://localhost:5000/xscreensaver',
-        //     success:function(e){
-        //         //console.log(e);
-        //         //console.log(e.xscreensaver_status);
-
-        //         if(e.xscreensaver_status == "on"){
-        //             //console.log("on...");
-        //             check.checked=true;
-        //         }
-        //         else if(e.xscreensaver_status == "off"){
-        //             check.checked=false;
-        //         }
-        //     }
-        // });
-        
-        // toggleBtn.click(function () {
-        //     //$("p").toggle();
-
-        //     //console.log(check.is(":checked"));
-        //     // 절전모드on(파란색)인 경우 true, 절전모드off(회색)인 경우 false
-            
-        //     if(check.is(":checked")==true){
-        //         //절전모드 on 일때
-        //         $.ajax({
-        //             type:'GET',
-        //             contentTypes: 'javascript/json; charset=utf-8',
-        //             data:{},
-        //             dataType:'json',
-        //             url:'http://localhost:5000/xscreensaver/on',
-        //             success:function(e){
-        //                 //console.log("ON");
-        //             }
-        //         })
-        //     }
-        //     else{
-        //         // 절전모드 off 일때
-        //         $.ajax({
-        //             type:'GET',
-        //             contentTypes: 'javascript/json; charset=utf-8',
-        //             data:{},
-        //             dataType:'json',
-        //             url:'http://localhost:5000/xscreensaver/off',
-        //             success:function(e){
-        //                 //console.log("OFF");
-        //             }
-        //         })
-        //     }
-        // });
-
-        // function cal_Watt(data){
-
-        // }
-        
-        // $(function tableCreate() {
-
-        //     var tc = new Array();
-        //     var html = '';
-
-        //     tc.push({ name: '남궁민수', job: '기관사' });
-        //     tc.push({ name: '유재석', job: 'MC' });
-        //     tc.push({ name: '박명수', job: '개그맨' });
-        //     tc.push({ name: '정준하', job: '엔터테이너' });
-        //     tc.push({ name: '정형돈', job: '개그맨' });
-
-        //     for (key in tc) {
-        //         html += '<tr style="margin-left:20px">';
-        //         html += '<td style="width:245px">' + tc[key].name + '</td>';
-        //         html += '<td style="width:245px">' + tc[key].job + '</td>';
-        //         html += '</tr>';
-        //     }
-
-        //     $("#dynamicTbody").empty();
-        //     $("#dynamicTbody").append(html);
-
-        // });
+        }) // toggle button's action
 
         $.ajax({
             url: 'http://localhost:5000/process',
@@ -331,7 +216,6 @@
                     html += '<td style="width:245px">ch_' + raw_data[key].point_id + '</td>';
                     html += '<td style="width:245px">' + raw_data[key].value + '</td>';
                     html += '</tr>';
-                    // value값에 1/10을 해야 암페어 값이 나옴
                 }
                 $("#dynamicTbody").empty();
                 $("#dynamicTbody").append(html);
@@ -397,7 +281,6 @@
                         html += '<td style="width:245px">ch_' + raw_data[key].point_id + '</td>';
                         html += '<td style="width:245px">' + raw_data[key].value + '</td>';
                         html += '</tr>';
-                        //value값에 1/10 해야지 암페어 값이 나옴
                     }
                     $("#dynamicTbody").empty();
                     $("#dynamicTbody").append(html);
