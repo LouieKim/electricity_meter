@@ -360,6 +360,10 @@ def xscreensaver_control(status):
         print("error")
         return jsonify({'error':"xscreensaver error"}), 500
 
+#author: hyeok0724.kim@ninewatt.com
+#update date: 20.09.18
+#descript: Select Data From Graph History Table
+#param: status
 @bp.route('/xscreensaver')
 def xscreensaver_status():
     pid_check = "xscreensaver" in (p.name() for p in psutil.process_iter())
