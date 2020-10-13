@@ -78,7 +78,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="right">
                 <div id="version">
 
@@ -150,14 +150,14 @@
 
     <script>
         $.ajax({
-            type:'GET',
-            contentType:'javascript/json; charset=utf-8',
-            data:{},
-            dataType:'json',
-            url:'http://localhost:5000/version',
-            success:function(data){
+            type: 'GET',
+            contentType: 'javascript/json; charset=utf-8',
+            data: {},
+            dataType: 'json',
+            url: 'http://localhost:5000/version',
+            success: function (data) {
                 var html = '';
-                html += '<label style="float:right;margin-right:20px">ver '+data['version']+'</label>'
+                html += '<label style="float:right;margin-right:20px">ver ' + data['version'] + '</label>'
                 $("#version").prepend(html);
             }
         })// get version
@@ -398,50 +398,11 @@
             var select_value = $("#graph_select option:selected").val();
             get_history(select_value);
         }, 60000)
-        //일정 시간마다 그래프 불러와서 띄워줌
+        //일정 시간(60초)마다 그래프 불러와서 띄워줌
 
         //========================그래프 관련 코드(끝)===============================//
 
-        $.ajax({
-            url: 'http://localhost:5000/process',
-            type: 'GET',
-            contentType: 'javascript/json; charset=utf-8',
-            data: {},
-            dataType: 'json',
-            success: function (data) {
-                document.querySelector('#app_process').innerHTML = data['ninewatt_app'];
-                document.querySelector('#manager_process').innerHTML = data['ninewatt_manager'];
-                document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
-            }
-        });
-
-        $.ajax({
-            url: 'http://localhost:5000/resource',
-            type: 'GET',
-            contentType: 'javascript/json; charset=utf-8',
-            data: {},
-            dataType: 'json',
-            success: function (data) {
-                document.querySelector('#cpu_usage').innerHTML = data['cpu'];
-                document.querySelector('#mem_usage').innerHTML = data['mem'];
-                document.querySelector('#hdd_usage').innerHTML = data['hdd'];
-            }
-        });
-
-        $.ajax({
-            url: 'http://localhost:5000/timenow',
-            type: 'GET',
-            contentType: 'javascript/json; charset=utf-8',
-            data: {},
-            dataType: 'json',
-            success: function (data) {
-                document.querySelector('#timenow').innerHTML = data['time'];
-            }
-        });
-
-        //=================================================================
-
-        setInterval(function () {
+        function get_process() {
             $.ajax({
                 url: 'http://localhost:5000/process',
                 type: 'GET',
@@ -453,10 +414,10 @@
                     document.querySelector('#manager_process').innerHTML = data['ninewatt_manager'];
                     document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
                 }
-            })
-        }, 60000);
+            });
+        }
 
-        setInterval(function () {
+        function get_resource() {
             $.ajax({
                 url: 'http://localhost:5000/resource',
                 type: 'GET',
@@ -468,10 +429,10 @@
                     document.querySelector('#mem_usage').innerHTML = data['mem'];
                     document.querySelector('#hdd_usage').innerHTML = data['hdd'];
                 }
-            })
-        }, 60000);
+            });
+        }
 
-        setInterval(function () {
+        function get_timenow() {
             $.ajax({
                 url: 'http://localhost:5000/timenow',
                 type: 'GET',
@@ -481,8 +442,39 @@
                 success: function (data) {
                     document.querySelector('#timenow').innerHTML = data['time'];
                 }
-            })
-        }, 60000);
+            });
+        }
+
+        get_process();
+        get_resource();
+        get_timenow();
+
+        //=========================Interval Function====================================
+
+        function process_Interval(time) {
+            setInterval(function(){
+                get_process()
+            }, time*1000);
+        }
+
+        function resource_Interval(time){
+            setInterval(function(){
+                get_resource()
+            },time * 1000);
+        }
+
+        function timenow_Interval(time){
+            setInterval(function(){
+                get_timenow()
+            },time*1000);
+        }
+
+        process_Interval(60); 
+        resource_Interval(2);
+        timenow_Interval(60);
+        // 2초마다 실행
+
+        //====================================================================
 
         function getToday() {
             var today = new Date();

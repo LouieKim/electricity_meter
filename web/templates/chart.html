@@ -45,14 +45,14 @@
                 </div><br><br><br>
 
                 <div class="reload_button" style="margin-top:5px;margin-left:30px">
-                    <button type="button" onclick="location.href='http://localhost:7070/chart'"
-                        class="btn btn-light" id="btn_power01">현재값</button>
-                    <button type="button" onclick="location.href='http://localhost:7070/graph'"
-                        class="btn btn-light" id="btn_power02" style="margin-left:10px">그래프</button>
+                    <button type="button" onclick="location.href='http://localhost:7070/chart'" class="btn btn-light"
+                        id="btn_power01">현재값</button>
+                    <button type="button" onclick="location.href='http://localhost:7070/graph'" class="btn btn-light"
+                        id="btn_power02" style="margin-left:10px">그래프</button>
                     <button type="button" onclick="window.location.reload()" class="btn btn-light" id="btn_power03"
                         style="margin-left:10px">새로고침</button>
-                    <button type="button" onclick="location.href='http://localhost:7070/setting'"
-                        class="btn btn-light" id="btn_power04" style="margin-left:10px">설정</button>
+                    <button type="button" onclick="location.href='http://localhost:7070/setting'" class="btn btn-light"
+                        id="btn_power04" style="margin-left:10px">설정</button>
 
                     <div class="toggle_btn_container" style="float:right; margin-left:20px">
                         <div class="toggle_btn_box">
@@ -68,7 +68,7 @@
 
             <div class="right">
                 <div id="version">
-                
+
                 </div>
                 <div class="logo_box">
                     <a href="/"><img src="{{ url_for('static',filename='images/ninewatt-logo-3d.gif') }}" alt=""></a>
@@ -137,14 +137,14 @@
 
     <script>
         $.ajax({
-            type:'GET',
-            contentType:'javascript/json; charset=utf-8',
-            data:{},
-            dataType:'json',
-            url:'http://localhost:5000/version',
-            success:function(data){
+            type: 'GET',
+            contentType: 'javascript/json; charset=utf-8',
+            data: {},
+            dataType: 'json',
+            url: 'http://localhost:5000/version',
+            success: function (data) {
                 var html = '';
-                html += '<label style="float:right;margin-right:20px">ver '+data['version']+'</label>'
+                html += '<label style="float:right;margin-right:20px">ver ' + data['version'] + '</label>'
                 $("#version").prepend(html);
             }
         })// get version
@@ -167,15 +167,15 @@
             }
         }) // set toggle_btn's status according to raspberry pi's screen saver status
 
-        toggleBtn.addEventListener('change' , function(){
-            if(toggleBtn.checked) {
+        toggleBtn.addEventListener('change', function () {
+            if (toggleBtn.checked) {
                 $.ajax({
-                    type:'GET',
+                    type: 'GET',
                     contentTypes: 'javascript/json; charset=utf-8',
-                    data:{},
-                    dataType:'json',
-                    url:'http://localhost:5000/xscreensaver/on',
-                    success:function(e){
+                    data: {},
+                    dataType: 'json',
+                    url: 'http://localhost:5000/xscreensaver/on',
+                    success: function (e) {
                     }
                 })
             } else {
@@ -191,67 +191,7 @@
             }
         }) // toggle button's action
 
-        $.ajax({
-            url: 'http://localhost:5000/process',
-            type: 'GET',
-            contentType: 'javascript/json; charset=utf-8',
-            data: {},
-            dataType: 'json',
-            success: function (data) {
-                document.querySelector('#app_process').innerHTML = data['ninewatt_app'];
-                document.querySelector('#manager_process').innerHTML = data['ninewatt_manager'];
-                document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
-            }
-        });
-
-        $.ajax({
-            url: 'http://localhost:5000/resource',
-            type: 'GET',
-            contentType: 'javascript/json; charset=utf-8',
-            data: {},
-            dataType: 'json',
-            success: function (data) {
-                document.querySelector('#cpu_usage').innerHTML = data['cpu'];
-                document.querySelector('#mem_usage').innerHTML = data['mem'];
-                document.querySelector('#hdd_usage').innerHTML = data['hdd'];
-            }
-        });
-
-        $.ajax({
-            url: 'http://localhost:5000/realtime',
-            type: 'GET',
-            contentType: 'javascript/json; charset=utf-8',
-            data: {},
-            dataType: 'json',
-            success: function (data) {
-                var html = '';
-                var raw_data = data['data'];
-
-                for (key in raw_data) {
-                    html += '<tr style="margin-left:20px">';
-                    html += '<td style="width:245px">ch_' + raw_data[key].point_id + '</td>';
-                    html += '<td style="width:245px">' + raw_data[key].value + '</td>';
-                    html += '</tr>';
-                }
-                $("#dynamicTbody").empty();
-                $("#dynamicTbody").append(html);
-            }
-        });
-
-        $.ajax({
-            url: 'http://localhost:5000/timenow',
-            type: 'GET',
-            contentType: 'javascript/json; charset=utf-8',
-            data: {},
-            dataType: 'json',
-            success: function (data) {
-                document.querySelector('#timenow').innerHTML = data['time'];
-            }
-        });
-
-        //=================================================================
-
-        setInterval(function () {
+        function get_process() {
             $.ajax({
                 url: 'http://localhost:5000/process',
                 type: 'GET',
@@ -263,10 +203,10 @@
                     document.querySelector('#manager_process').innerHTML = data['ninewatt_manager'];
                     document.querySelector('#web_process').innerHTML = data['ninewatt_web'];
                 }
-            })
-        }, 60000);
+            });
+        }
 
-        setInterval(function () {
+        function get_resource() {
             $.ajax({
                 url: 'http://localhost:5000/resource',
                 type: 'GET',
@@ -278,10 +218,10 @@
                     document.querySelector('#mem_usage').innerHTML = data['mem'];
                     document.querySelector('#hdd_usage').innerHTML = data['hdd'];
                 }
-            })
-        }, 60000);
+            });
+        }
 
-        setInterval(function () {
+        function get_realtime() {
             $.ajax({
                 url: 'http://localhost:5000/realtime',
                 type: 'GET',
@@ -301,10 +241,10 @@
                     $("#dynamicTbody").empty();
                     $("#dynamicTbody").append(html);
                 }
-            })
-        }, 60000);
+            });
+        }
 
-        setInterval(function () {
+        function get_timenow() {
             $.ajax({
                 url: 'http://localhost:5000/timenow',
                 type: 'GET',
@@ -314,8 +254,44 @@
                 success: function (data) {
                     document.querySelector('#timenow').innerHTML = data['time'];
                 }
-            })
-        }, 60000);
+            });
+        }
+
+        get_process();
+        get_resource();
+        get_realtime();
+        get_timenow();
+
+        //=================================================================
+
+        function process_Interval(time) {
+            setInterval(function () {
+                get_process()
+            }, time * 1000);
+        }
+
+        function resource_Interval(time) {
+            setInterval(function () {
+                get_resource()
+            }, time * 1000);
+        }
+
+        function realtime_Interval(time) {
+            setInterval(function () {
+                get_realtime();
+            }, time * 1000);
+        }
+
+        function timenow_Interval(time) {
+            setInterval(function () {
+                get_timenow();
+            }, time * 1000);
+        }
+
+        process_Interval(60);
+        resource_Interval(2);
+        realtime_Interval(2);
+        timenow_Interval(60);
 
     </script>
 </body>
