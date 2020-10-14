@@ -194,6 +194,7 @@
             }
         })
 
+        var interval_timer = 1000;
         //============================================================ Function Call =============================================================
         get_version();
 
@@ -207,12 +208,27 @@
         get_resource();
         get_timenow();
 
-        process_Interval(60);
-        resource_Interval(2);
-        timenow_Interval(60);
-        graph_Interval(2);
-
         get_toggleBtn_status();
+
+        setInterval(function () {
+            get_process()
+        }, interval_timer);
+
+
+        setInterval(function () {
+            get_resource()
+        }, interval_timer);
+
+
+        setInterval(function () {
+            get_timenow()
+        }, interval_timer);
+
+
+        setInterval(function () {
+            var select_value = $("#graph_select option:selected").val();
+            get_history(select_value);
+        }, interval_timer);
 
         //========================================================================= Toggle Button ============================================================================
 
@@ -306,19 +322,19 @@
         }
 
         function get_history(select_num) {
-            // yesterday_data가 어제, today_data가 오늘
-            var today_data = [];
-            var yesterday_data = [];
+            addData(chart, hour, '오늘', get_today(select_num), '#00FFFF', '어제', get_yesterday(select_num), '#FFFF99');
+        }
 
+        function get_today(select_num) {
+            var today_data = [];
+        
             $.ajax({
                 url: 'http://localhost:5000/graph/' + select_num + '/' + getToday(),
                 type: 'GET',
                 data: {},
-                dataType: 'json'
-            })
-                .done(function (res) {
-                    today_data = [];
-
+                dataType: 'json',
+                async: false,
+                success: function (res) {
                     // 라벨(시간)에 맞춰서 데이터 넣어주기
                     res.forEach(function (i) {
                         for (j = 0; j < hour.length; j++) {
@@ -326,29 +342,35 @@
                                 today_data[j] = i[2];
                             }
                         }
-                    })
+                    });
+                }
+            });
 
-                    $.ajax({
-                        url: 'http://localhost:5000/graph/' + select_num + '/' + getYesterday(),
-                        type: 'GET',
-                        data: {},
-                        dataType: 'json',
-                    })
-                        .done(function (res) {
-                            yesterday_data = [];
+            return today_data;
+        }
 
-                            // 라벨(시간)에 맞춰서 데이터 넣어주기
-                            res.forEach(function (i) {
-                                for (j = 0; j < hour.length; j++) {
-                                    if (i[1] == hour[j]) {
-                                        yesterday_data[j] = i[2];
-                                    }
-                                }
-                            })
+        function get_yesterday(select_num) {
+            var yesterday_data = [];
 
-                            addData(chart, hour, '오늘', today_data, '#00FFFF', '어제', yesterday_data, '#FFFF99');
-                        })
-                })
+            $.ajax({
+                url: 'http://localhost:5000/graph/' + select_num + '/' + getYesterday(),
+                type: 'GET',
+                data: {},
+                dataType: 'json',
+                async: false,
+                success: function (res) {
+                    // 라벨(시간)에 맞춰서 데이터 넣어주기
+                    res.forEach(function (i) {
+                        for (j = 0; j < hour.length; j++) {
+                            if (i[1] == hour[j]) {
+                                yesterday_data[j] = i[2];
+                            }
+                        }
+                    });
+                }
+            });
+
+            return yesterday_data;
         }
 
         //차트에 필요한 데이터 적용(이틀)
@@ -367,9 +389,11 @@
             chart.data.datasets[1].borderColor = backgd_2;
             chart.data.datasets[1].pointRadius = 0
 
+            //넣은 데이터들로 차트 업데이트
             chart.update();
         }
 
+        // fill hour data for label 'hour'
         function hour_label() {
             for (var i = 0; i <= 23; i += 1) {
                 for (var v = 0; v <= 50; v += 15) {
@@ -453,30 +477,8 @@
             });
         }
 
-        function process_Interval(time) {
-            setInterval(function () {
-                get_process()
-            }, time * 1000);
-        }
+        
 
-        function resource_Interval(time) {
-            setInterval(function () {
-                get_resource()
-            }, time * 1000);
-        }
-
-        function timenow_Interval(time) {
-            setInterval(function () {
-                get_timenow()
-            }, time * 1000);
-        }
-
-        function graph_Interval(time) {
-            setInterval(function () {
-                var select_value = $("#graph_select option:selected").val();
-                get_history(select_value);
-            }, time * 1000);
-        }
 
         // get today date ex)201012
         function getToday() {

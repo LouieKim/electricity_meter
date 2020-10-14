@@ -138,34 +138,34 @@
     <script>
         // get toggle_btn's true/false status
         var toggleBtn = document.querySelector('#toggle_btn');
-        //==================================================================
+        var interval_timer = 1000;
 
-        //first function call
+        //====================== Function Call ============================================
+        get_version();
+
         get_process();
         get_resource();
         get_realtime();
         get_timenow();
 
-        //time adjustment
-        process_Interval(60);
-        resource_Interval(2);
-        realtime_Interval(60);
-        timenow_Interval(60);
-        //==========================================================================
+        setInterval(function () {
+            get_process()
+        }, interval_timer);
 
-        // get version
-        $.ajax({
-            type: 'GET',
-            contentType: 'javascript/json; charset=utf-8',
-            data: {},
-            dataType: 'json',
-            url: 'http://localhost:5000/version',
-            success: function (data) {
-                var html = '';
-                html += '<label style="float:right;margin-right:20px">ver ' + data['version'] + '</label>'
-                $("#version").prepend(html);
-            }
-        })
+
+        setInterval(function () {
+            get_resource()
+        }, interval_timer);
+
+
+        setInterval(function () {
+            get_realtime();
+        }, interval_timer);
+
+
+        setInterval(function () {
+            get_timenow();
+        }, interval_timer);
 
         //=========================== Toggle Button ============================================
         // set toggle_btn's status according to raspberry pi's screen saver status
@@ -209,9 +209,23 @@
                 })
             }
         })
-        //==========================================================================
 
         //=========================== Function Definition =============================
+        function get_version() {
+            $.ajax({
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                url: 'http://localhost:5000/version',
+                success: function (data) {
+                    var html = '';
+                    html += '<label style="float:right;margin-right:20px">ver ' + data['version'] + '</label>'
+                    $("#version").prepend(html);
+                }
+            });
+        }
+
         function get_process() {
             $.ajax({
                 url: 'http://localhost:5000/process',
@@ -276,33 +290,7 @@
                     document.querySelector('#timenow').innerHTML = data['time'];
                 }
             });
-        }
-
-        function process_Interval(time) {
-            setInterval(function () {
-                get_process()
-            }, time * 1000);
-        }
-
-        function resource_Interval(time) {
-            setInterval(function () {
-                get_resource()
-            }, time * 1000);
-        }
-
-        function realtime_Interval(time) {
-            setInterval(function () {
-                get_realtime();
-            }, time * 1000);
-        }
-
-        function timenow_Interval(time) {
-            setInterval(function () {
-                get_timenow();
-            }, time * 1000);
-        }
-
-        //=================================================================        
+        }      
     </script>
 </body>
 
