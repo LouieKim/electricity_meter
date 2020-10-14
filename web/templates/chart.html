@@ -136,6 +136,24 @@
     </div>
 
     <script>
+        // get toggle_btn's true/false status
+        var toggleBtn = document.querySelector('#toggle_btn');
+        //==================================================================
+
+        //first function call
+        get_process();
+        get_resource();
+        get_realtime();
+        get_timenow();
+
+        //time adjustment
+        process_Interval(60);
+        resource_Interval(2);
+        realtime_Interval(60);
+        timenow_Interval(60);
+        //==========================================================================
+
+        // get version
         $.ajax({
             type: 'GET',
             contentType: 'javascript/json; charset=utf-8',
@@ -147,10 +165,10 @@
                 html += '<label style="float:right;margin-right:20px">ver ' + data['version'] + '</label>'
                 $("#version").prepend(html);
             }
-        })// get version
+        })
 
-        var toggleBtn = document.querySelector('#toggle_btn'); // get toggle_btn's true/false status
-
+        //=========================== Toggle Button ============================================
+        // set toggle_btn's status according to raspberry pi's screen saver status
         $.ajax({
             type: 'GET',
             contentTypes: 'javascript/json; charset=utf-8',
@@ -165,8 +183,9 @@
                     toggleBtn.checked = false;
                 }
             }
-        }) // set toggle_btn's status according to raspberry pi's screen saver status
+        })
 
+        // toggle button's action
         toggleBtn.addEventListener('change', function () {
             if (toggleBtn.checked) {
                 $.ajax({
@@ -189,8 +208,10 @@
                     }
                 })
             }
-        }) // toggle button's action
+        })
+        //==========================================================================
 
+        //=========================== Function Definition =============================
         function get_process() {
             $.ajax({
                 url: 'http://localhost:5000/process',
@@ -257,13 +278,6 @@
             });
         }
 
-        get_process();
-        get_resource();
-        get_realtime();
-        get_timenow();
-
-        //=================================================================
-
         function process_Interval(time) {
             setInterval(function () {
                 get_process()
@@ -288,11 +302,7 @@
             }, time * 1000);
         }
 
-        process_Interval(60);
-        resource_Interval(2);
-        realtime_Interval(60);
-        timenow_Interval(60);
-
+        //=================================================================        
     </script>
 </body>
 

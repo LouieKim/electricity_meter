@@ -149,94 +149,9 @@
     </div>
 
     <script>
-        $.ajax({
-            type: 'GET',
-            contentType: 'javascript/json; charset=utf-8',
-            data: {},
-            dataType: 'json',
-            url: 'http://localhost:5000/version',
-            success: function (data) {
-                var html = '';
-                html += '<label style="float:right;margin-right:20px">ver ' + data['version'] + '</label>'
-                $("#version").prepend(html);
-            }
-        })// get version
-
+        //================================================================= Global Variations ============================================================
         var toggleBtn = document.querySelector('#toggle_btn');
-
-        $.ajax({
-            type: 'GET',
-            contentTypes: 'javascript/json; charset=utf-8',
-            data: {},
-            dataType: 'json',
-            url: 'http://localhost:5000/xscreensaver',
-            success: function (e) {
-
-                if (e.xscreensaver_status == "on") {
-                    toggleBtn.checked = true;
-                }
-                else if (e.xscreensaver_status == "off") {
-                    toggleBtn.checked = false;
-                }
-            }
-        })
-
-        toggleBtn.addEventListener('change', function () {
-            console.log(toggleBtn.checked)
-            if (toggleBtn.checked) {
-                console.log("True")
-
-                $.ajax({
-                    type: 'GET',
-                    contentTypes: 'javascript/json; charset=utf-8',
-                    data: {},
-                    dataType: 'json',
-                    url: 'http://localhost:5000/xscreensaver/on',
-                    success: function (e) {
-                        console.log("ON");
-                    }
-                })
-            } else {
-                console.log("FALSE")
-
-                $.ajax({
-                    type: 'GET',
-                    contentTypes: 'javascript/json; charset=utf-8',
-                    data: {},
-                    dataType: 'json',
-                    url: 'http://localhost:5000/xscreensaver/off',
-                    success: function (e) {
-                        console.log("OFF");
-                    }
-                })
-            }
-        })
-
-        //========================그래프 관련 코드(시작)===============================//
-
-        $.ajax({
-            url: 'http://localhost:5000/modbusinfo',
-            type: 'GET',
-            contentType: 'javascript/json; charset=utf-8',
-            data: {},
-            dataType: 'json',
-            success: function (data) {
-                var html = '';
-                var raw_data = data['modbus_info'];
-
-                for (key in raw_data) {
-                    html += '<option value="' + raw_data[key].point_id + '">' + 'ch_' + raw_data[key].point_id + '</option>';
-                }
-                $("#graph_select").append(html);
-            }
-        });
-        // select box's options -> ch_1, ch_2 ....
-
-        //----------------------------그래프 객체 생성(시작)----------------------------//
         var hour = [];
-        var target = []; // current가 어제, target이 오늘
-        var current = [];
-
         var ctx = document.getElementById('myChart').getContext('2d');
         var chart = new Chart(ctx, {
             type: 'line',
@@ -278,8 +193,62 @@
                 }
             }
         })
-        //----------------------------그래프 객체 생성(끝)----------------------------//
 
+        //============================================================ Function Call =============================================================
+        get_version();
+
+        hour_label();
+
+        get_history(1);
+
+        combo_box();
+
+        get_process();
+        get_resource();
+        get_timenow();
+
+        process_Interval(60);
+        resource_Interval(2);
+        timenow_Interval(60);
+        graph_Interval(2);
+
+        get_toggleBtn_status();
+
+        //========================================================================= Toggle Button ============================================================================
+
+        toggleBtn.addEventListener('change', function () {
+            console.log(toggleBtn.checked)
+            if (toggleBtn.checked) {
+                console.log("True")
+
+                $.ajax({
+                    type: 'GET',
+                    contentTypes: 'javascript/json; charset=utf-8',
+                    data: {},
+                    dataType: 'json',
+                    url: 'http://localhost:5000/xscreensaver/on',
+                    success: function (e) {
+                        console.log("ON");
+                    }
+                })
+            } else {
+                console.log("FALSE")
+
+                $.ajax({
+                    type: 'GET',
+                    contentTypes: 'javascript/json; charset=utf-8',
+                    data: {},
+                    dataType: 'json',
+                    url: 'http://localhost:5000/xscreensaver/off',
+                    success: function (e) {
+                        console.log("OFF");
+                    }
+                })
+            }
+        })
+
+        // ============================================== Event Listener ==========================================================
+        // select box -> visible/invisible
         $(':checkbox[name="yesterday"]').change(function () {
             chart.data.datasets.find(function (ds) {
                 if (ds.label == '어제')
@@ -294,11 +263,53 @@
             });
             chart.update();
         })
-        // select box -> visible/invisible
 
-        get_history(1);
+        //콤보박스에서 장치 선택했을 때, 선택된 id 링크를 보여주는 부분
+        $("#graph_select").change(function () {
+            var select_value = this.value;
+            get_history(select_value);
+        });
+
+        //============================================================= Function Definition =================================================================
+        function get_version() {
+            $.ajax({
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                url: 'http://localhost:5000/version',
+                success: function (data) {
+                    var html = '';
+                    html += '<label style="float:right;margin-right:20px">ver ' + data['version'] + '</label>'
+                    $("#version").prepend(html);
+                }
+            })
+        }
+
+        function get_toggleBtn_status() {
+            $.ajax({
+                type: 'GET',
+                contentTypes: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                url: 'http://localhost:5000/xscreensaver',
+                success: function (e) {
+
+                    if (e.xscreensaver_status == "on") {
+                        toggleBtn.checked = true;
+                    }
+                    else if (e.xscreensaver_status == "off") {
+                        toggleBtn.checked = false;
+                    }
+                }
+            })
+        }
 
         function get_history(select_num) {
+            // yesterday_data가 어제, today_data가 오늘
+            var today_data = [];
+            var yesterday_data = [];
+
             $.ajax({
                 url: 'http://localhost:5000/graph/' + select_num + '/' + getToday(),
                 type: 'GET',
@@ -306,40 +317,16 @@
                 dataType: 'json'
             })
                 .done(function (res) {
-                    hour = [];
-                    target = [];
+                    today_data = [];
 
-                    for (var i = 0; i <= 23; i += 1) {
-                        for (var v = 0; v <= 50; v += 15) {
-                            if (i < 10) {
-                                if (v < 10) {
-                                    hour.push(`0${i}:0${v}`)
-                                } else {
-                                    hour.push(`0${i}:${v}`)
-                                }
-                            } else {
-                                if (v < 10) {
-                                    hour.push(`${i}:0${v}`)
-                                } else {
-                                    hour.push(`${i}:${v}`)
-                                }
-                            }
-                        }
-                    }
-
+                    // 라벨(시간)에 맞춰서 데이터 넣어주기
                     res.forEach(function (i) {
-                        for (j = 0; j < hour.length; j++) { // 라벨(시간)에 맞춰서 데이터 넣어주기
+                        for (j = 0; j < hour.length; j++) {
                             if (i[1] == hour[j]) {
-                                for (k = 0; k < j; k++) {
-                                    if (isEmpty(target[k])) {
-                                        target[k] = "NULL";
-                                    }
-                                }
-                                target[j] = i[2];
+                                today_data[j] = i[2];
                             }
                         }
                     })
-                    //get today's data
 
                     $.ajax({
                         url: 'http://localhost:5000/graph/' + select_num + '/' + getYesterday(),
@@ -348,59 +335,80 @@
                         dataType: 'json',
                     })
                         .done(function (res) {
-                            current = [];
+                            yesterday_data = [];
 
+                            // 라벨(시간)에 맞춰서 데이터 넣어주기
                             res.forEach(function (i) {
-                                for (j = 0; j < hour.length; j++) {// 라벨(시간)에 맞춰서 데이터 넣어주기
+                                for (j = 0; j < hour.length; j++) {
                                     if (i[1] == hour[j]) {
-                                        for (k = 0; k < j; k++) {
-                                            if (isEmpty(current[k])) {
-                                                current[k] = "NULL";
-                                            }
-                                        }
-                                        current[j] = i[2];
+                                        yesterday_data[j] = i[2];
                                     }
                                 }
                             })
 
-                            addData3(chart, hour, '오늘', target, '#00FFFF', '어제', current, '#FFFF99');
+                            addData(chart, hour, '오늘', today_data, '#00FFFF', '어제', yesterday_data, '#FFFF99');
                         })
-                    //어제 데이터까지 받아서 차트에 적용
                 })
         }
 
-        function addData3(chart, hour, today, target, backgd, yesterday, current, backgd_2) {
+        //차트에 필요한 데이터 적용(이틀)
+        function addData(chart, hour, today_label, today_data, backgd, yesterday_label, yesterday_data, backgd_2) {
             chart.data.labels = hour;
 
-            chart.data.datasets[0].label = today;
-            chart.data.datasets[0].data = target;
+            //오늘데이터
+            chart.data.datasets[0].label = today_label;
+            chart.data.datasets[0].data = today_data;
             chart.data.datasets[0].borderColor = backgd;
             chart.data.datasets[0].pointRadius = 0
-            //오늘데이터
 
-            chart.data.datasets[1].label = yesterday;
-            chart.data.datasets[1].data = current;
+            //어제데이터
+            chart.data.datasets[1].label = yesterday_label;
+            chart.data.datasets[1].data = yesterday_data;
             chart.data.datasets[1].borderColor = backgd_2;
             chart.data.datasets[1].pointRadius = 0
-            //어제데이터
 
             chart.update();
         }
-        //차트에 필요한 데이터 적용(이틀)
 
-        $("#graph_select").change(function () {
-            var select_value = this.value;
-            get_history(select_value);
-        });
-        //콤보박스에서 장치 선택했을 때, 선택된 id 링크를 보여주는 부분
+        function hour_label() {
+            for (var i = 0; i <= 23; i += 1) {
+                for (var v = 0; v <= 50; v += 15) {
+                    if (i < 10) {
+                        if (v < 10) {
+                            hour.push(`0${i}:0${v}`)
+                        } else {
+                            hour.push(`0${i}:${v}`)
+                        }
+                    } else {
+                        if (v < 10) {
+                            hour.push(`${i}:0${v}`)
+                        } else {
+                            hour.push(`${i}:${v}`)
+                        }
+                    }
+                }
+            }
+        }
 
-        setInterval(function () {
-            var select_value = $("#graph_select option:selected").val();
-            get_history(select_value);
-        }, 2000)
-        //일정 시간마다 그래프 불러와서 띄워줌
+        // select box's options -> ch_1, ch_2 ....
+        function combo_box() {
+            $.ajax({
+                url: 'http://localhost:5000/modbusinfo',
+                type: 'GET',
+                contentType: 'javascript/json; charset=utf-8',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    var html = '';
+                    var raw_data = data['modbus_info'];
 
-        //========================그래프 관련 코드(끝)===============================//
+                    for (key in raw_data) {
+                        html += '<option value="' + raw_data[key].point_id + '">' + 'ch_' + raw_data[key].point_id + '</option>';
+                    }
+                    $("#graph_select").append(html);
+                }
+            });
+        }
 
         function get_process() {
             $.ajax({
@@ -445,37 +453,32 @@
             });
         }
 
-        get_process();
-        get_resource();
-        get_timenow();
-
-        //=========================Interval Function====================================
-
         function process_Interval(time) {
-            setInterval(function(){
+            setInterval(function () {
                 get_process()
-            }, time*1000);
+            }, time * 1000);
         }
 
-        function resource_Interval(time){
-            setInterval(function(){
+        function resource_Interval(time) {
+            setInterval(function () {
                 get_resource()
-            },time * 1000);
+            }, time * 1000);
         }
 
-        function timenow_Interval(time){
-            setInterval(function(){
+        function timenow_Interval(time) {
+            setInterval(function () {
                 get_timenow()
-            },time*1000);
+            }, time * 1000);
         }
 
-        process_Interval(60); 
-        resource_Interval(2);
-        timenow_Interval(60);
-        // 2초마다 실행
+        function graph_Interval(time) {
+            setInterval(function () {
+                var select_value = $("#graph_select option:selected").val();
+                get_history(select_value);
+            }, time * 1000);
+        }
 
-        //====================================================================
-
+        // get today date ex)201012
         function getToday() {
             var today = new Date();
 
@@ -496,8 +499,8 @@
 
             return year + month + date;
         }
-        // get today date ex)201012
 
+        // get yesterday date ex)201011
         function getYesterday() {
             var today = new Date();
             today.setTime(today.getTime() - 86400000);
@@ -518,18 +521,7 @@
             date = String(date);
 
             return year + month + date;
-        }
-        // get yesterday date ex)201011
-
-        var isEmpty = function (value) {
-            if (value === "" || value == null || value == undefined || (value != null && typeof value == "object" && !Object.keys(value).length)) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }// target/current list에 문자열 데이터, null, undefined, 비어있는 객체는 비어있다고 판단 => 숫자 0은 비어있는 것이 아님        
-
+        }    
     </script>
 </body>
 
