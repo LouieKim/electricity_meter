@@ -17,3 +17,4 @@ class CalcHistory(db.Model):
     point_id = db.Column(db.Integer, db.ForeignKey('modbus_info.point_id', ondelete='cascade'))
     date = db.Column(db.DateTime, default=datetime.now, primary_key=True)
     value = db.Column(db.Integer, nullable=False)
+    
