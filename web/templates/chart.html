@@ -139,6 +139,7 @@
         // get toggle_btn's true/false status
         var toggleBtn = document.querySelector('#toggle_btn');
         var interval_timer = 60000;
+        var page_reload_timer=3600000;
 
         //====================== Function Call ============================================
         get_version();
@@ -166,6 +167,10 @@
         setInterval(function () {
             get_timenow();
         }, interval_timer);
+
+        setInterval(function(){
+            reload_page();
+        },page_reload_timer);
 
         //=========================== Toggle Button ============================================
         // set toggle_btn's status according to raspberry pi's screen saver status
@@ -290,6 +295,10 @@
                     document.querySelector('#timenow').innerHTML = data['time'];
                 }
             });
+        }
+
+        function reload_page(){
+            location.reload();
         }      
     </script>
 </body>

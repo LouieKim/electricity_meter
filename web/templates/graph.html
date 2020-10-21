@@ -195,6 +195,7 @@
         })
 
         var interval_timer = 60000;
+        var page_reload_timer=3600000;
         //============================================================ Function Call =============================================================
         get_version();
 
@@ -230,12 +231,16 @@
             get_history(select_value);
         }, interval_timer);
 
+        setInterval(function(){
+            reload_page();
+        },page_reload_timer);
+
         //========================================================================= Toggle Button ============================================================================
 
         toggleBtn.addEventListener('change', function () {
             console.log(toggleBtn.checked)
             if (toggleBtn.checked) {
-                console.log("True")
+                //console.log("True")
 
                 $.ajax({
                     type: 'GET',
@@ -244,11 +249,11 @@
                     dataType: 'json',
                     url: 'http://localhost:5000/xscreensaver/on',
                     success: function (e) {
-                        console.log("ON");
+                        //console.log("ON");
                     }
                 })
             } else {
-                console.log("FALSE")
+                //console.log("FALSE")
 
                 $.ajax({
                     type: 'GET',
@@ -257,7 +262,7 @@
                     dataType: 'json',
                     url: 'http://localhost:5000/xscreensaver/off',
                     success: function (e) {
-                        console.log("OFF");
+                        //console.log("OFF");
                     }
                 })
             }
@@ -329,7 +334,8 @@
             var today_data = [];
         
             $.ajax({
-                url: 'http://localhost:5000/graph/' + select_num + '/' + getToday(),
+                // url: 'http://localhost:5000/graph/' + select_num + '/' + getToday(),
+                url: 'http://localhost:5000/graph/' + select_num + '/201014',
                 type: 'GET',
                 data: {},
                 dataType: 'json',
@@ -353,7 +359,8 @@
             var yesterday_data = [];
 
             $.ajax({
-                url: 'http://localhost:5000/graph/' + select_num + '/' + getYesterday(),
+                // url: 'http://localhost:5000/graph/' + select_num + '/' + getYesterday(),
+                url: 'http://localhost:5000/graph/' + select_num + '/201013',
                 type: 'GET',
                 data: {},
                 dataType: 'json',
@@ -523,6 +530,11 @@
             date = String(date);
 
             return year + month + date;
+        }
+
+        // reload page
+        function reload_page(){
+            location.reload();
         }
     </script>
 </body>
