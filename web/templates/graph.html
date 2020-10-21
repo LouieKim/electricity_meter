@@ -337,7 +337,7 @@
                 success: function (res) {
                     // 라벨(시간)에 맞춰서 데이터 넣어주기
                     res.forEach(function (i) {
-                        for (j = 0; j < hour.length; j++) {
+                        for (var j = 0; j < hour.length; j++) {
                             if (i[1] == hour[j]) {
                                 today_data[j] = i[2];
                             }
@@ -361,7 +361,7 @@
                 success: function (res) {
                     // 라벨(시간)에 맞춰서 데이터 넣어주기
                     res.forEach(function (i) {
-                        for (j = 0; j < hour.length; j++) {
+                        for (var j = 0; j < hour.length; j++) {
                             if (i[1] == hour[j]) {
                                 yesterday_data[j] = i[2];
                             }
@@ -523,7 +523,7 @@
             date = String(date);
 
             return year + month + date;
-        }    
+        }
     </script>
 </body>
 
