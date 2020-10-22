@@ -195,7 +195,7 @@
         })
 
         var interval_timer = 60000;
-        var page_reload_timer=3600000;
+        var page_reload_timer = 3600000;
         //============================================================ Function Call =============================================================
         get_version();
 
@@ -270,6 +270,7 @@
 
         // ============================================== Event Listener ==========================================================
         // select box -> visible/invisible
+
         $(':checkbox[name="yesterday"]').change(function () {
             chart.data.datasets.find(function (ds) {
                 if (ds.label == '어제')
@@ -285,7 +286,7 @@
             chart.update();
         })
 
-        //콤보박스에서 장치 선택했을 때, 선택된 id 링크를 보여주는 부분
+        // 콤보박스에서 장치 선택했을 때, 선택된 id 링크를 보여주는 부분
         $("#graph_select").change(function () {
             var select_value = this.value;
             get_history(select_value);
@@ -300,8 +301,7 @@
                 dataType: 'json',
                 url: 'http://localhost:5000/version',
                 success: function (data) {
-                    var html = '';
-                    html += '<label style="float:right;margin-right:20px">ver ' + data['version'] + '</label>'
+                    var html = '<label style="float:right;margin-right:20px">ver ' + data['version'] + '</label>';
                     $("#version").prepend(html);
                 }
             })
