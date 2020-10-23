@@ -38,8 +38,8 @@
                 </div>
 
                 <div style="float:right; margin-top:5px">
-                    <label style="color:white"><input type="checkbox" name="yesterday" checked> 어제</label>
-                    <label style="margin-left:10px; margin-right:10px; color:white"><input type="checkbox" name="today"
+                    <label style="color:white"><input type="checkbox" id="yesterday" checked> 어제</label>
+                    <label style="margin-left:10px; margin-right:10px; color:white"><input type="checkbox" id="today"
                             checked>
                         오늘</label>
                 </div>
@@ -152,20 +152,67 @@
         //================================================================= Global Variations ============================================================
         var toggleBtn = document.querySelector('#toggle_btn');
         var hour = [];
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var chart = new Chart(ctx, {
+        
+        // window.onload = function () {
+        //     var ctx = document.getElementById('myChart').getContext('2d');
+        //     // var chart = new Chart(ctx, {
+        //     window.chart = new Chart(ctx, {
+        //         type: 'line',
+        //         data: {
+        //             labels: [],
+        //             datasets: [{
+        //                 label: '',
+        //                 data: [],
+        //                 borderColor: []
+        //             },
+        //             {
+        //                 label: '',
+        //                 data: [],
+        //                 borderColor: []
+        //             }]
+        //         },
+        //         options: {
+        //             scales: {
+        //                 xAxes: [{
+        //                     ticks: {
+        //                         display: false
+        //                     },
+        //                     scaleLabel: {
+        //                         display: true,
+        //                         labelString: "시간",
+        //                         fontColor: "white"
+        //                     }
+        //                 }],
+        //                 yAxes: [{
+        //                     ticks: {
+        //                         beginAtZero: true
+        //                     },
+        //                     scaleLabel: {
+        //                         display: true,
+        //                         labelString: "전력량(Wh)",
+        //                         fontColor: "white"
+        //                     }
+        //                 }]
+        //             }
+        //         }
+        //     })
+        // }
+
+        var config = {
             type: 'line',
             data: {
-                labels: [],
+                labels: hour,
                 datasets: [{
-                    label: '',
+                    label: '오늘',
                     data: [],
-                    borderColor: []
+                    borderColor: '#00FFFF',
+                    pointRadius: 0
                 },
                 {
-                    label: '',
+                    label: '어제',
                     data: [],
-                    borderColor: []
+                    borderColor: '#FFFF99',
+                    pointRadius: 0
                 }]
             },
             options: {
@@ -192,16 +239,22 @@
                     }]
                 }
             }
-        })
+        };
+
+        window.onload = function(){
+            var ctx = document.getElementById('myChart').getContext('2d');
+            window.chart = new Chart(ctx,config);
+            get_history(1);
+        }
 
         var interval_timer = 60000;
-        var page_reload_timer = 3600000;
+        var page_reload_timer = 1800000;
         //============================================================ Function Call =============================================================
         get_version();
 
         hour_label();
 
-        get_history(1);
+        // get_history(1);
 
         combo_box();
 
@@ -231,9 +284,9 @@
             get_history(select_value);
         }, interval_timer);
 
-        setInterval(function(){
+        setInterval(function () {
             reload_page();
-        },page_reload_timer);
+        }, page_reload_timer);
 
         //========================================================================= Toggle Button ============================================================================
 
@@ -271,19 +324,34 @@
         // ============================================== Event Listener ==========================================================
         // select box -> visible/invisible
 
-        $(':checkbox[name="yesterday"]').change(function () {
-            chart.data.datasets.find(function (ds) {
+        // $(':checkbox[name="yesterday"]').change(function () {
+        //     window.chart.data.datasets.find(function (ds) {
+        //         if (ds.label == '어제')
+        //             ds.hidden = !ds.hidden;
+        //     });
+        //     window.chart.update();
+        // })
+        document.getElementById('yesterday').addEventListener('change', function () {
+            window.chart.data.datasets.find(function (ds) {
                 if (ds.label == '어제')
                     ds.hidden = !ds.hidden;
             });
-            chart.update();
+            window.chart.update();
         })
-        $(':checkbox[name="today"]').change(function () {
-            chart.data.datasets.find(function (ds) {
+
+        // $(':checkbox[name="today"]').change(function () {
+        //     window.chart.data.datasets.find(function (ds) {
+        //         if (ds.label == '오늘')
+        //             ds.hidden = !ds.hidden;
+        //     });
+        //     window.chart.update();
+        // })
+        document.getElementById('today').addEventListener('change', function () {
+            window.chart.data.datasets.find(function (ds) {
                 if (ds.label == '오늘')
                     ds.hidden = !ds.hidden;
             });
-            chart.update();
+            window.chart.update();
         })
 
         // 콤보박스에서 장치 선택했을 때, 선택된 id 링크를 보여주는 부분
@@ -291,7 +359,6 @@
             var select_value = this.value;
             get_history(select_value);
         });
-
         //============================================================= Function Definition =================================================================
         function get_version() {
             $.ajax({
@@ -327,15 +394,15 @@
         }
 
         function get_history(select_num) {
-            addData(chart, hour, '오늘', get_today(select_num), '#00FFFF', '어제', get_yesterday(select_num), '#FFFF99');
+            // addData(window.chart, hour, '오늘', get_today(select_num), '#00FFFF', '어제', get_yesterday(select_num), '#FFFF99');
+            addData(window.chart, get_today(select_num), get_yesterday(select_num));
         }
 
         function get_today(select_num) {
             var today_data = [];
-        
+
             $.ajax({
                 url: 'http://localhost:5000/graph/' + select_num + '/' + getToday(),
-                // url: 'http://localhost:5000/graph/' + select_num + '/201014',
                 type: 'GET',
                 data: {},
                 dataType: 'json',
@@ -360,7 +427,6 @@
 
             $.ajax({
                 url: 'http://localhost:5000/graph/' + select_num + '/' + getYesterday(),
-                // url: 'http://localhost:5000/graph/' + select_num + '/201013',
                 type: 'GET',
                 data: {},
                 dataType: 'json',
@@ -381,22 +447,29 @@
         }
 
         //차트에 필요한 데이터 적용(이틀)
-        function addData(chart, hour, today_label, today_data, backgd, yesterday_label, yesterday_data, backgd_2) {
-            chart.data.labels = hour;
+        // function addData(chart, hour, today_label, today_data, backgd, yesterday_label, yesterday_data, backgd_2) {
+        //     chart.data.labels = hour;
 
-            //오늘데이터
-            chart.data.datasets[0].label = today_label;
-            chart.data.datasets[0].data = today_data;
-            chart.data.datasets[0].borderColor = backgd;
-            chart.data.datasets[0].pointRadius = 0
+        //     //오늘데이터
+        //     chart.data.datasets[0].label = today_label;
+        //     chart.data.datasets[0].data = today_data;
+        //     chart.data.datasets[0].borderColor = backgd;
+        //     chart.data.datasets[0].pointRadius = 0
 
-            //어제데이터
-            chart.data.datasets[1].label = yesterday_label;
-            chart.data.datasets[1].data = yesterday_data;
-            chart.data.datasets[1].borderColor = backgd_2;
-            chart.data.datasets[1].pointRadius = 0
+        //     //어제데이터
+        //     chart.data.datasets[1].label = yesterday_label;
+        //     chart.data.datasets[1].data = yesterday_data;
+        //     chart.data.datasets[1].borderColor = backgd_2;
+        //     chart.data.datasets[1].pointRadius = 0
 
-            //넣은 데이터들로 차트 업데이트
+        //     //넣은 데이터들로 차트 업데이트
+        //     chart.update();
+        // }
+
+        function addData(chart,today_data,yesterday_data){
+            chart.data.datasets[0].data=today_data;
+            chart.data.datasets[1].data=yesterday_data;
+
             chart.update();
         }
 
@@ -484,7 +557,7 @@
             });
         }
 
-        
+
 
 
         // get today date ex)201012
@@ -533,7 +606,7 @@
         }
 
         // reload page
-        function reload_page(){
+        function reload_page() {
             location.reload();
         }
     </script>
