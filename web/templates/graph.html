@@ -152,51 +152,6 @@
         //================================================================= Global Variations ============================================================
         var toggleBtn = document.querySelector('#toggle_btn');
         var hour = [];
-        
-        // window.onload = function () {
-        //     var ctx = document.getElementById('myChart').getContext('2d');
-        //     // var chart = new Chart(ctx, {
-        //     window.chart = new Chart(ctx, {
-        //         type: 'line',
-        //         data: {
-        //             labels: [],
-        //             datasets: [{
-        //                 label: '',
-        //                 data: [],
-        //                 borderColor: []
-        //             },
-        //             {
-        //                 label: '',
-        //                 data: [],
-        //                 borderColor: []
-        //             }]
-        //         },
-        //         options: {
-        //             scales: {
-        //                 xAxes: [{
-        //                     ticks: {
-        //                         display: false
-        //                     },
-        //                     scaleLabel: {
-        //                         display: true,
-        //                         labelString: "시간",
-        //                         fontColor: "white"
-        //                     }
-        //                 }],
-        //                 yAxes: [{
-        //                     ticks: {
-        //                         beginAtZero: true
-        //                     },
-        //                     scaleLabel: {
-        //                         display: true,
-        //                         labelString: "전력량(Wh)",
-        //                         fontColor: "white"
-        //                     }
-        //                 }]
-        //             }
-        //         }
-        //     })
-        // }
 
         var config = {
             type: 'line',
@@ -253,8 +208,6 @@
         get_version();
 
         hour_label();
-
-        // get_history(1);
 
         combo_box();
 
@@ -323,14 +276,6 @@
 
         // ============================================== Event Listener ==========================================================
         // select box -> visible/invisible
-
-        // $(':checkbox[name="yesterday"]').change(function () {
-        //     window.chart.data.datasets.find(function (ds) {
-        //         if (ds.label == '어제')
-        //             ds.hidden = !ds.hidden;
-        //     });
-        //     window.chart.update();
-        // })
         document.getElementById('yesterday').addEventListener('change', function () {
             window.chart.data.datasets.find(function (ds) {
                 if (ds.label == '어제')
@@ -338,14 +283,6 @@
             });
             window.chart.update();
         })
-
-        // $(':checkbox[name="today"]').change(function () {
-        //     window.chart.data.datasets.find(function (ds) {
-        //         if (ds.label == '오늘')
-        //             ds.hidden = !ds.hidden;
-        //     });
-        //     window.chart.update();
-        // })
         document.getElementById('today').addEventListener('change', function () {
             window.chart.data.datasets.find(function (ds) {
                 if (ds.label == '오늘')
@@ -394,7 +331,6 @@
         }
 
         function get_history(select_num) {
-            // addData(window.chart, hour, '오늘', get_today(select_num), '#00FFFF', '어제', get_yesterday(select_num), '#FFFF99');
             addData(window.chart, get_today(select_num), get_yesterday(select_num));
         }
 
@@ -447,25 +383,6 @@
         }
 
         //차트에 필요한 데이터 적용(이틀)
-        // function addData(chart, hour, today_label, today_data, backgd, yesterday_label, yesterday_data, backgd_2) {
-        //     chart.data.labels = hour;
-
-        //     //오늘데이터
-        //     chart.data.datasets[0].label = today_label;
-        //     chart.data.datasets[0].data = today_data;
-        //     chart.data.datasets[0].borderColor = backgd;
-        //     chart.data.datasets[0].pointRadius = 0
-
-        //     //어제데이터
-        //     chart.data.datasets[1].label = yesterday_label;
-        //     chart.data.datasets[1].data = yesterday_data;
-        //     chart.data.datasets[1].borderColor = backgd_2;
-        //     chart.data.datasets[1].pointRadius = 0
-
-        //     //넣은 데이터들로 차트 업데이트
-        //     chart.update();
-        // }
-
         function addData(chart,today_data,yesterday_data){
             chart.data.datasets[0].data=today_data;
             chart.data.datasets[1].data=yesterday_data;
@@ -556,9 +473,6 @@
                 }
             });
         }
-
-
-
 
         // get today date ex)201012
         function getToday() {
