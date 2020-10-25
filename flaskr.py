@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 import config
 from contextlib import closing
 import sqlite3
+import nw_logging
 
 db = None
 

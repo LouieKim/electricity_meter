@@ -1,6 +1,7 @@
 # python3.8
 
 from pymodbus.client.sync import ModbusTcpClient as ModbusClient
+import nw_logging
 from config import(
     UNIT,
     MODBUS_TCP_IP,
@@ -22,4 +23,5 @@ class GemsModbus():
             return gems_value.registers[0]
 
         except Exception as e:
+            nw_logging._LOGGER.error(e)
             client.close()
