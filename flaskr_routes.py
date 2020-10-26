@@ -15,6 +15,7 @@ from sqlalchemy import event
 from sqlalchemy.engine import Engine
 from sqlite3 import Connection as SQLite3Connection
 import subprocess
+import nw_logging
 
 from config import(
     RELEASE_VERSION
@@ -59,8 +60,8 @@ def get_modbus_value():
         return jsonify(success=True)
             
     except Exception as e:
-        #_LOGGER.error(e)
-        print(e)
+        nw_logging._LOGGER.error(e)
+        #print(e)
         return jsonify({'error': 'get Modbus Value'}), 500
 
 #author: hyeok0724.kim@ninewatt.com
@@ -100,8 +101,8 @@ def calc_data_graph(start_date, end_date):
         return jsonify(success=True)
     
     except Exception as e:
-        #_LOGGER.error(e)
-        print(e)
+        nw_logging._LOGGER.error(e)
+        #print(e)
         return jsonify({'error': 'calc_data_graph'}), 500
 
 #author: hyeok0724.kim@ninewatt.com
@@ -126,8 +127,8 @@ def get_real_time_data():
         return dict_rows_json
 
     except Exception as e:
-        #_LOGGER.error(e)
-        print(e)
+        nw_logging._LOGGER.error(e)
+        #print(e)
         return jsonify({'error': 'get_real_time_data'}), 500
 
 @bp.route('/resource')
@@ -143,8 +144,8 @@ def get_resource():
         return resource_json
 
     except Exception as e:
-        #_LOGGER.error(e)
-        print(e)
+        nw_logging._LOGGER.error(e)
+        #print(e)
         return jsonify({'error': 'get_resource'}), 500
 
 @bp.route('/process')
@@ -165,8 +166,8 @@ def get_process():
         return dict_rows_json
     
     except Exception as e:
-        #_LOGGER.error(e)
-        print(e)
+        nw_logging._LOGGER.error(e)
+        #print(e)
         return jsonify({'error': 'get_process'}), 500
 
 @bp.route('/timenow')
@@ -181,8 +182,8 @@ def get_timenow():
         return dict_rows_json
 
     except Exception as e:
-        #_LOGGER.error(e)
-        print(e)
+        nw_logging._LOGGER.error(e)
+        #print(e)
         return jsonify({'error': 'get_timenow'}), 500
 
 @bp.route('/modbusinfo')
@@ -209,8 +210,8 @@ def get_modbus_info():
         #return jsonify(dict_rows_json), 200
     
     except Exception as e:
-        #_LOGGER.error(e)
-        print(e)
+        nw_logging._LOGGER.error(e)
+        #print(e)
         return jsonify({'error': 'Admin access is required'}), 401
 
 @bp.route('/modbus/delete', methods = ['GET', 'POST'])
@@ -227,8 +228,8 @@ def del_modbus_info():
             return resp
 
     except Exception as e:
-        #_LOGGER.error(e)
-        print(e)
+        nw_logging._LOGGER.error(e)
+        #print(e)
         return jsonify({'error': 'del_modbus_info'}), 500
 
 @bp.route('/modbus/new', methods = ['GET', 'POST'])
@@ -248,8 +249,8 @@ def create_modbus_info():
             return jsonify(success=True)
 
     except Exception as e:
-        #_LOGGER.error(e)
-        print(e)
+        nw_logging._LOGGER.error(e)
+        #print(e)
         return jsonify({'error': 'create_modbus_info'}), 500
 
 #author: hyeok0724.kim@ninewatt.com
@@ -262,8 +263,8 @@ def stop_process():
         return jsonify(success=True)
 
     except Exception as e:
-        #_LOGGER.error(e)
-        print(e)
+        nw_logging._LOGGER.error(e)
+        #print(e)
         return jsonify({'error': 'stop_process'}), 500
 
 #author: hyeok0724.kim@ninewatt.com
@@ -276,8 +277,8 @@ def start_process():
         return jsonify(success=True)
 
     except Exception as e:
-        _LOGGER.error(e)
-        print(e)
+        nw_logging._LOGGER.error(e)
+        #print(e)
         return jsonify({'error': 'start_process'}), 500
 
 #author: hyeok0724.kim@ninewatt.com
@@ -311,8 +312,8 @@ def get_history_graph(point_id, day_date):
         return dict_rows_json
 
     except Exception as e:
-        #_LOGGER.error(e)
-        print(e)
+        nw_logging._LOGGER.error(e)
+        #print(e)
         return jsonify({'error': 'get_history_graph'}), 500
 
 #author: hyeok0724.kim@ninewatt.com
@@ -339,8 +340,8 @@ def get_today_history_graph(point_id):
         return dict_rows_json
     
     except Exception as e:
-        #_LOGGER.error(e)
-        print(e)
+        nw_logging._LOGGER.error(e)
+        #print(e)
         return jsonify({'error': 'get_today_history_graph'}), 500
 
 

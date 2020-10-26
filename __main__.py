@@ -5,6 +5,7 @@ import time
 import psutil
 import platform
 import setproctitle
+import nw_logging
 
 def main():
     while True:
