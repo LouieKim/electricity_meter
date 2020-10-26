@@ -3,6 +3,7 @@ import platform
 import setproctitle
 import flaskr
 import sys
+import nw_logging
 
 #Todo. app.py에서는 로깅 시스템과 운영체제 기본적인 설정을 여기서 함
 
