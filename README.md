@@ -1,18 +1,18 @@
 # electricity_meter
 ssh 열기  
-apt-get update  
-apt-get upgrade 
-root, pi 비밀번호 변경  
-python 경로 변경  
-부저 소리 없애기 
-용량 키우기  
-부팅 이미지 변경 
-배경화면 변경 
-고정IP 변경 
-초기 프로그램 실행  
-realvnc-vnc-server  
-vsftpd  
-xscreensaver  
+apt-get update    
+apt-get upgrade   
+root, pi 비밀번호 변경    
+python 경로 변경    
+부저 소리 없애기   
+용량 키우기    
+부팅 이미지 변경   
+배경화면 변경   
+고정IP 변경   
+초기 프로그램 실행    
+realvnc-vnc-server    
+vsftpd    
+xscreensaver    
 
 apt-get install   
 sudo pymodbus   
