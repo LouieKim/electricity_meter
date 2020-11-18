@@ -1,9 +1,8 @@
 # electricity_meter
 ssh 열기
-apt-get update
 
-apt-get upgrade
-
+apt-get update 
+apt-get upgrade 
 root, pi 비밀번호 변경
 
 python 경로 변경
