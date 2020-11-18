@@ -1,8 +1,11 @@
 # electricity_meter
 ssh 열기
 apt-get update
+
 apt-get upgrade
+
 root, pi 비밀번호 변경
+
 python 경로 변경
 부저 소리 없애기
 용량 키우기
