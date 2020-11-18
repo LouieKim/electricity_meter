@@ -14,19 +14,19 @@ realvnc-vnc-server
 vsftpd  
 xscreensaver  
 
-apt-get install
-sudo pymodbus
-sudo supervisor
-sudo setproctitle
-sudo apscheduler
-sudo xscreensaver
+apt-get install 
+sudo pymodbus 
+sudo supervisor 
+sudo setproctitle 
+sudo apscheduler  
+sudo xscreensaver 
 
-pip3 install
-sqlalchemy
-flask_cors
-flask_sqlalchemy
+pip3 install  
+sqlalchemy  
+flask_cors  
+flask_sqlalchemy  
 
-@python /home/pi/electricity_meter/__main__.py
+@python /home/pi/electricity_meter/__main__.py  
 
-@chromium-browser --disable-pinch --incognito --noerrdialogs --disable-suggestions-service --disable-translate --disable-save-password-bubble --disable-session-crashed-bubble --disable-infobars --touch-events=disabled --disable-gesture-typing --check-for-update-interval=31536000 --kiosk --app=http://localhost:7070
+@chromium-browser --disable-pinch --incognito --noerrdialogs --disable-suggestions-service --disable-translate --disable-save-password-bubble --disable-session-crashed-bubble --disable-infobars --touch-events=disabled --disable-gesture-typing --check-for-update-interval=31536000 --kiosk --app=http://localhost:7070 
 
