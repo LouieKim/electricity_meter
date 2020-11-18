@@ -14,12 +14,12 @@ realvnc-vnc-server
 vsftpd  
 xscreensaver  
 
-apt-get install 
-sudo pymodbus 
-sudo supervisor 
-sudo setproctitle 
-sudo apscheduler  
-sudo xscreensaver 
+apt-get install   
+sudo pymodbus   
+sudo supervisor   
+sudo setproctitle   
+sudo apscheduler      
+sudo xscreensaver   
 
 pip3 install  
 sqlalchemy  
